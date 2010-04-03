@@ -1,0 +1,17 @@
+git://github.com/m2ym/auto-complete.git
+git://github.com/emacsmirror/linum.git
+git://github.com/emacsmirror/psvn.git
+git://github.com/mattkeller/mk-project.git
+git://github.com/wfarr/color-theme-tango-2.git
+git://github.com/emacsmirror/ts-mode.git
+git://repo.or.cz/remember-el.git
+git://github.com/jrockway/ibuffer-git
+git://github.com/emacsmirror/auto-complete-etags.git
+git://gitorious.org/magit/mainline.git
+git://github.com/emacsmirror/haskell-mode.git
+git://github.com/haxney/color-theme.git
+git://github.com/emacsmirror/iedit.git
+git://github.com/emacsmirror/timeclock-x.git
+git://github.com/emacsmirror/php-mode.git
+git://repo.or.cz/org-mode.git
+git://github.com/chrisdone/zencoding.git
