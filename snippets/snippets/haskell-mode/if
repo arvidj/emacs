@@ -1,0 +1,5 @@
+#name : if condition then ... else ...
+# --
+if ${condition}
+   then ${1}
+   else ${0}

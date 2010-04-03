@@ -1,0 +1,6 @@
+#contributor : Arvid Jakobsson <arvid.jakobsson@gmail.com>
+#name : console.log(...)
+#group : control structure
+# --
+console.log($$1);
+$0
