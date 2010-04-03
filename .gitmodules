@@ -19,9 +19,6 @@
 [submodule "plugins/remember-el"]
 	path = plugins/remember-el
 	url = git://repo.or.cz/remember-el.git
-[submodule "plugins/git:/github.com/jrockway/ibuffer-git"]
-	path = plugins/git:/github.com/jrockway/ibuffer-git
-	url = git://github.com/jrockway/ibuffer-git
 [submodule "plugins/auto-complete-etags"]
 	path = plugins/auto-complete-etags
 	url = git://github.com/emacsmirror/auto-complete-etags.git
@@ -49,3 +46,6 @@
 [submodule "plugins/zencoding"]
 	path = plugins/zencoding
 	url = git://github.com/chrisdone/zencoding.git
+[submodule "plugins/ibuffer-git"]
+	path = plugins/ibuffer-git
+	url = git://github.com/jrockway/ibuffer-git.git

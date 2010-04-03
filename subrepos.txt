@@ -5,7 +5,7 @@ git://github.com/mattkeller/mk-project.git
 git://github.com/wfarr/color-theme-tango-2.git
 git://github.com/emacsmirror/ts-mode.git
 git://repo.or.cz/remember-el.git
-git://github.com/jrockway/ibuffer-git
+git://github.com/jrockway/ibuffer-git.git
 git://github.com/emacsmirror/auto-complete-etags.git
 git://gitorious.org/magit/mainline.git
 git://github.com/emacsmirror/haskell-mode.git
