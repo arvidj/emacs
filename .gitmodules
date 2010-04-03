@@ -1,0 +1,51 @@
+[submodule "plugins/auto-complete"]
+	path = plugins/auto-complete
+	url = git://github.com/m2ym/auto-complete.git
+[submodule "plugins/linum"]
+	path = plugins/linum
+	url = git://github.com/emacsmirror/linum.git
+[submodule "plugins/psvn"]
+	path = plugins/psvn
+	url = git://github.com/emacsmirror/psvn.git
+[submodule "plugins/mk-project"]
+	path = plugins/mk-project
+	url = git://github.com/mattkeller/mk-project.git
+[submodule "plugins/color-theme-tango-2"]
+	path = plugins/color-theme-tango-2
+	url = git://github.com/wfarr/color-theme-tango-2.git
+[submodule "plugins/ts-mode"]
+	path = plugins/ts-mode
+	url = git://github.com/emacsmirror/ts-mode.git
+[submodule "plugins/remember-el"]
+	path = plugins/remember-el
+	url = git://repo.or.cz/remember-el.git
+[submodule "plugins/git:/github.com/jrockway/ibuffer-git"]
+	path = plugins/git:/github.com/jrockway/ibuffer-git
+	url = git://github.com/jrockway/ibuffer-git
+[submodule "plugins/auto-complete-etags"]
+	path = plugins/auto-complete-etags
+	url = git://github.com/emacsmirror/auto-complete-etags.git
+[submodule "plugins/mainline"]
+	path = plugins/mainline
+	url = git://gitorious.org/magit/mainline.git
+[submodule "plugins/haskell-mode"]
+	path = plugins/haskell-mode
+	url = git://github.com/emacsmirror/haskell-mode.git
+[submodule "plugins/color-theme"]
+	path = plugins/color-theme
+	url = git://github.com/haxney/color-theme.git
+[submodule "plugins/iedit"]
+	path = plugins/iedit
+	url = git://github.com/emacsmirror/iedit.git
+[submodule "plugins/timeclock-x"]
+	path = plugins/timeclock-x
+	url = git://github.com/emacsmirror/timeclock-x.git
+[submodule "plugins/php-mode"]
+	path = plugins/php-mode
+	url = git://github.com/emacsmirror/php-mode.git
+[submodule "plugins/org-mode"]
+	path = plugins/org-mode
+	url = git://repo.or.cz/org-mode.git
+[submodule "plugins/zencoding"]
+	path = plugins/zencoding
+	url = git://github.com/chrisdone/zencoding.git
