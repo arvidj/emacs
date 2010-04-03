@@ -3,7 +3,7 @@
 (add-to-list 'load-path "~/.emacs.d/plugins/emacs-soap-client")
 (add-to-list 'load-path "~/.emacs.d/plugins/auto-complete")
 (add-to-list 'load-path "~/.emacs.d/plugins/auto-complete-etags")
-(add-to-list 'load-path "~/.emacs.d/plugins/zencoding-mode")
+(add-to-list 'load-path "~/.emacs.d/plugins/zencoding")
 (add-to-list 'load-path "~/.emacs.d/plugins/hs-lint")
 (add-to-list 'load-path "~/.emacs.d/plugins/yasnippet")
 (add-to-list 'load-path "~/.emacs.d/plugins/mk-project")
