@@ -1,6 +1,5 @@
 (require 'magit)
 
-
 (add-hook 'magit-mode-hook
           (lambda()
             (set-face-foreground 'magit-diff-add "green3")
