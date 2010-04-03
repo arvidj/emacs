@@ -1,6 +1,0 @@
-#case : case ... of ->  ... -> ...
-# --
-case ${expression} of
-   ${case1} -> ${1}
-   ${case2} -> ${2}
-   
