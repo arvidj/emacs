@@ -49,3 +49,6 @@
 [submodule "plugins/magit"]
 	path = plugins/magit
 	url = git://gitorious.org/magit/mainline.git
+[submodule "snippets"]
+	path = snippets
+	url = git@github.com:arvixx/yasnippets.git
