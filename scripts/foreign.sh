@@ -50,4 +50,29 @@ case $1 in
         done
 
         ;;
+    status )
+        echo "status"
+
+        len=${#svn_repos[@]}
+        for (( i = 0 ; i < len ; i++ ))  
+        do
+            name=`echo ${svn_repos[$i]} | cut -d " " -f 2`
+            cd $name
+            echo $name
+            svn -u status
+            cd ..
+        done
+
+        len=${#hg_repos[@]}
+        for (( i = 0 ; i < len ; i++ ))  
+        do
+            name=`echo ${hg_repos[$i]} | cut -d " " -f 2`
+            
+            cd $name
+            echo $name
+            hg status
+            cd ..
+        done
+
+        ;;
 esac
