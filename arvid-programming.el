@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;
-;; Programmering
+;; Programming
 
 ;;; C
 (add-hook 'c-mode-hook
