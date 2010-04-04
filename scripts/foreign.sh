@@ -14,11 +14,11 @@ case $1 in
     add )
         echo "adding"
 
-        # len=${#svn_repos[@]}
-        # for (( i = 0 ; i < len ; i++ ))  
-        # do
-        #     svn co ${svn_repos[$i]}
-        # done
+        len=${#svn_repos[@]}
+        for (( i = 0 ; i < len ; i++ ))  
+        do
+            svn co ${svn_repos[$i]}
+        done
 
         len=${#hg_repos[@]}
         for (( i = 0 ; i < len ; i++ ))  
