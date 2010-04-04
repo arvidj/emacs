@@ -7,6 +7,7 @@
 ;; Programming, etc
 (require 'arvid-haskell)
 (require 'arvid-flymake)
+(require 'arvid-sql)
 (load "arvid-programming.el")
 (load "arvid-sh.el")
 

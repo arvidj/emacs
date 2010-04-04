@@ -129,10 +129,6 @@
 	(define-key sgml-mode-map (kbd "RET") 'newline-and-indent)
 	(zencoding-mode))
 
-(add-hook 'sql-mode-hook 'my-sql-mode-hook) 
-(defun my-sql-mode-hook () 
-  (define-key sql-mode-map (kbd "RET") 'newline-and-indent))
-
 (add-hook 'css-mode-hook 'my-css-mode-hook) 
 (defun my-css-mode-hook () 
   (define-key css-mode-map (kbd "RET") 'newline-and-indent))
