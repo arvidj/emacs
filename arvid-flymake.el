@@ -45,6 +45,10 @@ it)"
   (global-set-key (kbd "C-c f n") 'flymake-goto-next-error)
   (global-set-key (kbd "C-c f p") 'flymake-goto-prev-error))
 
-(global-set-key "\C-c\C-v" 'my-flymake-show-next-error)
+;; Overwrite flymake-display-warning so that no annoying dialog box is
+;; used.
+(defun flymake-display-warning (warning) 
+  "Display a warning to the user, using lwarn"
+  (lwarn 'flymake :warning warning))
 
 (provide 'arvid-flymake)
