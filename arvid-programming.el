@@ -65,10 +65,6 @@
 (add-hook 'python-mode-hook
 	  '(lambda () (define-key python-mode-map "\C-m" 'newline-and-indent)))
 
-;;; elisp
-(add-hook 'emacs-lisp-mode-hook 
-	  '(lambda () (define-key emacs-lisp-mode-map (kbd "C-c C-l") 'eval-buffer)))
-
 ;;; Javascript
 ;;;; Stöd för js2-mode
 ;; Använd espresso istället!
