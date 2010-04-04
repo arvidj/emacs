@@ -27,6 +27,7 @@
  '(js2-enter-indents-newline t)
  '(js2-mirror-mode t)
  '(js2-mode-escape-quotes nil)
+ '(mk-proj-ack-cmd "ack-grep")
  '(mk-proj-ack-cmd-name "ack-grep")
  '(mk-proj-use-ido-selection t)
  '(org-agenda-files (quote ("~/org")))
