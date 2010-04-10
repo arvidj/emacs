@@ -13,5 +13,6 @@
 (add-to-list 'load-path "~/.emacs.d/plugins/color-theme/themes")
 (add-to-list 'load-path "~/.emacs.d/plugins/color-theme-tango-2")
 (add-to-list 'load-path "~/.emacs.d/plugins/php-mode")
+(add-to-list 'load-path "~/.emacs.d/plugins/espresso")
 
 (provide 'arvid-loadpaths)

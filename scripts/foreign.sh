@@ -2,8 +2,8 @@
 
 cd plugins/
 
-svn_repos=( "http://js2-mode.googlecode.com/svn/trunk js2"
-    "http://geben-on-emacs.googlecode.com/svn/trunk geben"
+svn_repos=( "http://geben-on-emacs.googlecode.com/svn/trunk geben"
+    "http://yasnippet.googlecode.com/svn/trunk/ yasnippet" 
     )
 
 hg_repos=( "https://emacs-soap-client.googlecode.com/hg/ emacs-soap-client" )

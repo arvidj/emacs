@@ -52,6 +52,6 @@
 [submodule "snippets"]
 	path = snippets
 	url = git@github.com:arvixx/yasnippets.git
-[submodule "plugins/yasnippet"]
-	path = plugins/yasnippet
-	url = git://github.com/smtlaissezfaire/yasnippet.git
+[submodule "plugins/espresso"]
+	path = plugins/espresso
+	url = http://github.com/emacsmirror/espresso.git

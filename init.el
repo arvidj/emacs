@@ -9,6 +9,7 @@
 (require 'arvid-flymake)
 (require 'arvid-sql)
 (require 'arvid-lisp)
+(require 'arvid-js)
 (load "arvid-programming.el")
 (load "arvid-sh.el")
 
@@ -25,7 +26,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Misc. modes
 (require 'arvid-org-mode)
-(load "arvid-yasnippet.el")
+(require 'arvid-yasnippet)
 (load "arvid-mk-project.el")
 (require 'arvid-auto-complete)
 (require 'arvid-ido)
