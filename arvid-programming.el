@@ -61,9 +61,6 @@
 ;; funkar inte, varför:
 ;; '(lambda () (define-key c-mode-map (kbd "RET") 'newline-and-indent)))
 
-;;; Python
-(add-hook 'python-mode-hook
-	  '(lambda () (define-key python-mode-map "\C-m" 'newline-and-indent)))
 
 ;;; PHP-mode
 (add-to-list 'load-path "~/.emacs.d/plugins/php-mode-1.5.0")

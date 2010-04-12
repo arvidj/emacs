@@ -10,6 +10,7 @@
 (require 'arvid-sql)
 (require 'arvid-lisp)
 (require 'arvid-js)
+(require 'arvid-python)
 (load "arvid-programming.el")
 (load "arvid-sh.el")
 
