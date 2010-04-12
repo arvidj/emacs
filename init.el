@@ -40,6 +40,7 @@
 (require 'arvid-jira)
 (require 'rejeep-comment)
 (require 'arvid-timeclock)
+(require 'vimperator-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Other
