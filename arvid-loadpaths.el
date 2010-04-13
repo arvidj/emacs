@@ -15,7 +15,7 @@
 (add-to-list 'load-path "~/.emacs.d/plugins/twilight-emacs")
 (add-to-list 'load-path "~/.emacs.d/plugins/php-mode")
 (add-to-list 'load-path "~/.emacs.d/plugins/wrap-region")
-(add-to-list 'load-path "~/.emacs.d/plugins/js2")
 (add-to-list 'load-path "~/.emacs.d/plugins/ts-mode")
+(add-to-list 'load-path "~/.emacs.d/plugins/espresso")
 
 (provide 'arvid-loadpaths)

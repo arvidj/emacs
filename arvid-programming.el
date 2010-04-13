@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;
-;; Programmering
+;; Programming
 
 ;;; C
 (add-hook 'c-mode-hook
@@ -61,44 +61,6 @@
 ;; funkar inte, varför:
 ;; '(lambda () (define-key c-mode-map (kbd "RET") 'newline-and-indent)))
 
-;;; Python
-(add-hook 'python-mode-hook
-	  '(lambda () (define-key python-mode-map "\C-m" 'newline-and-indent)))
-
-;;; elisp
-(add-hook 'emacs-lisp-mode-hook 
-	  '(lambda () (define-key emacs-lisp-mode-map (kbd "C-c C-l") 'eval-buffer)))
-
-;;; Javascript
-;;;; Stöd för js2-mode
-;; Använd espresso istället!
-;; http://www.nongnu.org/espresso/
-;; http://github.com/technomancy/emacs-starter-kit/commit/a43b4a669822f7649ec830a25ae3a256b086655a
-
-(autoload 'js2-mode "js2" nil t)
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-(add-hook 'js2-mode-hook 'my-js2-mode-hook)
-
-(defun my-js2-mode-hook () 
-  (local-set-key (kbd "C-c C-j") 'jquery-search-documentation)
-  (local-set-key (kbd "C-a") 'smart-beginning-of-line)
-  (c-subword-mode 1)
-)
-  
-
-(defun escape-js-regex () "Escape javascript regex" 
-  (interactive) 
-  (let ((re "\\([.?/]\\)")
-	(to "\\\\\\1")
-	(txt (delete-and-extract-region (region-beginning) (region-end))))
-    (insert (replace-regexp-in-string re to txt))))
-
-;; For searching jquery documentation
-(setq jquery-search-url "http://www.google.com/search?hl=en&aq=f&aqi=&oq=&q=site%3Aapi.jquery.com+jquery+method+")
-(defun jquery-search-documentation ()
-  "Search PHP documentation for the word at point."
-  (interactive)
-  (browse-url (concat jquery-search-url (current-word t))))
 
 ;;; PHP-mode
 (add-to-list 'load-path "~/.emacs.d/plugins/php-mode-1.5.0")
@@ -132,4 +94,3 @@
 (add-hook 'css-mode-hook 'my-css-mode-hook) 
 (defun my-css-mode-hook () 
   (define-key css-mode-map (kbd "RET") 'newline-and-indent))
-
