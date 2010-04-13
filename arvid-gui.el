@@ -1,13 +1,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;
-;; Utseende
+;; Interface and appeareances
 
 ;;; color-themes
 (require 'color-theme)
 (color-theme-initialize)
-(require 'color-theme-tango-2)
-(color-theme-tango-2)
-;; (require 'color-theme-twilight) ;; color-theme-less och color-theme-tango är också najs 
-;; (color-theme-twilight)
+(load-file "~/.emacs.d/plugins/twilight-emacs/color-theme-twilight.el")
+(color-theme-twilight)
 
 ;; Kolumn
 ;; (require 'column-marker) 

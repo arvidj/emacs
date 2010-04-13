@@ -55,3 +55,9 @@
 [submodule "plugins/yasnippet"]
 	path = plugins/yasnippet
 	url = git://github.com/smtlaissezfaire/yasnippet.git
+[submodule "plugins/twilight-emacs"]
+	path = plugins/twilight-emacs
+	url = git://github.com/crafterm/twilight-emacs.git
+[submodule "plugins/wrap-region"]
+	path = plugins/wrap-region
+	url = git://github.com/rejeep/wrap-region.git
