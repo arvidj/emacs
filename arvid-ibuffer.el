@@ -16,6 +16,10 @@
                 (filename . "remote/dev/framtidensmat"))
                ("wwoof-dev"
                 (filename . "remote/dev/wwoof_community"))
+               ("svn"
+                (name . "svn"))
+               ("sql"
+                (name . "*SQL*"))
                ))))
 
 (add-hook 'ibuffer-mode-hook
