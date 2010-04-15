@@ -61,3 +61,6 @@
 [submodule "plugins/espresso"]
 	path = plugins/espresso
 	url = http://github.com/emacsmirror/espresso.git
+[submodule "plugins/highlight-parentheses"]
+	path = plugins/highlight-parentheses
+	url = http://github.com/emacsmirror/highlight-parentheses.git

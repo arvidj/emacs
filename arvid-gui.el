@@ -7,6 +7,11 @@
 (load-file "~/.emacs.d/plugins/twilight-emacs/color-theme-twilight.el")
 (color-theme-twilight)
 
+;; Highlight surrounding parentheses.
+(require 'highlight-parentheses)
+(highlight-parentheses-mode 1)
+(add-hook 'find-file-hook 'highlight-parentheses-mode t)
+
 ;; Kolumn
 ;; (require 'column-marker) 
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -19,17 +24,6 @@
 
 ;; Stäng av splash-screen
 (setq inhibit-splash-screen t)
-
-
-;; För parantes matchning
-;; http://www.cs.cmu.edu/cgi-bin/info2www?(emacs)Matching
-;; http://www.emacswiki.org/cgi-bin/wiki/HighlightParentheses
-(show-paren-mode 1)
-(setq show-paren-style 'expression) ;; matcha hela uttryck
-(set-face-background 'show-paren-match-face "#333")
-(set-face-foreground 'show-paren-match-face "#eee")
-
-;; (transient-mark-mode -1)
 
 ;; fixa copy / paste till andra program
 ;; http://www.emacswiki.org/emacs/CopyAndPaste
