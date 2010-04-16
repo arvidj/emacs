@@ -12,7 +12,11 @@
 (add-to-list 'load-path "~/.emacs.d/plugins/color-theme")
 (add-to-list 'load-path "~/.emacs.d/plugins/color-theme/themes")
 (add-to-list 'load-path "~/.emacs.d/plugins/color-theme-tango-2")
+(add-to-list 'load-path "~/.emacs.d/plugins/twilight-emacs")
 (add-to-list 'load-path "~/.emacs.d/plugins/php-mode")
+(add-to-list 'load-path "~/.emacs.d/plugins/wrap-region")
+(add-to-list 'load-path "~/.emacs.d/plugins/ts-mode")
 (add-to-list 'load-path "~/.emacs.d/plugins/espresso")
+(add-to-list 'load-path "~/.emacs.d/plugins/highlight-parentheses")
 
 (provide 'arvid-loadpaths)

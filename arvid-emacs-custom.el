@@ -9,6 +9,7 @@
  '(TeX-auto-save t)
  '(TeX-parse-self t)
  '(ac-auto-show-menu 0.1)
+ '(ac-candidate-limit 20)
  '(ac-delay 0.1)
  '(c-basic-offset 8)
  '(comment-style (quote extra-line))

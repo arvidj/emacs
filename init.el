@@ -40,6 +40,8 @@
 (require 'arvid-jira)
 (require 'rejeep-comment)
 (require 'arvid-timeclock)
+(require 'wrap-region)
+(wrap-region-mode t)
 (require 'vimperator-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;
