@@ -47,6 +47,7 @@
 (require 'wrap-region)
 (wrap-region-mode t)
 (require 'vimperator-mode)
+(require 'arvid-misc)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Encodings
