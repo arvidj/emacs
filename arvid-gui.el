@@ -11,6 +11,7 @@
 (require 'highlight-parentheses)
 (highlight-parentheses-mode 1)
 (add-hook 'find-file-hook 'highlight-parentheses-mode t)
+(show-paren-mode 1)
 
 ;; Kolumn
 ;; (require 'column-marker) 

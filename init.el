@@ -1,6 +1,10 @@
 (add-to-list 'load-path "~/.emacs.d/")
 (require 'arvid-loadpaths)
 
+;;;;;;;;;;;;;;;;;;;;;;
+;; Move backup and autosave files.
+(load "arvid-backup-autosave.el")
+
 ;; For opening recently opened files
 (load "arvid-recentf.el")
 
@@ -43,15 +47,13 @@
 (require 'wrap-region)
 (wrap-region-mode t)
 (require 'vimperator-mode)
-
-;;;;;;;;;;;;;;;;;;;;;;
-;; Other
-(load "arvid-backup-autosave.el")
+(require 'arvid-misc)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Encodings
 ;; (load "arvid-encodings.el")
 
+;;;;;;;;;;;;;;;;;;;;;;
 ;; Activate functions
 (put 'narrow-to-region 'disabled nil)
 (put 'set-goal-column 'disabled nil)

@@ -18,6 +18,7 @@
  '(ido-default-buffer-method (quote selected-window))
  '(ido-default-file-method (quote selected-window))
  '(ido-enable-flex-matching nil)
+ '(ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "\\`.*\\.hi")))
  '(indent-tabs-mode nil)
  '(inferior-haskell-find-project-root nil)
  '(initial-scratch-message "")
