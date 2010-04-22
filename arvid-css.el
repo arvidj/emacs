@@ -1,3 +1,5 @@
+(require 'css-mode)
+
 (defun css-electric-brace (arg)
   (interactive "P")
   ;; insert a brace
@@ -5,11 +7,9 @@
   ;; maybe do electric behavior
   (css-indent-line))
 
-(require 'css-mode)
 (define-key css-mode-map "}" 'css-electric-brace)
 
-
-
+;; Font lock for px, em, %, url-keywords and colors. From rejeep.
 (eval-after-load 'css-mode
   '(progn
      (font-lock-add-keywords 'css-mode
