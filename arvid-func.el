@@ -33,19 +33,27 @@
 ;; Never understood why Emacs doesn't have this function.
 ;; http://steve.yegge.googlepages.com/my-dot-emacs-file
 (defun rename-file-and-buffer ()
-  "Renames both current buffer and file it's visiting to NEW-NAME." 
+  "Renames current buffer and file it is visiting."
   (interactive)
-  (let* ((name (buffer-name))
-         (filename (buffer-file-name))
-         (new-name (read-file-name "New file: " filename)))
-    (if (not filename)
-	(message "Buffer '%s' is not visiting a file!" name)
-      (if (get-buffer new-name)
-          (message "A buffer named '%s' already exists!" new-name)
-        (progn (rename-file name new-name 1)
-               (rename-buffer new-name)
-               (set-visited-file-name new-name)
-               (set-buffer-modified-p nil))))))
+  (let ((name (buffer-name))
+        (filename (buffer-file-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (message "Buffer '%s' is not visiting a file!" name)
+      (ido-nowhere
+       (let ((new-name (read-file-name "New name: " filename)))
+         (cond ((get-buffer new-name)
+                (message "A buffer named '%s' already exists!" new-name))
+               (t
+                (rename-file filename new-name 1)
+                (rename-buffer new-name)
+                (set-visited-file-name new-name)
+                (set-buffer-modified-p nil))))))))
+
+(defmacro ido-nowhere (&rest body)
+  `(progn
+     (ido-everywhere -1)
+     ,@body
+     (ido-everywhere 1)))
 
 ;; http://stackoverflow.com/questions/145291/smart-home-in-emacs
 (defun smart-beginning-of-line ()
