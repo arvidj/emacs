@@ -61,3 +61,6 @@
 [submodule "plugins/highlight-parentheses"]
 	path = plugins/highlight-parentheses
 	url = http://github.com/emacsmirror/highlight-parentheses.git
+[submodule "plugins/magit"]
+	path = plugins/magit
+	url = http://github.com/philjackson/magit.git
