@@ -42,7 +42,8 @@
 (defun my-php-mode-hook () 
   (local-set-key (kbd "C-c C-t") 'typo3-search-documentation)
   (define-key c-mode-map [remap c-beginning-of-defun] 'beginning-of-defun)
-  (define-key c-mode-map [remap c-end-of-defun] 'end-of-defun))
+  (define-key c-mode-map [remap c-end-of-defun] 'end-of-defun)
+  (setq parens-require-spaces nil))
 
 
 ;; Geben for PHP-debugging

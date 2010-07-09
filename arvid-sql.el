@@ -9,4 +9,6 @@
   (modify-syntax-entry ?# "< b" sql-mode-syntax-table)
   (set-syntax-table sql-mode-syntax-table))
 
+(setq sql-mysql-options '("-P 8888"))
+
 (provide 'arvid-sql)

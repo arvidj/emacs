@@ -15,6 +15,7 @@
 (require 'arvid-lisp)
 (require 'arvid-js)
 (require 'arvid-python)
+(require 'arvid-css)
 (load "arvid-programming.el")
 (load "arvid-sh.el")
 

@@ -18,4 +18,12 @@
 	  tags-completion-table)
     (find-tag (ido-completing-read "Find tag: " tag-names nil nil nil nil def))))
 
+;; disable auto searching for files unless called explicitly
+(setq ido-auto-merge-delay-time 99999)
+
+(define-key ido-file-dir-completion-map (kbd "C-c C-s") 
+  (lambda() 
+    (interactive)
+    (ido-initiate-auto-merge (current-buffer))))
+
 (provide 'arvid-ido)
