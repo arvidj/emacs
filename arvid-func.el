@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;
-;; Hjälpfunktioner
+;; Help functions
 
 (defun prepend-to-lines (with) 
   (interactive  "MPrepend: ")
