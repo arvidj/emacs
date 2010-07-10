@@ -30,6 +30,11 @@
   (insert char)
   (forward-char -1))
 
+;; Inserting file names 
+(defun rel-insert-path (path) 
+  (interactive "f")
+  (insert (file-relative-name path)))
+
 ;; Never understood why Emacs doesn't have this function.
 ;; http://steve.yegge.googlepages.com/my-dot-emacs-file
 (defun rename-file-and-buffer ()
