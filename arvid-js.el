@@ -2,7 +2,7 @@
 ;; http://www.nongnu.org/espresso/
 ;; http://github.com/technomancy/emacs-starter-kit/commit/a43b4a669822f7649ec830a25ae3a256b086655a
 
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\(on\\)\\'" . js-mode))
 (autoload 'js-mode "js" nil t)
 (add-hook 'js-mode-hook 'my-js-mode-hook)
 
