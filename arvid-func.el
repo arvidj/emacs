@@ -31,8 +31,8 @@
   (forward-char -1))
 
 ;; Inserting file names 
-(defun rel-insert-path (path) 
-  (interactive "f")
+(defun insert-relative-path (path) 
+  (interactive "F")
   (insert (file-relative-name path)))
 
 ;; Never understood why Emacs doesn't have this function.
