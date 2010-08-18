@@ -1,4 +1,8 @@
 /plugins/emacs-soap-client
 /plugins/geben
 /plugins/js2
-/plugins/yasnippet
+plugins/dsvn
+/image-dired
+/geben
+session.*
+/arvid-sql-gluteus.el
