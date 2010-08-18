@@ -18,11 +18,11 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; GUI
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
+(dolist (mode '(menu-bar-mode tool-bar-mode scroll-bar-mode tooltip-mode))
+  (if (fboundp mode)
+    (funcall mode -1)))
 
-;; Stäng av splash-screen
+;; Disable splash screen
 (setq inhibit-splash-screen t)
 
 ;; fixa copy / paste till andra program
