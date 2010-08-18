@@ -72,7 +72,7 @@
 ;;; PHP-mode
 (add-to-list 'load-path "~/.emacs.d/plugins/php-mode-1.5.0")
 (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
-(add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
+(add-to-list 'auto-mode-alist '("\\.php$\\|\\.phpsh$" . php-mode))
 ;; (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
 
 (add-to-list 'auto-mode-alist '("\\.tpl$\\|\\.tmpl$" . sgml-mode))
