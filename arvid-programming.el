@@ -58,7 +58,7 @@
 
 
 ;; Define function documentation function
-(setq typo3-search-url "http://typo3.org/fileadmin/typo3api-4.0.0/search.php?query=")
+(setq typo3-search-url "http://typo3.org/fileadmin/typo3api-4.2.6/search.php?query=")
 (defun typo3-search-documentation ()
   "Search PHP documentation for the word at point."
   (interactive)
