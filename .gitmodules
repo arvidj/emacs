@@ -73,3 +73,6 @@
 [submodule "plugins/magit"]
 	path = plugins/magit
 	url = http://github.com/philjackson/magit.git
+[submodule "plugins/yasnippet"]
+	path = plugins/yasnippet
+	url = git://github.com/emacsmirror/yasnippet.git
