@@ -12,7 +12,7 @@
     (c-offsets-alist            . ((case-label        . +)
 				   (arglist-close     . 0)
 				   (comment-intro     . 0)))
-	(c-hanging-semi&comma-criteria nil))  ;; Does not work
+    (c-hanging-semi&comma-criteria nil))  ;; Does not work
   "My C Programming Style")
 (c-add-style "PERSONAL" my-c-style)
 
