@@ -46,6 +46,9 @@
   (local-set-key (kbd "C-c C-t") 'typo3-search-documentation)
   (define-key c-mode-map [remap c-beginning-of-defun] 'beginning-of-defun)
   (define-key c-mode-map [remap c-end-of-defun] 'end-of-defun)
+  (define-key c-mode-map [remap c-mark-function] 'mark-defun)
+  (define-key c-mode-map (kbd "ä") (lambda () (interactive (insert "$"))))
+  (define-key c-mode-map (kbd "M-ä") (lambda () (interactive (insert "ä"))))
   (setq parens-require-spaces nil))
 
 
