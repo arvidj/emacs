@@ -33,8 +33,11 @@
   (local-unset-key (kbd "C-M-j")) 
   (local-unset-key (kbd "C-M-k")) 
 
-  (flymake-mode 1)
-  (c-toggle-electric-state 1))
+  ;; (flymake-mode 1)
+  (c-toggle-electric-state 1)
+
+  ;; Set fill width to 80 columns
+  (setq fill-column 80))
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
 (add-hook 'php-mode-hook 'my-php-mode-hook)
