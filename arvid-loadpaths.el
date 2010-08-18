@@ -18,5 +18,9 @@
 (add-to-list 'load-path "~/.emacs.d/plugins/ts-mode")
 (add-to-list 'load-path "~/.emacs.d/plugins/espresso")
 (add-to-list 'load-path "~/.emacs.d/plugins/highlight-parentheses")
+(add-to-list 'load-path "~/.emacs.d/plugins/dsvn")
+(add-to-list 'load-path "~/.emacs.d/plugins/browse-kill-ring")
+(add-to-list 'load-path "~/.emacs.d/plugins/rainbow")
+(add-to-list 'load-path "~/.emacs.d/plugins/autopair")
 
 (provide 'arvid-loadpaths)
