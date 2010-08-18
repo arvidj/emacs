@@ -69,7 +69,6 @@
 ;; (kill-line 0)))
 ;; perhaps this is better 
 (global-set-key (kbd "C-,") 'backward-kill-word)
-(global-set-key (kbd "C--") 'undo)
 
 ;; the formatting of these guys suck
 (global-set-key "\C-c\C-d" 'insert-current-date-time)
