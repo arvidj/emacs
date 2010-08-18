@@ -3,7 +3,7 @@
 cd plugins/
 
 svn_repos=( "http://geben-on-emacs.googlecode.com/svn/trunk geben"
-    "http://yasnippet.googlecode.com/svn/trunk/ yasnippet" 
+    "http://svn.apache.org/repos/asf/subversion/trunk/contrib/client-side/emacs dsvn"
     )
 
 hg_repos=( "https://emacs-soap-client.googlecode.com/hg/ emacs-soap-client" )
