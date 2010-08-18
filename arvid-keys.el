@@ -2,6 +2,15 @@
 ;; Knappar
 
 
+(defun global-set-keys (bindings)
+  "Globally set all BINDINGS."
+  (dolist (binding bindings)
+    (let ((key (car binding)) (command (cadr binding)))
+      (global-set-key (read-kbd-macro key) command))))
+
+(global-set-keys 
+ '(("C-c d" duplicate-current-line-or-region)))
+
 ;; bra guide: http://xahlee.org/emacs/keyboard_shortcuts.html
 
 ;;; snabb-knappar för viktiga config filer

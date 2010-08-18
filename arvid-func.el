@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;
-;; Hjälpfunktioner
+;; Help functions
 
 (defun prepend-to-lines (with) 
   (interactive  "MPrepend: ")
@@ -29,6 +29,11 @@
   The CHAR is replaced and the point is put before CHAR."
   (insert char)
   (forward-char -1))
+
+;; Inserting file names 
+(defun insert-relative-path (path) 
+  (interactive "F")
+  (insert (file-relative-name path)))
 
 ;; Never understood why Emacs doesn't have this function.
 ;; http://steve.yegge.googlepages.com/my-dot-emacs-file
@@ -127,6 +132,28 @@ Uses `current-date-time-format' for the formatting the date/time."
   (interactive)
   (insert (format-time-string current-date-format (current-time))))
 
+;; From rejeep
+;; http://github.com/rejeep/emacs
+(defun duplicate-current-line-or-region (arg)
+  "Duplicates the current line or region ARG times.
+If there's no region, the current line will be duplicated. However, if
+there's a region, all lines that region covers will be duplicated."
+  (interactive "p")
+  (let (beg end (origin (point)))
+    (if (and (region-active-p) (> (point) (mark)))
+        (exchange-point-and-mark))
+    (setq beg (line-beginning-position))
+    (if (region-active-p)
+        (exchange-point-and-mark))
+    (setq end (line-end-position))
+    (let ((region (buffer-substring-no-properties beg end)))
+      (dotimes (i arg)
+        (goto-char end)
+        (newline)
+        (insert region)
+        (setq end (point)))
+      (goto-char (+ origin (* (length region) arg) arg)))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;; Word count
 (defun word-count nil "Count words in buffer" (interactive)
@@ -167,3 +194,4 @@ Uses `current-date-time-format' for the formatting the date/time."
     (erase-buffer))
    ;; Send other commands to the default handler.
    (t (comint-simple-send proc command))))
+
