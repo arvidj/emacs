@@ -194,4 +194,3 @@ there's a region, all lines that region covers will be duplicated."
     (erase-buffer))
    ;; Send other commands to the default handler.
    (t (comint-simple-send proc command))))
-
