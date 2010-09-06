@@ -51,7 +51,8 @@
  '(svn-status-default-diff-arguments (quote ("-x --ignore-eol-style" "-x -w")))
  '(tab-stop-list (quote (4 8 12 16 20 24 28 32 36 48 56 64 \.\.\.)))
  '(tab-width 4)
- '(timeclock-file "~/Dropbox/gluteus/timelogs/.timelog"))
+ '(timeclock-file "~/Dropbox/gluteus/timelogs/.timelog")
+ '(vc-handled-backends nil))
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
