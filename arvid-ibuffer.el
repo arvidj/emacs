@@ -16,15 +16,25 @@
                 (filename . "remote/dev/framtidensmat"))
                ("wwoof-dev"
                 (filename . "remote/dev/wwoof_community"))
+			   ("core-arvid-local"
+                (filename . "public_html/core-arvid-local"))
+			   ("core-arvid-local"
+                (filename . "public_html/core-magenta-2.0-git"))
+			   ("magit"
+                (name . "^\\*magit"))
+			   ("dired"
+                (mode . dired-mode))
                ("svn"
                 (name . "svn"))
                ("sql"
                 (name . "*SQL*"))
                ))))
 
+(setq ibuffer-show-empty-filter-groups nil)
 (add-hook 'ibuffer-mode-hook
-          (lambda () 
-            (ibuffer-switch-to-saved-filter-groups "default")))
+          (lambda ()
+			(ibuffer-auto-mode 1)
+			(ibuffer-switch-to-saved-filter-groups "default")))
 
 (define-key ibuffer-mode-map (kbd "TAB") 'ibuffer-toggle-filter-group)
 ;; TODO: in ibuffer, use ido to switch file but it should default to dir of buffer on point
