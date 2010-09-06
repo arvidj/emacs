@@ -76,3 +76,6 @@
 [submodule "plugins/yasnippet"]
 	path = plugins/yasnippet
 	url = git://github.com/emacsmirror/yasnippet.git
+[submodule "plugins/smex"]
+	path = plugins/smex
+	url = http://github.com/nonsequitur/smex.git
