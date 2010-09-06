@@ -27,6 +27,7 @@
  '(jde-jdk-registry (quote (("1.6.0" . "/usr/lib/jvm/java-6-sun/"))))
  '(jira2-wsdl-descriptor-url "http://bugs.gluteus.se:8080/rpc/soap/jirasoapservice-v2?wsdl")
  '(js-enabled-frameworks (quote (javascript prototype)))
+ '(js-flat-functions t)
  '(js-indent-level 4)
  '(js2-auto-indent-flag t)
  '(js2-basic-offset 4)
