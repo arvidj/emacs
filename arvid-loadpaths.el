@@ -22,5 +22,7 @@
 (add-to-list 'load-path "~/.emacs.d/plugins/browse-kill-ring")
 (add-to-list 'load-path "~/.emacs.d/plugins/rainbow")
 (add-to-list 'load-path "~/.emacs.d/plugins/autopair")
+(add-to-list 'load-path "~/.emacs.d/plugins/anything")
+(add-to-list 'load-path "~/.emacs.d/plugins/anything-config")
 
 (provide 'arvid-loadpaths)
