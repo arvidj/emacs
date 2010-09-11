@@ -2,7 +2,7 @@
 ;; scattered all over the file system!
 ;; http://snarfed.org/space/gnu%20emacs%20backup%20files
 (defvar autosave-dir
- (concat "~/.emacs.local.d/autosave-emacs"))
+ (concat "~/.emacs.d/autosave-emacs/"))
 
 (make-directory autosave-dir t)
 
@@ -19,6 +19,5 @@
 ;; Put backup files (ie foo~) in one place too. (The backup-directory-alist
 ;; list contains regexp=>directory mappings; filenames matching a regexp are
 ;; backed up in the corresponding directory. Emacs will mkdir it if necessary.)
-(defvar backup-dir (concat "~/.emacs.local.d/backup-emacs"))
+(defvar backup-dir (concat "~/.emacs.d/backup-emacs/"))
 (setq backup-directory-alist (list (cons "." backup-dir)))
-
