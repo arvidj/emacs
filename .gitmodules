@@ -79,3 +79,6 @@
 [submodule "plugins/smex"]
 	path = plugins/smex
 	url = http://github.com/nonsequitur/smex.git
+[submodule "plugins/drag-stuff"]
+	path = plugins/drag-stuff
+	url = http://github.com/rejeep/drag-stuff.git
