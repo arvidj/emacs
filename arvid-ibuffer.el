@@ -7,15 +7,21 @@
                ("emacs"
                 (filename . ".emacs.d/"))
                ("goodiebag-live"
-                (filename . "remote/live/goodiebag"))
+				(or (filename . "remote/live/goodiebag")
+					(filename . "remote/live/gc_gb")))
                ("goodiebag-dev"
                 (filename . "remote/dev/goodiebag"))
+               ("goodiebag-local"
+                (or (filename . "local/gc_gb")
+					(filename . "local/goodiebag")))
                ("framtidensmat-live"
                 (filename . "remote/live/framtidensmat"))
                ("framtidensmat-dev"
                 (filename . "remote/dev/framtidensmat"))
                ("wwoof-dev"
                 (filename . "remote/dev/wwoof_community"))
+			   ("wwoof-live"
+                (filename . "remote/live/wwoof_community"))
 			   ("core-arvid-local"
                 (filename . "public_html/core-arvid-local"))
 			   ("core-arvid-local"
