@@ -82,3 +82,9 @@
 [submodule "plugins/drag-stuff"]
 	path = plugins/drag-stuff
 	url = http://github.com/rejeep/drag-stuff.git
+[submodule "plugins/anything"]
+	path = plugins/anything
+	url = http://github.com/emacsmirror/anything.git
+[submodule "plugins/anything-config"]
+	path = plugins/anything-config
+	url = git://repo.or.cz/anything-config.git

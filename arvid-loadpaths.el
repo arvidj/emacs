@@ -26,5 +26,7 @@
 (add-to-list 'load-path "~/.emacs.d/plugins/color-theme-zenburn")
 (add-to-list 'load-path "~/.emacs.d/plugins/smex")
 (add-to-list 'load-path "~/.emacs.d/plugins/drag-stuff")
+(add-to-list 'load-path "~/.emacs.d/plugins/anything")
+(add-to-list 'load-path "~/.emacs.d/plugins/anything-config")
 
 (provide 'arvid-loadpaths)

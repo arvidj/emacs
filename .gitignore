@@ -6,3 +6,4 @@ plugins/dsvn
 /geben
 session.*
 /arvid-sql-gluteus.el
+/backup-emacs
