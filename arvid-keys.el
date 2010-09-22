@@ -88,3 +88,8 @@
 
 ;; Bindings for rejeep-comment
 (global-set-key (kbd "C-7") 'comment-or-uncomment-current-line-or-region)
+
+;; Bindings for controlling text scale
+(global-set-key (kbd "C-M-+") 'text-scale-increase)
+(global-set-key (kbd "C-M--") 'text-scale-decrease)
+(global-set-key (kbd "C-M-0") (lambda () (interactive) (text-scale-increase 0)))

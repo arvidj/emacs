@@ -82,3 +82,6 @@
 [submodule "plugins/anything-config"]
 	path = plugins/anything-config
 	url = git://repo.or.cz/anything-config.git
+[submodule "plugins/wanderlust"]
+	path = plugins/wanderlust
+	url = http://github.com/emacsmirror/wanderlust.git
