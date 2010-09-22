@@ -58,6 +58,9 @@
 (wrap-region-mode t)
 (require 'vimperator-mode)
 (require 'arvid-misc)
+(require 'arvid-smex)
+(require 'arvid-diff)
+(require 'arvid-drag-stuff)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Encodings

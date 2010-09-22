@@ -2,7 +2,7 @@
 (require 'yasnippet)
 
 (yas/initialize)
-;; (yas/load-directory "~/.emacs.d/plugins/yasnippet/snippets")
-(yas/load-directory "~/.emacs.d/snippets")
+(setq yas/root-directory "~/.emacs.d/snippets")
+(yas/load-directory yas/root-directory)
 
 (provide 'arvid-yasnippet)

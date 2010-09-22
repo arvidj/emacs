@@ -1,8 +1,22 @@
 ;; timeclock
 (require 'timeclock-x)
 
+;; TODO:
+;;  * Log time to basecamp?
+;;  * A way of distinguishing support projects
+;;  * Suggest project by checking timelog
+;;  * Update mode-line when rereading log 
+
+
+(defmacro make-timeclock-out (reason)
+  `(lambda () (interactive) (timeclock-out nil ,reason)))
+
 (global-set-key (kbd "C-c ti") 'timeclock-in)
-(global-set-key (kbd "C-c to") 'timeclock-out)
+(global-set-key (kbd "C-c too") 'timeclock-out)
+(global-set-key (kbd "C-c tof") (make-timeclock-out "fika"))
+(global-set-key (kbd "C-c tol") (make-timeclock-out "lunch"))
+(global-set-key (kbd "C-c toh") (make-timeclock-out "hem"))
+
 (global-set-key (kbd "C-c tc") 'timeclock-change)
 (global-set-key (kbd "C-c tr") 'timeclock-reread-log)
 (global-set-key (kbd "C-c tu") 'timeclock-update-modeline)

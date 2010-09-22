@@ -27,6 +27,7 @@
  '(jde-jdk-registry (quote (("1.6.0" . "/usr/lib/jvm/java-6-sun/"))))
  '(jira2-wsdl-descriptor-url "http://bugs.gluteus.se:8080/rpc/soap/jirasoapservice-v2?wsdl")
  '(js-enabled-frameworks (quote (javascript prototype)))
+ '(js-flat-functions t)
  '(js-indent-level 4)
  '(js2-auto-indent-flag t)
  '(js2-basic-offset 4)
@@ -51,7 +52,9 @@
  '(svn-status-default-diff-arguments (quote ("-x --ignore-eol-style" "-x -w")))
  '(tab-stop-list (quote (4 8 12 16 20 24 28 32 36 48 56 64 \.\.\.)))
  '(tab-width 4)
- '(timeclock-file "~/Dropbox/gluteus/timelogs/.timelog"))
+ '(timeclock-file "~/Dropbox/gluteus/timelogs/.timelog")
+ '(vc-handled-backends nil)
+ '(yas/prompt-functions (quote (yas/ido-prompt yas/no-prompt))))
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
