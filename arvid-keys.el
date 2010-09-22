@@ -93,3 +93,9 @@
 (global-set-key (kbd "C-M-+") 'text-scale-increase)
 (global-set-key (kbd "C-M--") 'text-scale-decrease)
 (global-set-key (kbd "C-M-0") (lambda () (interactive) (text-scale-increase 0)))
+
+;; Append / prepend to lines
+(global-set-key (kbd "C-c n") 'append-to-lines)
+(global-set-key (kbd "C-c j") 'prepend-to-lines)
+
+
