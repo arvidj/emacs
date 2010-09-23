@@ -33,7 +33,26 @@
   (c-toggle-electric-state 1)
 
   ;; Set fill width to 80 columns
-  (setq fill-column 80))
+  (setq fill-column 80)
+
+  ;; Try to make auto-pair + electric mode work together.
+  ;; (setq autopair-handle-action-fns '(my-test-handler))
+
+  (define-key c-mode-map (kbd "M-a") nil)
+  
+  (define-key c-mode-map (kbd "ä") (lambda () (interactive (insert "$"))))
+  (define-key c-mode-map (kbd "ö") (lambda () (interactive (insert ";"))))
+  (define-key c-mode-map (kbd ";") (lambda () (interactive) (message "Idiot!")))
+  (define-key c-mode-map (kbd "$") (lambda () (interactive) (message "Idiot!")))
+  (define-key c-mode-map (kbd "M-ä") (lambda () (interactive (insert "ä")))))
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
+
+;; (defun my-test-handler (a b c)
+;;   (autopair-default-handle-action a b c)
+;;   (open-line 1)
+;;   (next-line)
+;;   (indent-according-to-mode)
+;;   (previous-line)
+;;   (indent-according-to-mode))
 
 (provide 'arvid-c-mode)
