@@ -119,13 +119,13 @@ Uses `current-date-time-format' for the formatting the date/time."
        (insert "\n"))
 
 
-;; Todo: automatically make a comment
 (defun arvid-add ()
   "Insert a comment with my name and date, for creating a comment about modifications"
   (interactive)
   (insert "Arvid add ")
   (insert-current-date)
-  (insert ":\n"))
+  (insert ": ")
+  (comment-region (line-beginning-position) (line-end-position)))
 
 (defun insert-current-date () 
   "Insert the current date into the current buffer."
