@@ -88,3 +88,21 @@
 
 ;; Bindings for rejeep-comment
 (global-set-key (kbd "C-7") 'comment-or-uncomment-current-line-or-region)
+
+;; These keys are always a pain.
+(global-set-key (kbd "M-U") (lambda () (interactive) (insert "[")))
+(global-set-key (kbd "M-I") (lambda () (interactive) (insert "]")))
+(global-set-key (kbd "M-J") (lambda () (interactive) (insert "(")))
+(global-set-key (kbd "M-K") (lambda () (interactive) (insert ")")))
+(global-set-key (kbd "M-M") (lambda () (interactive) (insert "{")))
+(global-set-key (kbd "M-;") (lambda () (interactive) (insert "}")))
+
+(global-set-key (kbd "<XF86Calculator>") 'calc)
+
+(global-set-key (kbd "<f5>") 'whitespace-mode)
+
+(global-set-key (kbd "M-Q") 'unfill-paragraph)
+
+;; Goal columns is bugging me out
+(global-unset-key (kbd "C-x C-n"))
+
