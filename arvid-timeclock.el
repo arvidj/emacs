@@ -4,9 +4,10 @@
 ;; TODO:
 ;;  * Log time to basecamp?
 ;;  * A way of distinguishing support projects
-;;  * Suggest project by checking timelog
-;;  * Update mode-line when rereading log 
-
+;;  * Suggest project by checking timelog, also use ido for selection
+;;  * Update mode-line when rereading log (defadvice the reread-log function?)
+;;  * Generate report. Check the report-generation already there.
+;;  * When using timeclock-change, one is prompted for comments twice.
 
 (defmacro make-timeclock-out (reason)
   `(lambda () (interactive) (timeclock-out nil ,reason)))
