@@ -19,8 +19,9 @@
 	(txt (delete-and-extract-region (region-beginning) (region-end))))
     (insert (replace-regexp-in-string re to txt))))
 
-;; For searching jquery documentation
-(setq jquery-search-url "http://www.google.com/search?hl=en&aq=f&aqi=&oq=&q=site%3Aapi.jquery.com+jquery+method+")
+;;; For searching jquery documentation via jqapi
+(setq jquery-search-url "http://jqapi.com/#p=")
+
 (defun jquery-search-documentation ()
   "Search PHP documentation for the word at point."
   (interactive)
