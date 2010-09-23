@@ -56,6 +56,8 @@
 (require 'arvid-smex)
 (require 'arvid-diff)
 (require 'arvid-drag-stuff)
+(require 'arvid-anything)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Encodings
