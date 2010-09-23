@@ -17,6 +17,7 @@
 (global-set-key (kbd "C-c tof") (make-timeclock-out "fika"))
 (global-set-key (kbd "C-c tol") (make-timeclock-out "lunch"))
 (global-set-key (kbd "C-c toh") (make-timeclock-out "hem"))
+(global-set-key (kbd "C-c top") (make-timeclock-out "paus"))
 
 (global-set-key (kbd "C-c tc") 'timeclock-change)
 (global-set-key (kbd "C-c tr") 'timeclock-reread-log)
