@@ -6,6 +6,20 @@
 (autoload 'js-mode "js" nil t)
 (add-hook 'js-mode-hook 'my-js-mode-hook)
 
+(defun insert-dollar-or-jquery ()
+  "If transient-mark is active, wrap the current region in $(
+... ), otherwise insert $."
+  (interactive)
+  (if mark-active
+	  (save-excursion
+		(let ((end (max (region-end) (region-beginning)))
+			  (beginning (min (region-end) (region-beginning))))
+		  (goto-char end)
+		  (insert ")")
+		  (goto-char beginning)
+		  (insert "$(")))
+	(insert "$")))
+
 (defun my-js-mode-hook () 
   (local-set-key (kbd "C-c C-j") 'jquery-search-documentation)
   (local-set-key (kbd "RET") 'newline-and-indent)
