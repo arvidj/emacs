@@ -12,4 +12,4 @@
 	(define-key sgml-mode-map (kbd "RET") 'newline-and-indent)
 	(zencoding-mode))
 
-(provide 'arvid-sgml-mode)
+(provide 'arvid-sgml)

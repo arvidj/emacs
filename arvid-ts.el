@@ -8,4 +8,4 @@
   (c-subword-mode)
   (define-key ts-mode-map (kbd "C-j") 'join-line))
 
-(provide 'arvid-ts-mode)
+(provide 'arvid-ts)

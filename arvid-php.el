@@ -33,4 +33,4 @@
 (add-to-list 'load-path "~/.emacs.d/plugins/geben")
 (autoload 'geben "geben" "PHP Debugger for Emacs" t)
 
-(provide 'arvid-php-mode)
+(provide 'arvid-php)

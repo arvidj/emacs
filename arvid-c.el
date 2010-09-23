@@ -55,4 +55,4 @@
 ;;   (previous-line)
 ;;   (indent-according-to-mode))
 
-(provide 'arvid-c-mode)
+(provide 'arvid-c)
