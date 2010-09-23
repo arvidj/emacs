@@ -1,21 +1,36 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Help functions
 
-(defun prepend-to-lines (with) 
-  (interactive  "MPrepend: ")
-  (to-line-helper "^" with))
+;; Prepending / appending to lines 
+(defun prepend-to-lines (arg prefix) 
+"Prepend prefix to all lines in region. If a negative arg is
+given, prefix is placed after whitespace in beginning of line."
+  (interactive  "p\nMPrepend: ")
+  (if (< arg 0)
+	  (to-line-helper "^\\([[:space:]]*\\)" (concat "\\1" prefix))
+	(to-line-helper "^" prefix)))
 
-(defun append-to-lines (with) 
-  (interactive  "MAppend: ")
-  (to-line-helper "$" with))
+(defun append-to-lines (arg suffix) 
+  "Append suffix to all lines in region. Suffix is placed before
+whitespace at end of line, unless negative arg is given."
+  (interactive  "p\nMAppend: ")
+  (if (< arg 0)
+	  (to-line-helper "$" suffix)
+	(to-line-helper "[[:space:]]*$" suffix)))
 
 (defun to-line-helper (what with) 
   (if mark-active
-      (replace-regexp what with nil (region-beginning) (region-end))
+	  (save-excursion
+		(let ((reg-beg (region-beginning))
+			  (reg-end (region-end)))
+		  (replace-regexp 
+		   what with nil 
+		   (progn (goto-char reg-beg) (line-beginning-position)) 
+		   (progn (goto-char reg-end) (line-end-position)))))
     (message "Mark not active")))
 
 (defun nuke-all-buffers () 
-  "Kill all buffers, leaving *scractch* only."
+  "Kill all buffers, leaving *scratch* only."
   (interactive)
   (mapcar (lambda (x) (kill-buffer x)) (buffer-list)) 
   (delete-other-windows))

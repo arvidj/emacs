@@ -7,3 +7,4 @@ plugins/dsvn
 session.*
 /arvid-sql-gluteus.el
 /backup-emacs
+/autosave-emacs
