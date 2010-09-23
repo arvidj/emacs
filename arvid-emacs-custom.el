@@ -54,7 +54,8 @@
  '(tab-width 4)
  '(timeclock-file "~/Dropbox/gluteus/timelogs/.timelog")
  '(vc-handled-backends nil)
- '(yas/prompt-functions (quote (yas/ido-prompt yas/no-prompt))))
+ '(yas/prompt-functions (quote (yas/ido-prompt yas/no-prompt)))
+ '(smerge-command-prefix "\C-cm"))
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
@@ -64,4 +65,5 @@
  '(font-lock-warning-face ((t (:foreground "red"))))
  '(hl-line ((t (:inherit highlight :background "#022"))))
  '(org-level-2 ((t (:inherit outline-8))))
- '(org-level-4 ((t (:inherit outline-6)))))
+ '(org-level-4 ((t (:inherit outline-6))))
+ '(smerge-refined-change ((t (:background "blue")))))
