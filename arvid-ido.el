@@ -26,4 +26,6 @@
     (interactive)
     (ido-initiate-auto-merge (current-buffer))))
 
+(global-set-key (kbd "C-x C-b") 'ido-switch-buffer)
+
 (provide 'arvid-ido)
