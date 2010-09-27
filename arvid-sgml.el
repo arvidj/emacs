@@ -10,6 +10,8 @@
 (add-hook 'sgml-mode-hook 'my-sgml-mode-hook)
 (defun my-sgml-mode-hook () 
 	(define-key sgml-mode-map (kbd "RET") 'newline-and-indent)
+	(define-key sgml-mode-map (kbd "C-M-p") 'sgml-skip-tag-backward)
+	(define-key sgml-mode-map (kbd "C-M-n") 'sgml-skip-tag-forward)
 	(zencoding-mode))
 
 (provide 'arvid-sgml)
