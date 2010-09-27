@@ -6,14 +6,17 @@
                 (mode . org-mode))
                ("emacs"
                 (filename . ".emacs.d/"))
-               ("goodiebag-live"
+               
+			   ;; Various typo projects
+			   ("goodiebag-live"
 				(or (filename . "remote/live/goodiebag")
 					(filename . "remote/live/gc_gb")))
                ("goodiebag-dev"
                 (filename . "remote/dev/goodiebag"))
                ("goodiebag-local"
                 (or (filename . "local/gc_gb")
-					(filename . "local/goodiebag")))
+					(filename . "local/goodiebag")
+					(filename . "public_html/goodiebag")))
                ("framtidensmat-live"
                 (filename . "remote/live/framtidensmat"))
                ("framtidensmat-dev"
@@ -22,10 +25,24 @@
                 (filename . "remote/dev/wwoof_community"))
 			   ("wwoof-live"
                 (filename . "remote/live/wwoof_community"))
+			   ("quinyx"
+                (filename . "remote/dev/quinyx/"))
+
+			   ("core-live"
+                (filename . "remote/live/core-live/"))
+			   
+			   ;; Local cure trunk
 			   ("core-arvid-local"
-                (filename . "public_html/core-arvid-local"))
-			   ("core-arvid-local"
-                (filename . "public_html/core-magenta-2.0-git"))
+                (or (filename . "public_html/core-arvid-local")
+					(filename . "local/core-arvid-local")))
+
+			   ;; Local magenta 2.0 development
+			   ("ssfe"
+                (or (filename . "public_html/core-magenta-2.0-git")
+					(filename . "local/gc_system")
+					(filename . "local/core-magenta-2.0-git")))
+			   
+			   
 			   ("magit"
                 (name . "^\\*magit"))
 			   ("dired"
