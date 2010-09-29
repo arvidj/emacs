@@ -9,6 +9,14 @@
 ;;  * Generate report. Check the report-generation already there.
 ;;  * When using timeclock-change, one is prompted for comments twice.
 
+(defun arvid-timeclock-ask-for-reason ()
+  "Ask the user for the reason they are clocking out."
+  (let ((minutes (ceiling (/ (timeclock-last-period) 60))))
+	(concat (timeclock-completing-read
+	 "Reason for clocking out: " 'timeclock-reason-history)
+			" " (number-to-string minutes))))
+(setq timeclock-get-reason-function 'arvid-timeclock-ask-for-reason)
+
 (defmacro make-timeclock-out (reason)
   `(lambda () (interactive) (timeclock-out nil ,reason)))
 
