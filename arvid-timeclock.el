@@ -9,16 +9,29 @@
 ;;  * Generate report. Check the report-generation already there.
 ;;  * When using timeclock-change, one is prompted for comments twice.
 
-(defun arvid-timeclock-ask-for-reason ()
-  "Ask the user for the reason they are clocking out."
-  (let ((minutes (ceiling (/ (timeclock-last-period) 60))))
-	(concat (timeclock-completing-read
-	 "Reason for clocking out: " 'timeclock-reason-history)
-			" " (number-to-string minutes))))
-(setq timeclock-get-reason-function 'arvid-timeclock-ask-for-reason)
+(defun arvid-timeclock-out (&optional arg reason find-reason)
+  "Clock out like normal but add minutes spent to the end of the
+log-line."
+  (interactive "P")
+  (or timeclock-last-event
+	  (error "You haven't clocked in!"))
+  (if (equal (downcase (car timeclock-last-event)) "o")
+	  (error "You've already clocked out!")
+	(timeclock-log
+	 (if arg "O" "o")
+	 (concat (or reason
+				 (and timeclock-get-reason-function
+					  (or find-reason (interactive-p))
+					  (funcall timeclock-get-reason-function)))
+			 " "
+			 (number-to-string
+			  (ceiling (/ (timeclock-last-period) 60)))))
+	(run-hooks 'timeclock-out-hook)
+	(if arg
+		(run-hooks 'timeclock-done-hook))))
 
 (defmacro make-timeclock-out (reason)
-  `(lambda () (interactive) (timeclock-out nil ,reason)))
+  `(lambda () (interactive) (arvid-timeclock-out nil ,reason)))
 
 (global-set-key (kbd "C-c ti") 'timeclock-in)
 (global-set-key (kbd "C-c too") 'timeclock-out)
