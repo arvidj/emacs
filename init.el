@@ -6,7 +6,7 @@
 (load "arvid-backup-autosave.el")
 
 ;; For opening recently opened files
-(load "arvid-recentf.el")
+(require 'arvid-recentf)
 
 ;; Programming, etc
 (require 'arvid-haskell)
@@ -23,9 +23,9 @@
 (require 'arvid-php)
 (require 'arvid-sgml)
 (require 'arvid-ts)
-
 (load "arvid-programming.el")
 (load "arvid-sh.el")
+(require 'arvid-etest)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Keybindings

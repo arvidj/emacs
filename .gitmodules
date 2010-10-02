@@ -91,3 +91,6 @@
 [submodule "plugins/wanderlust"]
 	path = plugins/wanderlust
 	url = http://github.com/emacsmirror/wanderlust.git
+[submodule "plugins/etest"]
+	path = plugins/etest
+	url = git://github.com/philjackson/etest.git
