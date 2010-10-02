@@ -93,12 +93,12 @@ line."
 
 ;; http://geosoft.no/development/emacs.html
 (defun scroll-down-keep-cursor ()
-   ;; Scroll the text one line down while keeping the cursor
+   "Scroll the text one line down while keeping the cursor."
    (interactive)
    (scroll-down 4))
 
 (defun scroll-up-keep-cursor ()
-   ;; Scroll the text one line up while keeping the cursor
+   "Scroll the text one line up while keeping the cursor."
    (interactive)
    (scroll-up 4)) 
 
