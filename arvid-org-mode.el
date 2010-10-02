@@ -4,7 +4,11 @@
 
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
-;; TODO: Bind ctrl-j to join-line in org-mode.
+;; Set C-j to join-line in org-mode
+(add-hook 'org-mode-hook
+		  (lambda ()
+			(define-key org-mode-map (kbd "C-j") 'join-line)))
+
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
