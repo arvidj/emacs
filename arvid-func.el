@@ -77,16 +77,18 @@ whitespace at end of line, unless negative arg is given."
 
 ;; http://stackoverflow.com/questions/145291/smart-home-in-emacs
 (defun smart-beginning-of-line ()
-  "Move point to first non-whitespace character or beginning-of-line.
+  "Move point to first non-whitespace character or goal-column, or beginning-of-line.
 
 Move point to the first non-whitespace character on this line.
 If point was already at that position, move point to beginning of
 line."
   (interactive)
   (let ((oldpos (point)))
-    (back-to-indentation)
-    (and (= oldpos (point))
-         (beginning-of-line))))
+	(if goal-column
+        (move-to-column goal-column)
+	  (back-to-indentation))
+	(and (= oldpos (point))
+		 (beginning-of-line))))
 
 
 ;; http://geosoft.no/development/emacs.html
