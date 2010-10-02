@@ -1,5 +1,8 @@
 (require 'css-mode)
 
+;; TODO
+;;; Function for collapsing / expanding rules written by Fredrik
+
 (add-hook 'css-mode-hook 'arvid-css-mode-hook)
 (defun arvid-css-mode-hook ()
   (define-key css-mode-map (kbd "RET") 'newline-and-indent)

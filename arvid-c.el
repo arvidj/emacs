@@ -1,3 +1,13 @@
+;; TODO: A way of collapsing / expanding function calls. Ie, transform:
+;;	  fun(a, b, c)
+;;	 into
+;;	  fun(
+;;		 a,
+;;		 b,
+;;		 c
+;;	  )
+;; For fun and profit
+
 (add-hook 'c-mode-hook
 	  '(lambda () (local-set-key (kbd "RET") 'newline-and-indent)))
 
