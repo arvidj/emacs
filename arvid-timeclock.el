@@ -9,7 +9,7 @@
 ;;  * Generate report. Check the report-generation already there.
 ;;  * When using timeclock-change, one is prompted for comments twice.
 
-(defun arvid-timeclock-out (&optional arg reason find-reason)
+(defun timeclock-out (&optional arg reason find-reason)
   "Clock out like normal but add minutes spent to the end of the
 log-line."
   (interactive "P")
@@ -23,7 +23,7 @@ log-line."
 				 (and timeclock-get-reason-function
 					  (or find-reason (interactive-p))
 					  (funcall timeclock-get-reason-function)))
-			 " "
+			 " | Minutes spent: "
 			 (number-to-string
 			  (ceiling (/ (timeclock-last-period) 60)))))
 	(run-hooks 'timeclock-out-hook)
@@ -31,7 +31,7 @@ log-line."
 		(run-hooks 'timeclock-done-hook))))
 
 (defmacro make-timeclock-out (reason)
-  `(lambda () (interactive) (arvid-timeclock-out nil ,reason)))
+  `(lambda () (interactive) (timeclock-out nil ,reason)))
 
 (global-set-key (kbd "C-c ti") 'timeclock-in)
 (global-set-key (kbd "C-c too") 'timeclock-out)
