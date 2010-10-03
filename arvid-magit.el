@@ -1,5 +1,9 @@
 (require 'magit)
 
+;; TODO
+;;; Modify magit-visit-item so that (magit-visit-item -1) visits item
+;;; in other window.
+
 (add-hook 'magit-mode-hook
           (lambda()
             (set-face-foreground 'magit-diff-add "green3")

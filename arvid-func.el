@@ -40,7 +40,7 @@ whitespace at end of line, unless negative arg is given."
   (let ((process-list ())) ad-do-it))
 
 (defadvice zap-to-char (after my-zap-to-char-advice (arg char) activate)
-  "Kill up to the ARG'th occurence of CHAR, and leave CHAR.
+  "Kill up to the ARG'th occurrence of CHAR, and leave CHAR.
   The CHAR is replaced and the point is put before CHAR."
   (insert char)
   (forward-char -1))
@@ -74,6 +74,8 @@ whitespace at end of line, unless negative arg is given."
      (ido-everywhere -1)
      ,@body
      (ido-everywhere 1)))
+
+;; Movement 
 
 ;; http://stackoverflow.com/questions/145291/smart-home-in-emacs
 (defun smart-beginning-of-line ()
@@ -135,6 +137,7 @@ Uses `current-date-time-format' for the formatting the date/time."
        (insert (format-time-string current-time-format (current-time)))
        (insert "\n"))
 
+;; Various
 
 (defun arvid-add ()
   "Insert a comment with my name and date, for creating a comment about modifications"

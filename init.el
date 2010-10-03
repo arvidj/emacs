@@ -1,3 +1,7 @@
+;; TODO: typo3-clear-cache should be able to figure out which cache to
+;; clear by checking the current filename. It would also be nice to
+;; have an option for only clearing configuration.
+
 (add-to-list 'load-path "~/.emacs.d/")
 (require 'arvid-loadpaths)
 

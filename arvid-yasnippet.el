@@ -1,4 +1,7 @@
-;; yasnippet
+;; TODO: smarter new-snippet
+;;;  After creating a snippet, it should now what to save it as, and
+;;;  where, using mode-name and key of the snippet.
+
 (require 'yasnippet)
 
 (yas/initialize)

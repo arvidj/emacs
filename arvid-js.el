@@ -2,13 +2,23 @@
 ;; http://www.nongnu.org/espresso/
 ;; http://github.com/technomancy/emacs-starter-kit/commit/a43b4a669822f7649ec830a25ae3a256b086655a
 
+;; TODO: fix indentation for multiple var-declarations such as
+;;    var a,
+;;        b;
+;;   is right now indented as
+;;    var a,
+;;    b;
+;;   which sucks
+;; TODO: fix imenu support for how I declare modules.
+;; TODO: Send chrome javascript errors to emacs. How to hook into
+;;       console?
+
 (add-to-list 'auto-mode-alist '("\\.js\\(on\\)?\\'" . js-mode))
 (autoload 'js-mode "js" nil t)
 (add-hook 'js-mode-hook 'my-js-mode-hook)
 
 (defun insert-dollar-or-jquery ()
-  "If transient-mark is active, wrap the current region in $(
-... ), otherwise insert $."
+  "Wrap transient region if any in $(...), otherwise insert $."
   (interactive)
   (if mark-active
 	  (save-excursion

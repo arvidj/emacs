@@ -1,3 +1,4 @@
+;; TODO: Create a chrome extension that sends xdebug backtraces to emacs 
 
 ;; Define function documentation function
 (setq typo3-search-url "http://typo3.org/fileadmin/typo3api-4.2.6/search.php?query=")
