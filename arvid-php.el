@@ -20,7 +20,7 @@
   (define-key c-mode-map [remap c-mark-function] 'mark-defun)
   (define-key c-mode-map [remap c-fill-paragraph] 'fill-paragraph)
   (define-key c-mode-map (kbd "ä") (lambda () (interactive (insert "$"))))
-  (define-key c-mode-map (kbd "$") (lambda () (interactive) (message "Idiot!")))
+  (define-key c-mode-map (kbd "$") 'report-intelligence-level)
   (define-key c-mode-map (kbd "M-ä") (lambda () (interactive (insert "ä"))))
   
   ;; I prefer $ not being part of a word. That way, c-backward-subword

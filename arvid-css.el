@@ -20,7 +20,7 @@
 (eval-after-load 'css-mode
   '(progn
 	 (define-key css-mode-map (kbd "ö") (lambda () (interactive (insert ";"))))
-	 (define-key css-mode-map (kbd ";") (lambda () (interactive) (message "Idiot!")))
+	 (define-key css-mode-map (kbd ";") 'report-intelligence-level)
 	 (define-key css-mode-map "}" 'css-electric-brace)
 	 (font-lock-add-keywords 'css-mode
                              '(("#[a-fA-F0-9][a-fA-F0-9][a-fA-F0-9]\\([a-fA-F0-9][a-fA-F0-9][a-fA-F0-9]\\)?" . font-lock-reference-face)

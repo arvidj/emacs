@@ -214,3 +214,9 @@ there's a region, all lines that region covers will be duplicated."
     (erase-buffer))
    ;; Send other commands to the default handler.
    (t (comint-simple-send proc command))))
+
+;; User interaction
+(defun report-intelligence-level () 
+  "Reports the current users level of intelligence in an user friendly manner."
+  (interactive)
+  (message "Idiot!"))

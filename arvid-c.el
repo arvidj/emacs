@@ -52,8 +52,8 @@
   
   (define-key c-mode-map (kbd "ä") (lambda () (interactive (insert "$"))))
   (define-key c-mode-map (kbd "ö") (lambda () (interactive (insert ";"))))
-  (define-key c-mode-map (kbd ";") (lambda () (interactive) (message "Idiot!")))
-  (define-key c-mode-map (kbd "$") (lambda () (interactive) (message "Idiot!")))
+  (define-key c-mode-map (kbd ";") 'report-intelligence-level)
+  (define-key c-mode-map (kbd "$") 'report-intelligence-level)
   (define-key c-mode-map (kbd "M-ä") (lambda () (interactive (insert "ä")))))
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
