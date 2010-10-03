@@ -1,6 +1,23 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Help functions
 
+(defun ninjaword-word-at-point () 
+  "Looks up word in point using Ninjawords."
+  (interactive)
+  (browse-url (concat
+			   "http://ninjawords.com/?q="
+			   (downcase (current-word t)))))
+
+(defun quick-wikipedia-summary-for-word-at-point () 
+  "Opens the a quick Wikipedia summary of the word at point in a new window."
+  (interactive)
+  ;; dig +short txt <keyword>.wp.dg.cx
+  (let ((word (replace-regexp-in-string
+			   "^[,\.\?[:space:]]*\\(.*?\\)[,\.\?[:space:]]*$"
+			   "\\1"
+			   (current-word t))))
+	(shell-command (concat "dig +short txt " word ".wp.dg.cx"))))
+
 ;; Prepending / appending to lines 
 (defun prepend-to-lines (arg prefix) 
 "Prepend prefix to all lines in region. If a negative arg is
