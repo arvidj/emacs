@@ -1,3 +1,6 @@
+;; TODO: It would be nice to have a mode for trying out TS.
+
+
 ;;; TypoScript-mode
 (autoload 'ts-mode "ts-mode")
 (add-to-list 'auto-mode-alist '("\\.ts$" . ts-mode))

@@ -1,6 +1,23 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Help functions
 
+(defun ninjaword-word-at-point () 
+  "Looks up word in point using Ninjawords."
+  (interactive)
+  (browse-url (concat
+			   "http://ninjawords.com/?q="
+			   (downcase (current-word t)))))
+
+(defun quick-wikipedia-summary-for-word-at-point () 
+  "Opens the a quick Wikipedia summary of the word at point in a new window."
+  (interactive)
+  ;; dig +short txt <keyword>.wp.dg.cx
+  (let ((word (replace-regexp-in-string
+			   "^[,\.\?[:space:]]*\\(.*?\\)[,\.\?[:space:]]*$"
+			   "\\1"
+			   (current-word t))))
+	(shell-command (concat "dig +short txt " word ".wp.dg.cx"))))
+
 ;; Prepending / appending to lines 
 (defun prepend-to-lines (arg prefix) 
 "Prepend prefix to all lines in region. If a negative arg is
@@ -50,7 +67,7 @@ whitespace at end of line, unless negative arg is given."
   (let ((process-list ())) ad-do-it))
 
 (defadvice zap-to-char (after my-zap-to-char-advice (arg char) activate)
-  "Kill up to the ARG'th occurence of CHAR, and leave CHAR.
+  "Kill up to the ARG'th occurrence of CHAR, and leave CHAR.
   The CHAR is replaced and the point is put before CHAR."
   (insert char)
   (forward-char -1))
@@ -86,28 +103,32 @@ whitespace at end of line, unless negative arg is given."
      ,@body
      (ido-everywhere 1)))
 
+;; Movement 
+
 ;; http://stackoverflow.com/questions/145291/smart-home-in-emacs
 (defun smart-beginning-of-line ()
-  "Move point to first non-whitespace character or beginning-of-line.
+  "Move point to first non-whitespace character or goal-column, or beginning-of-line.
 
 Move point to the first non-whitespace character on this line.
 If point was already at that position, move point to beginning of
 line."
   (interactive)
   (let ((oldpos (point)))
-    (back-to-indentation)
-    (and (= oldpos (point))
-         (beginning-of-line))))
+	(if goal-column
+        (move-to-column goal-column)
+	  (back-to-indentation))
+	(and (= oldpos (point))
+		 (beginning-of-line))))
 
 
 ;; http://geosoft.no/development/emacs.html
 (defun scroll-down-keep-cursor ()
-   ;; Scroll the text one line down while keeping the cursor
+   "Scroll the text one line down while keeping the cursor."
    (interactive)
    (scroll-down 4))
 
 (defun scroll-up-keep-cursor ()
-   ;; Scroll the text one line up while keeping the cursor
+   "Scroll the text one line up while keeping the cursor."
    (interactive)
    (scroll-up 4)) 
 
@@ -144,6 +165,7 @@ Uses `current-date-time-format' for the formatting the date/time."
        (insert (format-time-string current-time-format (current-time)))
        (insert "\n"))
 
+;; Various
 
 (defun arvid-add ()
   "Insert a comment with my name and date, for creating a comment about modifications"
@@ -220,3 +242,9 @@ there's a region, all lines that region covers will be duplicated."
     (erase-buffer))
    ;; Send other commands to the default handler.
    (t (comint-simple-send proc command))))
+
+;; User interaction
+(defun report-intelligence-level () 
+  "Reports the current users level of intelligence in an user friendly manner."
+  (interactive)
+  (message "Idiot!"))

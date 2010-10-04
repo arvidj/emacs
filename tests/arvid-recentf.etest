@@ -1,0 +1,13 @@
+(setq file-dir-list
+	  '("asdf"
+		"/home/arvid/foo/bar/zxcv"
+		"/home/arvid/foo/qwer"))
+
+(etest
+ (ok (string= (strip-prefix "foo/qwer" "foo" "~") "~/qwer"))
+ (ok (string= (strip-prefix "qwer" "foo" "~") "qwer"))
+ (ok (string= (strip-prefix "foo/qwer" "foo") "/qwer"))
+ (ok (equal (collapse-file-list file-dir-list)
+		 '("asdf"
+		   "~/foo/bar/zxcv"
+		   "~/foo/qwer"))))

@@ -29,5 +29,6 @@
 (add-to-list 'load-path "~/.emacs.d/plugins/anything")
 (add-to-list 'load-path "~/.emacs.d/plugins/anything-config")
 (add-to-list 'load-path "~/.emacs.d/plugins/iedit")
+(add-to-list 'load-path "~/.emacs.d/plugins/etest")
 
 (provide 'arvid-loadpaths)

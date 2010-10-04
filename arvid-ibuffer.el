@@ -64,6 +64,7 @@
 
 (define-key ibuffer-mode-map (kbd "TAB") 'ibuffer-toggle-filter-group)
 ;; TODO: in ibuffer, use ido to switch file but it should default to dir of buffer on point
+;;; I don't get what I mean here ;)
 ;; (define-key ibuffer-mode-map (kbd "C-x C-f") 'ido-find-file)
 (global-set-key (kbd "C-x B") 'ibuffer)
 (global-unset-key (kbd "C-x C-b"))

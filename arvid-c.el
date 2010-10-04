@@ -1,3 +1,13 @@
+;; TODO: A way of collapsing / expanding function calls. Ie, transform:
+;;	  fun(a, b, c)
+;;	 into
+;;	  fun(
+;;		 a,
+;;		 b,
+;;		 c
+;;	  )
+;; For fun and profit
+
 (add-hook 'c-mode-hook
 	  '(lambda () (local-set-key (kbd "RET") 'newline-and-indent)))
 
@@ -52,8 +62,8 @@
   
   (define-key c-mode-map (kbd "ä") (lambda () (interactive (insert "$"))))
   (define-key c-mode-map (kbd "ö") (lambda () (interactive (insert ";"))))
-  (define-key c-mode-map (kbd ";") (lambda () (interactive) (message "Idiot!")))
-  (define-key c-mode-map (kbd "$") (lambda () (interactive) (message "Idiot!")))
+  (define-key c-mode-map (kbd ";") 'report-intelligence-level)
+  (define-key c-mode-map (kbd "$") 'report-intelligence-level)
   (define-key c-mode-map (kbd "M-ä") (lambda () (interactive (insert "ä")))))
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
