@@ -14,7 +14,7 @@
  '(add-log-mailing-address "arvid@gluteus.se")
  '(c-basic-offset 8)
  '(comment-style (quote extra-line))
- '(diff-switches "-c -r")
+ '(diff-switches "-r -u")
  '(ediff-window-setup-function (quote ediff-setup-windows-plain))
  '(haskell-program-name "ghci -XExistentialQuantification")
  '(ido-default-buffer-method (quote selected-window))
