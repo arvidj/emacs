@@ -27,6 +27,9 @@
                 (filename . "remote/live/wwoof_community"))
 			   ("quinyx"
                 (filename . "remote/dev/quinyx/"))
+			   ("pulsteknik"
+                (filename . "remote/dev/pulsteknik/"))
+			   
 
 			   ("core-live"
                 (filename . "remote/live/core-live/"))
