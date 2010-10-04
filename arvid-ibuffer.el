@@ -31,7 +31,7 @@
 			   ("core-live"
                 (filename . "remote/live/core-live/"))
 			   
-			   ;; Local cure trunk
+			   ;; Local core trunk
 			   ("core-arvid-local"
                 (or (filename . "public_html/core-arvid-local")
 					(filename . "local/core-arvid-local")))
