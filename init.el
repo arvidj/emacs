@@ -66,6 +66,7 @@
 (require 'arvid-diff)
 (require 'arvid-drag-stuff)
 (require 'arvid-anything)
+(require 'arvid-shell)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;
