@@ -47,6 +47,7 @@
  '(php-manual-path "~/docs/php/php-manual-english")
  '(reb-re-syntax (quote string))
  '(sgml-basic-offset 4)
+ '(smerge-command-prefix "m")
  '(sql-mysql-options (quote ("-P 8888")))
  '(svn-log-edit-show-diff-for-commit t)
  '(svn-status-default-diff-arguments (quote ("-x --ignore-eol-style" "-x -w")))
@@ -54,8 +55,7 @@
  '(tab-width 4)
  '(timeclock-file "~/Dropbox/gluteus/timelogs/.timelog")
  '(vc-handled-backends nil)
- '(yas/prompt-functions (quote (yas/ido-prompt yas/no-prompt)))
- '(smerge-command-prefix "\C-cm"))
+ '(yas/prompt-functions (quote (yas/ido-prompt yas/no-prompt))))
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
