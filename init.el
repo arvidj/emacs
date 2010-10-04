@@ -30,6 +30,7 @@
 (load "arvid-programming.el")
 (load "arvid-sh.el")
 (require 'arvid-etest)
+(require 'arvid-ruby)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Keybindings
