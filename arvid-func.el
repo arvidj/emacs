@@ -45,7 +45,8 @@ whitespace at end of line, unless negative arg is given."
   (insert char)
   (forward-char -1))
 
-;; Inserting file names 
+;; Inserting file names
+;; TODO: with arg, ask also relative to what.
 (defun insert-relative-path (path) 
   (interactive "F")
   (insert (file-relative-name path)))

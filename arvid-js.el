@@ -1,3 +1,8 @@
+;; TOOD
+;;; A nice way of removing console.log statements.
+;;; Font lock for "that", make it keyword-ish
+
+
 ;;; Javascript
 ;; http://www.nongnu.org/espresso/
 ;; http://github.com/technomancy/emacs-starter-kit/commit/a43b4a669822f7649ec830a25ae3a256b086655a
@@ -6,6 +11,8 @@
 (autoload 'js-mode "js" nil t)
 (add-hook 'js-mode-hook 'my-js-mode-hook)
 
+
+;; TODO: if negative arg, wrap preceding word.
 (defun insert-dollar-or-jquery ()
   "If transient-mark is active, wrap the current region in $(
 ... ), otherwise insert $."

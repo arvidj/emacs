@@ -9,6 +9,9 @@
 ;;  * Generate report. Check the report-generation already there.
 ;;  * When using timeclock-change, one is prompted for comments twice.
 
+
+;; TODO: This is still not ideal, since the timeclock-change function calls
+;; timeclock-out instead of this one. Perhaps is should advice it, or 
 (defun arvid-timeclock-out (&optional arg reason find-reason)
   "Clock out like normal but add minutes spent to the end of the
 log-line."
