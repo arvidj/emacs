@@ -35,16 +35,26 @@ whitespace at end of line, unless negative arg is given."
 	  (to-line-helper "$" suffix)
 	(to-line-helper "[[:space:]]*$" suffix)))
 
-(defun to-line-helper (what with) 
+;; Replace what with with in n 
+(defun to-line-helper (pattern replacement) 
   (if mark-active
 	  (save-excursion
 		(let ((reg-beg (region-beginning))
 			  (reg-end (region-end)))
 		  (replace-regexp 
-		   what with nil 
+		   pattern replacement nil 
 		   (progn (goto-char reg-beg) (line-beginning-position)) 
 		   (progn (goto-char reg-end) (line-end-position)))))
     (message "Mark not active")))
+
+(defun wrap-lines (arg how)
+  (interactive "p\nMWrap: ")
+  (let ((re-replacement (replace-regexp-in-string "|" "\\\\1" (regexp-quote how))))
+	(message (regexp-quote how))
+	(message re-replacement)
+	(if (< arg 0)
+	  (to-line-helper  re-replacement)
+	(to-line-helper "^[[:space:]]*\\(.*?\\)[[:space:]]*$" re-replacement))))
 
 (defun nuke-all-buffers () 
   "Kill all buffers, leaving *scratch* only."
@@ -62,7 +72,8 @@ whitespace at end of line, unless negative arg is given."
   (insert char)
   (forward-char -1))
 
-;; Inserting file names 
+;; Inserting file names
+;; TODO: with arg, ask also relative to what.
 (defun insert-relative-path (path) 
   (interactive "F")
   (insert (file-relative-name path)))

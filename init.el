@@ -5,6 +5,10 @@
 (add-to-list 'load-path "~/.emacs.d/")
 (require 'arvid-loadpaths)
 
+;; TODO:
+;;;   Minor mode for calculating the width / height of selections. 
+
+
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Move backup and autosave files.
 (load "arvid-backup-autosave.el")

@@ -32,6 +32,16 @@
 
   ;; we like auto-newline, but not hungry-delete
   (c-toggle-auto-newline 1)
+  
+  ;; TODO: make this work with transposeWords, so that case is
+  ;; preserved in an intelligent fashion. That is, if point is at:
+  ;;   this.fooBar
+  ;;           ^
+  ;; and transpose words is used, the result shall become:
+  ;;   that.barFoo
+  ;; instead of
+  ;;   that.Barfoo
+  ;; which is useless.
   (c-subword-mode 1)
   ;; (auto-complete-mode 1)
 

@@ -8,7 +8,7 @@
 
 ;; Key binding for running tests.
 (add-hook 'emacs-lisp-mode-hook
-		  (lambda ()
-			(local-set-key (kbd "C-c et") 'etest-execute)))
+	  (lambda ()
+	    (local-set-key (kbd "C-c et") 'etest-execute)))
 
 (provide 'arvid-etest)

@@ -7,7 +7,7 @@
 (add-hook 'ts-mode-hook 'my-ts-mode-hook)
 
 (defun my-ts-mode-hook () 
-  (setq default-tab-width 2)
+  (setq tab-width 2)
   (c-subword-mode)
   (define-key ts-mode-map (kbd "C-j") 'join-line))
 

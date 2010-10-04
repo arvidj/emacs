@@ -1,9 +1,10 @@
-(add-to-list 'load-path "~/.emacs.d/plugins/iedit")
+;; TODO
+;;; If narrowed, disable auto-complete in iedit-mode.
+;;; Fix type face for iedit.
+;;; Make it more obvious when turned on, in order to avoid mistakes.
+
 (require 'iedit)
 
 (global-set-key (kbd "C-;") 'iedit-mode)
-
-;; Om iedit-mode startas, och narrow-buffer är igång, stäng av
-;; autocomplete.
 
 (provide 'arvid-iedit)

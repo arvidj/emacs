@@ -1,7 +1,8 @@
 (require 'css-mode)
 
-;; TODO
-;;; Function for collapsing / expanding rules written by Fredrik
+;; TODO:
+;;   Intelligent ordering and grouping of rules
+;;   Folding / unfolding Fredrik CSS.
 
 (add-hook 'css-mode-hook 'arvid-css-mode-hook)
 (defun arvid-css-mode-hook ()
