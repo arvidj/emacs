@@ -41,7 +41,10 @@
                 (or (filename . "public_html/core-magenta-2.0-git")
 					(filename . "local/gc_system")
 					(filename . "local/core-magenta-2.0-git")))
-			   
+
+			   ;; Some other projects
+			   ("nevarforget"
+                (or (filename . "dev/nevarforget")))
 			   
 			   ("magit"
                 (name . "^\\*magit"))
