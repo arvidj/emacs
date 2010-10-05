@@ -1,12 +1,7 @@
 (require 'dsvn)
 
-;; Fråga Johan: egentligen vill jag inte sätta dom till
-;; scroll*keep-cursor ... jag vill unsetta dom så dom får tillbaka
-;; sitt default, vilket ju är scroll*keep-cursor
-;; (add-hook 'diff-mode-hook
-;;           '(lambda () 
-;;              (define-key diff-mode-map (kbd "M-p") 'scroll-down-keep-cursor)
-;;              (define-key diff-mode-map (kbd "M-n") 'scroll-up-keep-cursor)))
+;; TODO: bind "g" to re-run diff in svn output
+;; TODO: make it nicer to apply / re-apply hunks. run update directly after applying hunk.
 
 (global-set-key (kbd "C-x g") 'svn-status)
 

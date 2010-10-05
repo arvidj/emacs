@@ -1,4 +1,7 @@
 ;; TODO: Create a chrome extension that sends xdebug backtraces to emacs 
+;; TODO: Check out http://www.emacswiki.org/emacs/php-completion.el
+;; TODO: Generate docstrings
+;; TODO: Fix fill-paragraph when writing doc-strings.
 
 ;; Define function documentation function
 (setq typo3-search-url "http://typo3.org/fileadmin/typo3api-4.2.6/search.php?query=")
