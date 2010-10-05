@@ -18,7 +18,7 @@
 	(define-key ac-complete-mode-map (kbd "RET") nil)
 	
 	(setq ac-sources '(ac-source-yasnippet ac-source-etags ac-source-words-in-buffer ac-source-abbrev ))
-	(setq ac-modes '( css-mode haskell-mode c-mode xml-mode html-mode php-mode emacs-lisp-mode js-mode ts-mode sql-mode ))
+	(setq ac-modes '( css-mode haskell-mode c-mode xml-mode html-mode php-mode emacs-lisp-mode js-mode ts-mode sql-mode ruby-mode ))
   (setq ac-auto-start 3)
   (setq ac-auto-start t))
 

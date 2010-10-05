@@ -34,6 +34,7 @@
 (load "arvid-programming.el")
 (load "arvid-sh.el")
 (require 'arvid-etest)
+(require 'arvid-ruby)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Keybindings
@@ -70,6 +71,7 @@
 (require 'arvid-diff)
 (require 'arvid-drag-stuff)
 (require 'arvid-anything)
+(require 'arvid-shell)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;

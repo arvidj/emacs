@@ -1,116 +1,97 @@
 ;;;;;;;;;;;;;;;;;;;;;;
-;; Knappar
+;; Key bindings
 
-
+;; Nice guide: http://xahlee.org/emacs/keyboard_shortcuts.html
 (defun global-set-keys (bindings)
   "Globally set all BINDINGS."
   (dolist (binding bindings)
     (let ((key (car binding)) (command (cadr binding)))
       (global-set-key (read-kbd-macro key) command))))
 
-(global-set-keys 
- '(("C-c d" duplicate-current-line-or-region)))
+(defun global-unset-keys (keys)
+  "Globally unset all BINDINGS."
+  (dolist (key keys)
+    (global-unset-key (read-kbd-macro key))))
 
-;; bra guide: http://xahlee.org/emacs/keyboard_shortcuts.html
+(global-unset-keys
+ '("C-Z"
+   "\C-x C-z"
+   ;; Goal columns is bugging me out
+   "C-x C-n"
+   "C-x C-b"
+   ))
 
-;;; snabb-knappar för viktiga config filer
-(global-set-key (kbd "<f10>")
-  '(lambda()(interactive)(find-file "~/org/ideer.org")))
-(global-set-key (kbd "<f12>") ; make F12 switch to .emacs; create if needed
-  '(lambda()(interactive)(find-file "~/.emacs.d/init.el"))) 
-(global-set-key (kbd "<f11>") ; make F11 switch to xmonad.hs; create if needed
-  '(lambda()(interactive)(find-file "~/.xmonad/xmonad.hs"))) 
+(global-set-keys
+ '(("C-c d" duplicate-current-line-or-region)
 
+   ;;; Quick access to some config files
+   ("<f10>" (lambda()(interactive)(find-file "~/org/ideer.org")))
+   ; make F11 switch to xmonad.hs; create if needed
+   ("<f11>" (lambda()(interactive)(find-file "~/.xmonad/xmonad.hs")))
+   ; make F12 switch to .emacs; create if needed
+   ("<f12>" (lambda()(interactive)(find-file "~/.emacs.d/init.el")))
 
-;; irriterande grejer
-(global-unset-key "\C-Z")
-;; här fungerade inte (global-unset-key "\C-x \C-z")
-(global-unset-key (kbd "\C-x C-z"))
+   ("M-g" goto-line)
+   ("M-#" replace-string)
+   ("M-\"" align-regexp)
 
-
-;; Remove noob-bindings
-;; (global-unset-key [right])
-;; (global-unset-key [left])
-;; (global-unset-key [up])
-;; (global-unset-key [down])
-;; (global-unset-key [next])
-;; (global-unset-key [prior])
-;; (global-unset-key [home])
-;; (global-unset-key [end])
-
-(global-set-key "\M-g" 'goto-line)
-(global-set-key "\M-#" 'replace-string)
-(global-set-key "\M-\"" 'align-regexp)
-
-(global-set-key [\C-return] 'dabbrev-expand)
-
-(global-set-key "\C-a" 'smart-beginning-of-line)
-(global-set-key "\M-p" 'scroll-down-keep-cursor)
-(global-set-key "\M-n" 'scroll-up-keep-cursor)
-(global-set-key "\C-j" 'join-line)
-
-;; window handling
-(global-set-key (kbd "C-ä") '(lambda () (interactive) 
-			       (enlarge-window 3)))
-(global-set-key (kbd "C-Ä") '(lambda () (interactive) 
-			       (enlarge-window -3)))
-(global-set-key (kbd "C-'") '(lambda () (interactive) 
-			       (enlarge-window-horizontally 3)))
-(global-set-key (kbd "C-*") '(lambda () (interactive) 
-			       (enlarge-window-horizontally -3)))
-
-(global-set-key (kbd "C-c C-k") 'comment-region)
+   ("C-a" smart-beginning-of-line)
+   ("M-p" scroll-down-keep-cursor)
+   ("M-n" scroll-up-keep-cursor)
+   ("C-j" join-line)
 
 
+   ;; Window handling
+   ("C-ä" (lambda () (interactive) (enlarge-window 3)))
+   ("C-Ä" (lambda () (interactive) (enlarge-window -3)))
+   ("C-'" (lambda () (interactive) (enlarge-window-horizontally 3)))
+   ("C-*" (lambda () (interactive) (enlarge-window-horizontally -3)))
 
-;; Files
-(global-set-key (kbd "C-c C-r") 'revert-buffer)
-
-;; Registers
-;; Does not work, needs param or something
-;; (global-set-key (kbd "C-x r i") '(lambda () (interactive) 
-;;                                   (insert-register t)))
-(global-set-key (kbd "C-x r a") 'append-to-register)
+   ;; Files
+   ("C-c C-r" revert-buffer)
 
 
-;; I never use this, but I should
-;; (global-set-key (kbd "C-,") (lambda () (interactive)
-;; (kill-line 0)))
-;; perhaps this is better 
-(global-set-key (kbd "C-,") 'backward-kill-word)
+   ;; Registers
+   ;; Does not work, needs param or something
+   ;; (global-set-key (kbd "C-x r i") '(lambda () (interactive)
+   ;;                                   (insert-register t)))
+   ("C-x r a" append-to-register)
 
-;; the formatting of these guys suck
-(global-set-key "\C-c\C-d" 'insert-current-date-time)
-(global-set-key "\C-c\C-t" 'insert-current-time)
+   ;; I never use this, but I should
+   ("C-," backward-kill-word)
 
-;; Renames current buffer and visiting file.
-(global-set-key (kbd "C-c C-r") 'rename-file-and-buffer)
+   ;; The formatting of these guys suck
+   ("C-c C-d" insert-current-date-time)
+   ("C-c C-t" insert-current-time)
 
-;; Bindings for rejeep-comment
-(global-set-key (kbd "C-7") 'comment-or-uncomment-current-line-or-region)
+   ;; Renames current buffer and visiting file.
+   ("C-c C-r" rename-file-and-buffer)
 
-;; These keys are always a pain.
-(global-set-key (kbd "M-U") (lambda () (interactive) (insert "[")))
-(global-set-key (kbd "M-I") (lambda () (interactive) (insert "]")))
-(global-set-key (kbd "M-J") (lambda () (interactive) (insert "(")))
-(global-set-key (kbd "M-K") (lambda () (interactive) (insert ")")))
-(global-set-key (kbd "M-M") (lambda () (interactive) (insert "{")))
-(global-set-key (kbd "M-;") (lambda () (interactive) (insert "}")))
+   ;; Bindings for rejeep-comment
+   ("C-7" comment-or-uncomment-current-line-or-region)
 
-(global-set-key (kbd "<XF86Calculator>") 'calc)
+   ;; These keys are always a pain.
+   ("M-U" (lambda () (interactive) (insert "[")))
+   ("M-I" (lambda () (interactive) (insert "]")))
+   ("M-J" (lambda () (interactive) (insert "(")))
+   ("M-K" (lambda () (interactive) (insert ")")))
+   ("M-M" (lambda () (interactive) (insert "{")))
+   ("M-;" (lambda () (interactive) (insert "}")))
 
-(global-set-key (kbd "<f5>") 'whitespace-mode)
+   ;; Calculator button I had on one keyboard.
+   ("<XF86Calculator>" calc)
+   ("<f5>" whitespace-mode)
 
-(global-set-key (kbd "M-Q") 'unfill-paragraph)
+   ("M-Q" unfill-paragraph)
 
-;; Goal columns is bugging me out
-(global-unset-key (kbd "C-x C-n"))
+   ;; Bindings for controlling text scale
+   ("C-M-+" text-scale-increase)
+   ("C-M--" text-scale-decrease)
+   ("C-M-0" (lambda () (interactive) (text-scale-increase 0)))
 
-;; Bindings for controlling text scale
-(global-set-key (kbd "C-M-+") 'text-scale-increase)
-(global-set-key (kbd "C-M--") 'text-scale-decrease)
-(global-set-key (kbd "C-M-0") (lambda () (interactive) (text-scale-increase 0)))
+   ;; Append / prepend to lines
+   ("C-c n" append-to-lines)
+   ("C-c j" prepend-to-lines)
 
-;; Append / prepend to lines
-(global-set-key (kbd "C-c n") 'append-to-lines)
-(global-set-key (kbd "C-c j") 'prepend-to-lines)
+   ("C-x B" 'ibuffer)
+   ))

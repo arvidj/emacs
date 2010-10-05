@@ -34,7 +34,7 @@
 			   ("core-live"
                 (filename . "remote/live/core-live/"))
 			   
-			   ;; Local cure trunk
+			   ;; Local core trunk
 			   ("core-arvid-local"
                 (or (filename . "public_html/core-arvid-local")
 					(filename . "local/core-arvid-local")))
@@ -44,7 +44,10 @@
                 (or (filename . "public_html/core-magenta-2.0-git")
 					(filename . "local/gc_system")
 					(filename . "local/core-magenta-2.0-git")))
-			   
+
+			   ;; Some other projects
+			   ("nevarforget"
+                (or (filename . "dev/nevarforget")))
 			   
 			   ("magit"
                 (name . "^\\*magit"))
@@ -63,13 +66,6 @@
 			(ibuffer-switch-to-saved-filter-groups "default")))
 
 (define-key ibuffer-mode-map (kbd "TAB") 'ibuffer-toggle-filter-group)
-;; TODO: in ibuffer, use ido to switch file but it should default to dir of buffer on point
-;;; I don't get what I mean here ;)
-;; (define-key ibuffer-mode-map (kbd "C-x C-f") 'ido-find-file)
-(global-set-key (kbd "C-x B") 'ibuffer)
-(global-unset-key (kbd "C-x C-b"))
 
 (provide 'arvid-ibuffer)
-
-
 

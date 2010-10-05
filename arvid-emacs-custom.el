@@ -46,6 +46,8 @@
  '(php-completion-file "~/.emacs.d/plugins/php-completion-file")
  '(php-manual-path "~/docs/php/php-manual-english")
  '(reb-re-syntax (quote string))
+ '(ruby-indent-level 4)
+ '(safe-local-variable-values (quote ((indent-tabs-mode nil))))
  '(sgml-basic-offset 4)
  '(smerge-command-prefix "m")
  '(sql-mysql-options (quote ("-P 8888")))
