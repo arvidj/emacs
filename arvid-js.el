@@ -46,7 +46,7 @@
   (define-key js-mode-map (kbd "ä") 'insert-dollar-or-jquery)
   (define-key js-mode-map (kbd "$") 'report-intelligence-level)
   
-  (define-key js-mode-map (kbd "ö") 'report-intelligence-level)
+  (define-key js-mode-map (kbd "ö") (lambda () (interactive) (insert ";")))
   (define-key js-mode-map (kbd "M-ö") (lambda () (interactive) (insert "ö")))
   (define-key js-mode-map (kbd ";") 'report-intelligence-level)
   
