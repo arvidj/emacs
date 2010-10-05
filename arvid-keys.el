@@ -25,11 +25,11 @@
  '(("C-c d" duplicate-current-line-or-region)
 
    ;;; Quick access to some config files
-   ("<f10>" (lambda()(interactive)(find-file "~/org/ideer.org")))
-   ; make F11 switch to xmonad.hs; create if needed
-   ("<f11>" (lambda()(interactive)(find-file "~/.xmonad/xmonad.hs")))
-   ; make F12 switch to .emacs; create if needed
-   ("<f12>" (lambda()(interactive)(find-file "~/.emacs.d/init.el")))
+   ("<f9>" (lambda () (interactive) (find-file "~/gluteus/information.org")))
+   ("<f10>" (lambda () (interactive) (find-file "~/org/ideer.org")))
+   ("<f11>" (lambda () (interactive) (find-file "~/.xmonad/xmonad.hs")))
+   ("<f12>" (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
+   ("C-x nf" (lambda () (interactive) (ido-find-file-in-dir "~/.emacs.d/")))
 
    ("M-g" goto-line)
    ("M-#" replace-string)
@@ -46,6 +46,15 @@
    ("C-Ä" (lambda () (interactive) (enlarge-window -3)))
    ("C-'" (lambda () (interactive) (enlarge-window-horizontally 3)))
    ("C-*" (lambda () (interactive) (enlarge-window-horizontally -3)))
+   ("C-M-3" (lambda () (interactive)
+			  (delete-other-windows)
+			  (split-window-horizontally)
+			  (split-window-horizontally)
+			  (balance-windows)))
+
+   ;; TODO: in temporary windows (define windows?) bind alt-q to kill
+   ;; buffer instead of just quitting. Also kill all dired some time
+   ;; soon.
 
    ;; Files
    ("C-c C-r" revert-buffer)
@@ -77,10 +86,12 @@
    ("M-K" (lambda () (interactive) (insert ")")))
    ("M-M" (lambda () (interactive) (insert "{")))
    ("M-;" (lambda () (interactive) (insert "}")))
+   ("M-D" delete-pair)
 
    ;; Calculator button I had on one keyboard.
    ("<XF86Calculator>" calc)
    ("<f5>" whitespace-mode)
+   ("<f6>" linum-mode)
 
    ("M-Q" unfill-paragraph)
 
