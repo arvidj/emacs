@@ -3,7 +3,7 @@
 
 ;;; TypoScript-mode
 (autoload 'ts-mode "ts-mode")
-(add-to-list 'auto-mode-alist '("\\.ts$" . ts-mode))
+(add-to-list 'auto-mode-alist '("\\.ts$\\|/ext_typoscript_setup\\.txt$" . ts-mode))
 (add-hook 'ts-mode-hook 'my-ts-mode-hook)
 
 (defun my-ts-mode-hook () 
