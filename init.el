@@ -72,6 +72,7 @@
 (require 'arvid-drag-stuff)
 (require 'arvid-anything)
 (require 'arvid-shell)
+(require 'arvid-conf)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;
