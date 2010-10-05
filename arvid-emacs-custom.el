@@ -64,6 +64,7 @@
  '(default ((t (:inherit nil :stipple nil :background "#141414" :foreground "#F8F8F8" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 100 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
  '(compilation-error ((t (:inherit font-lock-warning-face))))
  '(font-lock-warning-face ((t (:foreground "red"))))
+ '(highlight ((t (:background "green" :underline t :slant italic :weight bold))))
  '(hl-line ((t (:inherit highlight :background "#022"))))
  '(org-level-2 ((t (:inherit outline-8))))
  '(org-level-4 ((t (:inherit outline-6))))
