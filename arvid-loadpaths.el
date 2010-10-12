@@ -1,34 +1,14 @@
-(add-to-list 'load-path "~/.emacs.d/plugins/magit")
-(add-to-list 'load-path "~/.emacs.d/plugins/timeclock-x")
-(add-to-list 'load-path "~/.emacs.d/plugins/emacs-soap-client")
-(add-to-list 'load-path "~/.emacs.d/plugins/auto-complete")
-(add-to-list 'load-path "~/.emacs.d/plugins/auto-complete-etags")
-(add-to-list 'load-path "~/.emacs.d/plugins/zencoding")
-(add-to-list 'load-path "~/.emacs.d/plugins/hs-lint")
-(add-to-list 'load-path "~/.emacs.d/plugins/yasnippet")
-(add-to-list 'load-path "~/.emacs.d/plugins/mk-project")
-(add-to-list 'load-path "~/.emacs.d/plugins/remember-el")
-(add-to-list 'load-path "~/.emacs.d/plugins/org-mode")
-(add-to-list 'load-path "~/.emacs.d/plugins/color-theme")
-(add-to-list 'load-path "~/.emacs.d/plugins/color-theme/themes")
-(add-to-list 'load-path "~/.emacs.d/plugins/color-theme-tango-2")
-(add-to-list 'load-path "~/.emacs.d/plugins/twilight-emacs")
-(add-to-list 'load-path "~/.emacs.d/plugins/php-mode")
-(add-to-list 'load-path "~/.emacs.d/plugins/wrap-region")
-(add-to-list 'load-path "~/.emacs.d/plugins/ts-mode")
-(add-to-list 'load-path "~/.emacs.d/plugins/espresso")
-(add-to-list 'load-path "~/.emacs.d/plugins/highlight-parentheses")
-(add-to-list 'load-path "~/.emacs.d/plugins/dsvn")
-(add-to-list 'load-path "~/.emacs.d/plugins/browse-kill-ring")
-(add-to-list 'load-path "~/.emacs.d/plugins/rainbow")
-(add-to-list 'load-path "~/.emacs.d/plugins/autopair")
-(add-to-list 'load-path "~/.emacs.d/plugins/color-theme-tangotango")
-(add-to-list 'load-path "~/.emacs.d/plugins/color-theme-zenburn")
-(add-to-list 'load-path "~/.emacs.d/plugins/smex")
-(add-to-list 'load-path "~/.emacs.d/plugins/drag-stuff")
-(add-to-list 'load-path "~/.emacs.d/plugins/anything")
-(add-to-list 'load-path "~/.emacs.d/plugins/anything-config")
-(add-to-list 'load-path "~/.emacs.d/plugins/iedit")
-(add-to-list 'load-path "~/.emacs.d/plugins/etest")
+;; Add plugins
+(let ((plugins '("magit" "timeclock-x" "emacs-soap-client" "auto-complete"
+				 "auto-complete-etags" "zencoding" "hs-lint" "yasnippet"
+				 "mk-project" "remember-el" "org-mode" "color-theme"
+				 "color-theme/themes" "color-theme-tango-2" "twilight-emacs"
+				 "php-mode" "wrap-region" "ts-mode" "espresso"
+				 "highlight-parentheses" "dsvn" "browse-kill-ring" "rainbow"
+				 "autopair" "color-theme-tangotango" "color-theme-zenburn"
+				 "smex" "drag-stuff" "anything" "anything-config" "iedit"
+				 "etest")))
+  (dolist (plugin plugins)
+	(add-to-list 'load-path (concat "~/.emacs.d/plugins/" plugin))))
 
 (provide 'arvid-loadpaths)
