@@ -14,18 +14,22 @@
 (add-to-list 'load-path "~/.emacs.d/plugins/php-mode-1.5.0")
 (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
 (add-to-list 'auto-mode-alist '("\\.php$\\|\\.phpsh$" . php-mode))
- 
+
 (add-hook 'php-mode-hook 'my-php-mode-hook)
-(defun my-php-mode-hook () 
-  (local-set-key (kbd "C-c C-t") 'typo3-search-documentation)
-  (define-key c-mode-map [remap c-beginning-of-defun] 'beginning-of-defun)
+
+(defun my-php-mode-hook ()
+  ;; Remappings
+  (Define-key c-mode-map [remap c-beginning-of-defun] 'beginning-of-defun)
   (define-key c-mode-map [remap c-end-of-defun] 'end-of-defun)
   (define-key c-mode-map [remap c-mark-function] 'mark-defun)
   (define-key c-mode-map [remap c-fill-paragraph] 'fill-paragraph)
-  (define-key c-mode-map (kbd "ä") (lambda () (interactive (insert "$"))))
-  (define-key c-mode-map (kbd "$") 'report-intelligence-level)
-  (define-key c-mode-map (kbd "M-ä") (lambda () (interactive (insert "ä"))))
-  
+
+  (define-keys c-mode-map
+	`(("C-c C-t" typo3-search-documentation)
+	  ("ä" ,(make-inserter "$"))
+	  ("$" report-intelligence-level)
+	  ("M-ä" ,(make-inserter "ä"))))
+
   ;; I prefer $ not being part of a word. That way, c-backward-subword
   ;; moves to a instead of $ when moving backward in a variable like this:
   ;; $asdfQwerZxcv

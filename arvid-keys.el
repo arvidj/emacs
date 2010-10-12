@@ -2,17 +2,6 @@
 ;; Key bindings
 
 ;; Nice guide: http://xahlee.org/emacs/keyboard_shortcuts.html
-(defun global-set-keys (bindings)
-  "Globally set all BINDINGS."
-  (dolist (binding bindings)
-    (let ((key (car binding)) (command (cadr binding)))
-      (global-set-key (read-kbd-macro key) command))))
-
-(defun global-unset-keys (keys)
-  "Globally unset all BINDINGS."
-  (dolist (key keys)
-    (global-unset-key (read-kbd-macro key))))
-
 (global-unset-keys
  '("C-Z"
    "\C-x C-z"
@@ -22,7 +11,7 @@
    ))
 
 (global-set-keys
- '(("C-c d" duplicate-current-line-or-region)
+ `(("C-c d" duplicate-current-line-or-region)
 
    ;;; Quick access to some config files
    ("<f9>" (lambda () (interactive) (find-file "~/gluteus/information.org")))
@@ -80,12 +69,12 @@
    ("C-7" comment-or-uncomment-current-line-or-region)
 
    ;; These keys are always a pain.
-   ("M-U" (lambda () (interactive) (insert "[")))
-   ("M-I" (lambda () (interactive) (insert "]")))
-   ("M-J" (lambda () (interactive) (insert "(")))
-   ("M-K" (lambda () (interactive) (insert ")")))
-   ("M-M" (lambda () (interactive) (insert "{")))
-   ("M-;" (lambda () (interactive) (insert "}")))
+   ("M-U" ,(make-inserter "["))
+   ("M-I" ,(make-inserter "]"))
+   ("M-J" ,(make-inserter "("))
+   ("M-K" ,(make-inserter ")"))
+   ("M-M" ,(make-inserter "{"))
+   ("M-;" ,(make-inserter "}"))
    ("M-D" delete-pair)
 
    ;; Calculator button I had on one keyboard.
@@ -104,5 +93,4 @@
    ("C-c n" append-to-lines)
    ("C-c j" prepend-to-lines)
 
-   ("C-x B" 'ibuffer)
-   ))
+   ("C-x B" 'ibuffer)))

@@ -243,8 +243,28 @@ there's a region, all lines that region covers will be duplicated."
    ;; Send other commands to the default handler.
    (t (comint-simple-send proc command))))
 
-;; User interaction
+;; Various defuns for setting keybinding
 (defun report-intelligence-level () 
   "Reports the current users level of intelligence in an user friendly manner."
   (interactive)
   (message "Idiot!"))
+
+(defun make-inserter (str)
+  `(lambda () (interactive) (insert ,str)))
+
+(defun global-set-keys (bindings)
+  "Globally set all BINDINGS."
+  (dolist (binding bindings)
+    (let ((key (car binding)) (command (cadr binding)))
+      (global-set-key (read-kbd-macro key) command))))
+
+(defun global-unset-keys (keys)
+  "Globally unset all BINDINGS."
+  (dolist (key keys)
+    (global-unset-key (read-kbd-macro key))))
+
+(defun define-keys (map bindings)
+  (dolist (binding bindings)
+    (let ((key (car binding)) (command (cadr binding)))
+      (define-key map (read-kbd-macro key) command))))
+

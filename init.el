@@ -8,6 +8,9 @@
 ;; TODO:
 ;;;   Minor mode for calculating the width / height of selections. 
 
+;;;;;;;;;;;;;;;;;;;;;;
+;; Misc. defuns
+(load "arvid-func.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Move backup and autosave files.
@@ -89,7 +92,3 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Customization
 (load "arvid-custom.el")
-
-;;;;;;;;;;;;;;;;;;;;;;
-;; Misc. defuns
-(load "arvid-func.el")

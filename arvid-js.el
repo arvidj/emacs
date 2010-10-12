@@ -37,23 +37,22 @@
 		  (insert "$(")))
 	(insert "$")))
 
-(defun my-js-mode-hook () 
-  (local-set-key (kbd "C-c C-j") 'jquery-search-documentation)
-  (local-set-key (kbd "RET") 'newline-and-indent)
+(defun my-js-mode-hook ()
   (c-subword-mode 1)
   (setq default-tab-width 4)
-  
-  (define-key js-mode-map (kbd "ä") 'insert-dollar-or-jquery)
-  (define-key js-mode-map (kbd "$") 'report-intelligence-level)
-  
-  (define-key js-mode-map (kbd "ö") (lambda () (interactive) (insert ";")))
-  (define-key js-mode-map (kbd "M-ö") (lambda () (interactive) (insert "ö")))
-  (define-key js-mode-map (kbd ";") 'report-intelligence-level)
-  
-  (define-key js-mode-map (kbd "M-ä") (lambda () (interactive) (insert "ä"))))
 
-(defun escape-js-regex () "Escape javascript regex" 
-  (interactive) 
+  (define-keys js-mode-map
+	`(("ä" insert-dollar-or-jquery)
+	  ("$" report-intelligence-level)
+	  ("ö" (make-inserter ";"))
+	  (";" report-intelligence-level)
+	  ("M-ä" ,(make-inserter "ä"))
+	  ("M-ö" ,(make-inserter "ö"))
+	  ("C-c C-j" jquery-search-documentation)
+	  ("RET" newline-and-indent))))
+
+(defun escape-js-regex () "Escape javascript regex"
+  (interactive)
   (let ((re "\\([.?/]\\)")
 	(to "\\\\\\1")
 	(txt (delete-and-extract-region (region-beginning) (region-end))))
