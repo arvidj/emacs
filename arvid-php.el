@@ -1,4 +1,4 @@
-;; TODO: Create a chrome extension that sends xdebug backtraces to emacs 
+;; TODO: Create a chrome extension that sends xdebug backtraces to emacs
 ;; TODO: Check out http://www.emacswiki.org/emacs/php-completion.el
 ;; TODO: Generate docstrings
 ;; TODO: Fix fill-paragraph when writing doc-strings.
