@@ -1,3 +1,5 @@
+;; TODO: auto-load
+
 ;;; Haskell
 (load "~/.emacs.d/plugins/haskell-mode/haskell-site-file")
 (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)

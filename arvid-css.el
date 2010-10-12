@@ -1,8 +1,8 @@
 (require 'css-mode)
 
-;; TODO:
-;;   Intelligent ordering and grouping of rules
-;;   Folding / unfolding Fredrik CSS.
+;; TODO: Intelligent ordering and grouping of rules
+;; TODO: Folding / unfolding Fredrik CSS.
+;; TODO: Auto-load css-mode
 
 (add-hook 'css-mode-hook 'arvid-css-mode-hook)
 (defun arvid-css-mode-hook ()

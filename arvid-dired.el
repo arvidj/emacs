@@ -1,8 +1,7 @@
 (require 'dired)
 
-;; TODO
-;;  * Colors per file types, check out dired+
-
+;; TODO: Colors per file types, check out dired+
+;; TODO: Map over keybindings, see arvid-keys.el
 
 (define-key dired-mode-map (kbd "C-c e") 'wdired-change-to-wdired-mode)
 (define-key dired-mode-map (kbd "C-c u") 'dired-up-directory)

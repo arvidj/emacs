@@ -1,3 +1,5 @@
+;; TODO: autoload?
+
 (require 'etest)
 
 ;; Set load path
