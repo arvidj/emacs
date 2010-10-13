@@ -1,2 +1,2 @@
-(add-to-list 'auto-mode-alist '("/\\.htaccess$" . conf-mode))
+(add-to-list 'auto-mode-alist '("/_?\\.htaccess$" . conf-mode))
 (provide 'arvid-conf)
