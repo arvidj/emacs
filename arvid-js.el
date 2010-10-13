@@ -39,6 +39,9 @@
 
 (defun my-js-mode-hook () 
   (local-set-key (kbd "C-c C-j") 'jquery-search-documentation)
+  (local-set-key (kbd "C-c C-k") 'js-search-documentation)
+  (local-set-key (kbd "M-j") 'c-indent-new-comment-line)
+  
   (local-set-key (kbd "RET") 'newline-and-indent)
   (c-subword-mode 1)
   (setq default-tab-width 4)
@@ -63,8 +66,18 @@
 (setq jquery-search-url "http://jqapi.com/#p=")
 
 (defun jquery-search-documentation ()
-  "Search PHP documentation for the word at point."
+  "Search jQuery documentation for the word at point."
   (interactive)
   (browse-url (concat jquery-search-url (current-word t))))
+
+(setq js-documentation-search-url
+	  (concat "http://www.google.com/search?q="
+			  "inurl:https://developer.mozilla.org/en/JavaScript/Reference+"))
+
+;; TODO: If no word at point, prompt
+(defun js-search-documentation () 
+  "Search Mozilla Developer Center for word at point"
+  (interactive)
+  (browse-url (concat js-documentation-search-url (current-word t))))
 
 (provide 'arvid-js)
