@@ -1,6 +1,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Help functions
 
+;; TODO: perhaps it is better to user basename of filename since this
+;; does not handle uniquified buffernames very nicely.
+(defun kill-ring-save-buffername ()
+  "Saves the current buffer-name in kill-ring."
+  (interactive)
+  (kill-new (buffer-name)))
+
 (defun ninjaword-word-at-point () 
   "Looks up word in point using Ninjawords."
   (interactive)
