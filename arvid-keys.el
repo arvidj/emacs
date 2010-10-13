@@ -38,9 +38,9 @@
    ("C-a" smart-beginning-of-line)
    ("M-p" scroll-down-keep-cursor)
    ("M-n" scroll-up-keep-cursor)
-   ("C-j" join-line)
-
-
+   
+   ("C-å" join-line)
+   
    ;; Window handling
    ("C-ä" (lambda () (interactive) (enlarge-window 3)))
    ("C-Ä" (lambda () (interactive) (enlarge-window -3)))
