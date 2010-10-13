@@ -16,6 +16,7 @@
 (global-unset-keys
  '("C-Z"
    "\C-x C-z"
+   
    ;; Goal columns is bugging me out
    "C-x C-n"
    "C-x C-b"
@@ -104,5 +105,4 @@
    ("C-c n" append-to-lines)
    ("C-c j" prepend-to-lines)
 
-   ("C-x B" 'ibuffer)
-   ))
+   ("C-x B" ibuffer)))
