@@ -1,9 +1,8 @@
 (require 'magit)
 (require 'magit-svn)
 
-;; TODO
-;;; Modify magit-visit-item so that (magit-visit-item -1) visits item
-;;; in other window.
+;; TODO: Modify magit-visit-item so that (magit-visit-item -1) visits
+;; item in other window.
 
 (add-hook 'magit-mode-hook
           (lambda()

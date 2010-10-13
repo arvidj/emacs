@@ -33,18 +33,20 @@ log-line."
 (defmacro make-timeclock-out (reason)
   `(lambda () (interactive) (timeclock-out nil ,reason)))
 
-(global-set-key (kbd "C-c ti") 'timeclock-in)
-(global-set-key (kbd "C-c too") 'timeclock-out)
-(global-set-key (kbd "C-c tof") (make-timeclock-out "fika"))
-(global-set-key (kbd "C-c tol") (make-timeclock-out "lunch"))
-(global-set-key (kbd "C-c toh") (make-timeclock-out "hem"))
-(global-set-key (kbd "C-c top") (make-timeclock-out "paus"))
-
-(global-set-key (kbd "C-c tc") 'timeclock-change)
-(global-set-key (kbd "C-c tr") 'timeclock-reread-log)
-(global-set-key (kbd "C-c tu") 'timeclock-update-modeline)
-(global-set-key (kbd "C-c tw") 'timeclock-when-to-leave-string)
-(global-set-key (kbd "C-c tf") 'timeclock-visit-timelog)
+;; TODO: Only set prefix key once.
+;; TODO: Make helper for defining a lot of bindings for one prefix.
+(global-set-keys
+ `(("C-c ti" timeclock-in)
+   ("C-c too" timeclock-out)
+   ("C-c tof" ,(make-timeclock-out "fika"))
+   ("C-c tol" ,(make-timeclock-out "lunch"))
+   ("C-c toh" ,(make-timeclock-out "hem"))
+   ("C-c top" ,(make-timeclock-out "paus"))
+   ("C-c tc" timeclock-change)
+   ("C-c tr" timeclock-reread-log)
+   ("C-c tu" timeclock-update-modeline)
+   ("C-c tw" timeclock-when-to-leave-string)
+   ("C-c tf" timeclock-visit-timelog)))
 
 (add-hook 'timeclock-in-hook '(lambda () (set-face-background 'mode-line "#444488")))
 (add-hook 'timeclock-out-hook '(lambda () (set-face-background 'mode-line "#555753")))
