@@ -31,8 +31,8 @@
 (require 'arvid-php)
 (require 'arvid-sgml)
 (require 'arvid-ts)
-(load "arvid-programming.el")
-(load "arvid-sh.el")
+(require 'arvid-programming)
+(require 'arvid-sh)
 (require 'arvid-etest)
 (require 'arvid-ruby)
 
