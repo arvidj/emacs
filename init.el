@@ -73,6 +73,7 @@
 (require 'arvid-anything)
 (require 'arvid-shell)
 (require 'arvid-conf)
+(require 'arvid-fic)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;
