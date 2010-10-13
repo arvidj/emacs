@@ -16,6 +16,7 @@
  '(comment-style (quote extra-line))
  '(diff-switches "-r -u")
  '(ediff-window-setup-function (quote ediff-setup-windows-plain))
+ '(fic-highlighted-words (quote ("REFACTOR" "FIXME" "TODO" "BUG" "KLUDGE")))
  '(haskell-program-name "ghci -XExistentialQuantification")
  '(ido-default-buffer-method (quote selected-window))
  '(ido-default-file-method (quote selected-window))
@@ -46,6 +47,8 @@
  '(php-completion-file "~/.emacs.d/plugins/php-completion-file")
  '(php-manual-path "~/docs/php/php-manual-english")
  '(reb-re-syntax (quote string))
+ '(recentf-auto-cleanup (quote never))
+ '(recentf-max-menu-items 30)
  '(ruby-indent-level 4)
  '(safe-local-variable-values (quote ((indent-tabs-mode nil))))
  '(sgml-basic-offset 4)
@@ -63,8 +66,9 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#141414" :foreground "#F8F8F8" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 100 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
+ '(default ((t (:inherit nil :stipple nil :background "#141414" :foreground "#F8F8F8" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "unknown" :family "Mensch"))))
  '(compilation-error ((t (:inherit font-lock-warning-face))))
+ '(diff-added ((t (:inherit diff-changed :foreground "green"))))
  '(font-lock-warning-face ((t (:foreground "red"))))
  '(highlight ((t (:background "green" :underline t :slant italic :weight bold))))
  '(hl-line ((t (:inherit highlight :background "#022"))))
