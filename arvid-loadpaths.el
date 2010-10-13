@@ -30,5 +30,6 @@
 (add-to-list 'load-path "~/.emacs.d/plugins/anything-config")
 (add-to-list 'load-path "~/.emacs.d/plugins/iedit")
 (add-to-list 'load-path "~/.emacs.d/plugins/etest")
+(add-to-list 'load-path "~/.emacs.d/plugins/fic-mode")
 
 (provide 'arvid-loadpaths)
