@@ -7,7 +7,17 @@
 ;;		 c
 ;;	  )
 ;; For fun and profit
+;;
+;; TODO: Fix / when stopping block comments.
+;;   inserting / when point is at x:
+;;    /**
+;;     *
+;;     * x
+;;   then remove space between x and preceding *
+;;
+;;  Also alt-j at /** does not prefix next line with *
 
+;; TODO Move to my-c-mode-hook.
 (add-hook 'c-mode-hook
 	  '(lambda () (local-set-key (kbd "RET") 'newline-and-indent)))
 
