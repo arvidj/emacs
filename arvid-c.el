@@ -17,10 +17,6 @@
 ;;
 ;;  Also alt-j at /** does not prefix next line with *
 
-;; TODO Move to my-c-mode-hook.
-(add-hook 'c-mode-hook
-	  '(lambda () (local-set-key (kbd "RET") 'newline-and-indent)))
-
 ;; Create my personal style.
 (defconst my-c-style
   '((c-hanging-braces-alist     . ((defun-open after)
@@ -68,13 +64,13 @@
   ;; Try to make auto-pair + electric mode work together.
   ;; (setq autopair-handle-action-fns '(my-test-handler))
 
-  (define-key c-mode-map (kbd "M-a") nil)
-  
-  (define-key c-mode-map (kbd "ä") (lambda () (interactive (insert "$"))))
-  (define-key c-mode-map (kbd "ö") (lambda () (interactive (insert ";"))))
-  (define-key c-mode-map (kbd ";") 'report-intelligence-level)
-  (define-key c-mode-map (kbd "$") 'report-intelligence-level)
-  (define-key c-mode-map (kbd "M-ä") (lambda () (interactive (insert "ä")))))
+  (define-keys c-mode-map
+	`(("M-a" nil)
+	  ("ä" ,(make-inserter "$"))
+	  ("ö" ,(make-inserter ";"))
+	  (";" report-intelligence-level)
+	  ("$" report-intelligence-level)
+	  ("M-ä" ,(make-inserter "ä")))))
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
 ;; (defun my-test-handler (a b c)

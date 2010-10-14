@@ -1,6 +1,6 @@
 ;; Shell-script
-(add-hook 'shell-script-mode-hook
+(add-hook 'sh-mode-hook
  	  '(lambda ()
-	     (setq sh-indent-comment t)
+	     (setq sh-indent-comment t)))
 
 (provide 'arvid-sh)

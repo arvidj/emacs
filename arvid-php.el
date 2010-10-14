@@ -23,12 +23,14 @@
   (define-key c-mode-map [remap c-end-of-defun] 'end-of-defun)
   (define-key c-mode-map [remap c-mark-function] 'mark-defun)
   (define-key c-mode-map [remap c-fill-paragraph] 'fill-paragraph)
-
+  
+  ;; TODO: Why is this not working!
   (define-keys c-mode-map
-	`(("C-c C-t" typo3-search-documentation)
-	  ("ä" ,(make-inserter "$"))
-	  ("$" report-intelligence-level)
-	  ("M-ä" ,(make-inserter "ä"))))
+  	`(("C-c C-t" typo3-search-documentation)
+  	  ("ä" ,(make-inserter "$"))
+  	  ("$" report-intelligence-level)
+  	  ("M-ä" ,(make-inserter "ä"))
+  	  ("ö" ,(make-inserter ";"))))
 
   ;; I prefer $ not being part of a word. That way, c-backward-subword
   ;; moves to a instead of $ when moving backward in a variable like this:
