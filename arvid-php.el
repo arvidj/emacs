@@ -16,10 +16,9 @@
 (add-to-list 'auto-mode-alist '("\\.php$\\|\\.phpsh$" . php-mode))
 
 (add-hook 'php-mode-hook 'my-php-mode-hook)
-
 (defun my-php-mode-hook ()
   ;; Remappings
-  (Define-key c-mode-map [remap c-beginning-of-defun] 'beginning-of-defun)
+  (define-key c-mode-map [remap c-beginning-of-defun] 'beginning-of-defun)
   (define-key c-mode-map [remap c-end-of-defun] 'end-of-defun)
   (define-key c-mode-map [remap c-mark-function] 'mark-defun)
   (define-key c-mode-map [remap c-fill-paragraph] 'fill-paragraph)
