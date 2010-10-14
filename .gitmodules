@@ -64,9 +64,6 @@
 [submodule "plugins/browse-kill-ring"]
 	path = plugins/browse-kill-ring
 	url = http://github.com/emacsmirror/browse-kill-ring.git
-[submodule "plugins/rainbow"]
-	path = plugins/rainbow
-	url = git://git.naquadah.org/rainbow.git
 [submodule "plugins/autopair"]
 	path = plugins/autopair
 	url = http://github.com/emacsmirror/autopair.git

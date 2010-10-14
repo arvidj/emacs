@@ -34,7 +34,6 @@
 (require 'arvid-python)
 (require 'arvid-css)
 (require 'arvid-autopair)
-;; (require 'rainbow-mode)
 (require 'arvid-c)
 (require 'arvid-php)
 (require 'arvid-sgml)
