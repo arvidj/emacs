@@ -44,7 +44,7 @@
   (define-keys js-mode-map
 	`(("ä" insert-dollar-or-jquery)
 	  ("$" report-intelligence-level)
-	  ("ö" (make-inserter ";"))
+	  ("ö" ,(make-inserter ";"))
 	  (";" report-intelligence-level)
 	  ("M-ä" ,(make-inserter "ä"))
 	  ("M-ö" ,(make-inserter "ö"))
