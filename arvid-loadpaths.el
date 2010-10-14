@@ -7,7 +7,7 @@
 				 "highlight-parentheses" "dsvn" "browse-kill-ring" "autopair" 
 				 "color-theme-tangotango" "color-theme-zenburn"
 				 "smex" "drag-stuff" "anything" "anything-config" "iedit"
-				 "etest" "fic-mode")))
+				 "etest" "fic-mode" "command-frequency")))
   (dolist (plugin plugins)
 	(add-to-list 'load-path (concat "~/.emacs.d/plugins/" plugin))))
 

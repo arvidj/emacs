@@ -80,6 +80,7 @@
 (require 'arvid-shell)
 (require 'arvid-conf)
 (require 'arvid-fic)
+(require 'arvid-command-frequency)
 
 (require 'arvid-machine-specific)
 
