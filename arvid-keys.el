@@ -11,15 +11,22 @@
    "C-x C-b"
    ))
 
+(defun make-find-file (file) 
+  `(lambda () (interactive) (find-file ,file)))
+(defun make-find-file-in-dir (dir)
+  `(lambda () (interactive) (ido-find-file-in-dir ,dir)))
+
 (global-set-keys
  `(("C-c d" duplicate-current-line-or-region)
 
    ;;; Quick access to some config files
-   ("<f9>" (lambda () (interactive) (find-file "~/gluteus/information.org")))
-   ("<f10>" (lambda () (interactive) (find-file "~/org/ideer.org")))
-   ("<f11>" (lambda () (interactive) (find-file "~/.xmonad/xmonad.hs")))
-   ("<f12>" (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
-   ("C-x nf" (lambda () (interactive) (ido-find-file-in-dir "~/.emacs.d/")))
+   ("<f9>" ,(make-find-file "~/gluteus/information.org"))
+   ("<f10>" ,(make-find-file "~/org/ideer.org"))
+   ("<f11>" ,(make-find-file "~/.xmonad/xmonad.hs"))
+   ("<f12>" ,(make-find-file "~/.emacs.d/init.el"))
+   
+   ("C-x nf" ,(make-find-file-in-dir "~/.emacs.d/"))
+   ("C-x nh" ,(make-find-file-in-dir "~/"))
 
    ("M-g" goto-line)
    ("M-#" replace-string)
