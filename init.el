@@ -60,7 +60,7 @@
 (load "arvid-mk-project.el")
 (require 'arvid-auto-complete)
 (require 'arvid-ido)
-(require 'arvid-dsvn)
+(require 'arvid-svn)
 (require 'arvid-magit)
 (require 'arvid-ibuffer)
 (require 'arvid-iedit)
