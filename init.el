@@ -28,7 +28,6 @@
 (require 'arvid-haskell)
 (require 'arvid-flymake)
 (require 'arvid-sql)
-(require 'arvid-sql-gluteus)
 (require 'arvid-lisp)
 (require 'arvid-js)
 (require 'arvid-python)
@@ -82,6 +81,7 @@
 (require 'arvid-conf)
 (require 'arvid-fic)
 
+(require 'arvid-machine-specific)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Encodings
