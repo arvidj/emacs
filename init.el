@@ -6,6 +6,10 @@
 ;; editing are loaded even if something breaks. This means that
 ;; keybindings and elisp stuff goes first, since I need that to fix
 ;; emacs ;)
+;;
+;; However, in order to have bindings I need the functions that are
+;; defined in the various mode right? Or is this a indication that
+;; mode specific bindings should be in their own file?
 
 (add-to-list 'load-path "~/.emacs.d/")
 (require 'arvid-loadpaths)
