@@ -32,13 +32,11 @@
 (require 'arvid-haskell)
 (require 'arvid-flymake)
 (require 'arvid-sql)
-(require 'arvid-sql-gluteus)
 (require 'arvid-lisp)
 (require 'arvid-js)
 (require 'arvid-python)
 (require 'arvid-css)
 (require 'arvid-autopair)
-;; (require 'rainbow-mode)
 (require 'arvid-c)
 (require 'arvid-php)
 (require 'arvid-sgml)
@@ -65,7 +63,7 @@
 (load "arvid-mk-project.el")
 (require 'arvid-auto-complete)
 (require 'arvid-ido)
-(require 'arvid-dsvn)
+(require 'arvid-svn)
 (require 'arvid-magit)
 (require 'arvid-ibuffer)
 (require 'arvid-iedit)
@@ -86,7 +84,9 @@
 (require 'arvid-shell)
 (require 'arvid-conf)
 (require 'arvid-fic)
+(require 'arvid-command-frequency)
 
+(require 'arvid-machine-specific)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Encodings
