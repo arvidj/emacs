@@ -97,6 +97,11 @@
    ("C-M--" text-scale-decrease)
    ("C-M-0" (lambda () (interactive) (text-scale-increase 0)))
 
+   ("M-j" backward-char)
+   ("M-k" next-line)
+   ("M-i" previous-line)
+   ("M-l" forward-char)
+
    ;; Append / prepend to lines
    ("C-c n" append-to-lines)
    ("C-c j" prepend-to-lines)
