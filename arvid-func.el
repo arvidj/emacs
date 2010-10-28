@@ -63,10 +63,14 @@ whitespace at end of line, unless negative arg is given."
 	  (to-line-helper  re-replacement)
 	(to-line-helper "^[[:space:]]*\\(.*?\\)[[:space:]]*$" re-replacement))))
 
-(defun nuke-all-buffers () 
-  "Kill all buffers, leaving *scratch* only."
-  (interactive)
-  (mapcar (lambda (x) (kill-buffer x)) (buffer-list)) 
+(defun nuke-all-buffers (arg)
+  "Kill all buffers except current, leaving *scratch* only. If
+arg is negative, also kill current."
+  (interactive "p")
+  (mapcar (lambda (x)
+			(when (or (eq arg -1) (not (eq x (current-buffer))))
+				(kill-buffer x)))
+		  (buffer-list))
   (delete-other-windows))
 
 (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
