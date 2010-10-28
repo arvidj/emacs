@@ -6,10 +6,12 @@
 ;; that is use often via M-x. These may or may not have bindings, the
 ;; problem is that is use them in an inconvenient way.
 
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-
-;; This is your old M-x.
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+(global-set-keys
+ '(("M-x" smex)
+   ;; <menu> is between my r-alt and r-control on the laptop.
+   ("<menu>" smex)
+   ("M-X" smex-major-mode-commands)
+   ;; This is your old M-x.
+   ("C-c C-c M-x" execute-extended-command)))
 
 (provide 'arvid-smex)
