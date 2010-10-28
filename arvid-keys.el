@@ -5,13 +5,13 @@
 (global-unset-keys
  '("C-Z"
    "\C-x C-z"
-   
+
    ;; Goal columns is bugging me out
    "C-x C-n"
    "C-x C-b"
    ))
 
-(defun make-find-file (file) 
+(defun make-find-file (file)
   `(lambda () (interactive) (find-file ,file)))
 (defun make-find-file-in-dir (dir)
   `(lambda () (interactive) (ido-find-file-in-dir ,dir)))
@@ -24,7 +24,7 @@
    ("<f10>" ,(make-find-file "~/org/ideer.org"))
    ("<f11>" ,(make-find-file "~/.xmonad/xmonad.hs"))
    ("<f12>" ,(make-find-file "~/.emacs.d/init.el"))
-   
+
    ("C-x nf" ,(make-find-file-in-dir "~/.emacs.d/"))
    ("C-x nh" ,(make-find-file-in-dir "~/"))
 
@@ -35,9 +35,9 @@
    ("C-a" smart-beginning-of-line)
    ("M-p" scroll-down-keep-cursor)
    ("M-n" scroll-up-keep-cursor)
-   
+
    ("C-å" join-line)
-   
+
    ;; Window handling
    ("C-ä" (lambda () (interactive) (enlarge-window 3)))
    ("C-Ä" (lambda () (interactive) (enlarge-window -3)))
