@@ -94,3 +94,6 @@
 [submodule "plugins/command-frequency"]
 	path = plugins/command-frequency
 	url = http://github.com/emacsmirror/command-frequency.git
+[submodule "plugins/arvid-google-translate"]
+	path = plugins/arvid-google-translate
+	url = git@github.com:arvixx/arvid-google-translate.git

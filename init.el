@@ -85,6 +85,7 @@
 (require 'arvid-conf)
 (require 'arvid-fic)
 (require 'arvid-command-frequency)
+(require 'arvid-google-translate)
 
 (require 'arvid-machine-specific)
 
