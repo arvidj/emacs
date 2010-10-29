@@ -38,13 +38,13 @@ log-line."
 (global-set-keys
  `(("C-c ti" timeclock-in)
    ("C-c too" timeclock-out)
-   
+
    ;; Most common reasons I have for clocking out.
    ("C-c tof" ,(make-timeclock-out "fika"))
    ("C-c tol" ,(make-timeclock-out "lunch"))
    ("C-c toh" ,(make-timeclock-out "hem"))
    ("C-c top" ,(make-timeclock-out "paus"))
-   
+
    ("C-c tc" timeclock-change)
    ("C-c tr" timeclock-reread-log)
    ("C-c tu" timeclock-update-modeline)

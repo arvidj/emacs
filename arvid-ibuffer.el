@@ -6,7 +6,7 @@
                 (mode . org-mode))
                ("emacs"
                 (filename . ".emacs.d/"))
-               
+
 			   ;; Various typo projects
 			   ("goodiebag-live"
 				(or (filename . "remote/live/goodiebag")
@@ -46,7 +46,7 @@
 
 			   ("core-live"
                 (filename . "remote/live/core-live/"))
-			   
+
 			   ;; Local core trunk
 			   ("core-arvid-local"
                 (or (filename . "public_html/core-arvid-local")
@@ -64,7 +64,7 @@
 			   ;; Some other projects
 			   ("nevarforget"
                 (or (filename . "dev/nevarforget")))
-			   
+
 			   ("magit"
                 (name . "^\\*magit"))
 			   ("dired"

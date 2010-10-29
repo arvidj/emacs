@@ -22,8 +22,8 @@
   '((c-hanging-braces-alist     . ((defun-open after)
 								   (substatement-open after)))
     (c-offsets-alist            . ((case-label        . +)
-				   (arglist-close     . 0)
-				   (comment-intro     . 0)))
+								   (arglist-close     . 0)
+								   (comment-intro     . 0)))
     (c-hanging-semi&comma-criteria nil))  ;; Does not work
   "My C Programming Style")
 (c-add-style "PERSONAL" my-c-style)
@@ -38,7 +38,7 @@
 
   ;; we like auto-newline, but not hungry-delete
   (c-toggle-auto-newline 1)
-  
+
   ;; TODO: make this work with transposeWords, so that case is
   ;; preserved in an intelligent fashion. That is, if point is at:
   ;;   this.fooBar
@@ -52,8 +52,8 @@
   ;; (auto-complete-mode 1)
 
   ;; need to unset this so that I can use it for window-mgmt
-  (local-unset-key (kbd "C-M-j")) 
-  (local-unset-key (kbd "C-M-k")) 
+  (local-unset-key (kbd "C-M-j"))
+  (local-unset-key (kbd "C-M-k"))
 
   ;; (flymake-mode 1)
   (c-toggle-electric-state 1)

@@ -73,7 +73,7 @@
 			  "inurl:https://developer.mozilla.org/en/JavaScript/Reference+"))
 
 ;; TODO: If no word at point, prompt
-(defun js-search-documentation () 
+(defun js-search-documentation ()
   "Search Mozilla Developer Center for word at point"
   (interactive)
   (browse-url (concat js-documentation-search-url (current-word t))))

@@ -1,7 +1,7 @@
 ;; TODO: typo3-clear-cache should be able to figure out which cache to
 ;; clear by checking the current filename. It would also be nice to
 ;; have an option for only clearing configuration.
-;; 
+;;
 ;; TODO: order by importance so that features that are essential for
 ;; editing are loaded even if something breaks. This means that
 ;; keybindings and elisp stuff goes first, since I need that to fix
@@ -15,7 +15,7 @@
 (require 'arvid-loadpaths)
 
 ;; TODO:
-;;;   Minor mode for calculating the width / height of selections. 
+;;;   Minor mode for calculating the width / height of selections.
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Misc. defuns

@@ -8,14 +8,14 @@
   (interactive)
   (kill-new (buffer-name)))
 
-(defun ninjaword-word-at-point () 
+(defun ninjaword-word-at-point ()
   "Looks up word in point using Ninjawords."
   (interactive)
   (browse-url (concat
 			   "http://ninjawords.com/?q="
 			   (downcase (current-word t)))))
 
-(defun quick-wikipedia-summary-for-word-at-point () 
+(defun quick-wikipedia-summary-for-word-at-point ()
   "Opens the a quick Wikipedia summary of the word at point in a new window."
   (interactive)
   ;; dig +short txt <keyword>.wp.dg.cx
@@ -25,8 +25,8 @@
 			   (current-word t))))
 	(shell-command (concat "dig +short txt " word ".wp.dg.cx"))))
 
-;; Prepending / appending to lines 
-(defun prepend-to-lines (arg prefix) 
+;; Prepending / appending to lines
+(defun prepend-to-lines (arg prefix)
 "Prepend prefix to all lines in region. If a negative arg is
 given, prefix is placed after whitespace in beginning of line."
   (interactive  "p\nMPrepend: ")
@@ -34,7 +34,7 @@ given, prefix is placed after whitespace in beginning of line."
 	  (to-line-helper "^\\([[:space:]]*\\)" (concat "\\1" prefix))
 	(to-line-helper "^" prefix)))
 
-(defun append-to-lines (arg suffix) 
+(defun append-to-lines (arg suffix)
   "Append suffix to all lines in region. Suffix is placed before
 whitespace at end of line, unless negative arg is given."
   (interactive  "p\nMAppend: ")
@@ -42,15 +42,15 @@ whitespace at end of line, unless negative arg is given."
 	  (to-line-helper "$" suffix)
 	(to-line-helper "[[:space:]]*$" suffix)))
 
-;; Replace what with with in n 
-(defun to-line-helper (pattern replacement) 
+;; Replace what with with in n
+(defun to-line-helper (pattern replacement)
   (if mark-active
 	  (save-excursion
 		(let ((reg-beg (region-beginning))
 			  (reg-end (region-end)))
-		  (replace-regexp 
-		   pattern replacement nil 
-		   (progn (goto-char reg-beg) (line-beginning-position)) 
+		  (replace-regexp
+		   pattern replacement nil
+		   (progn (goto-char reg-beg) (line-beginning-position))
 		   (progn (goto-char reg-end) (line-end-position)))))
     (message "Mark not active")))
 
@@ -63,10 +63,10 @@ whitespace at end of line, unless negative arg is given."
 	  (to-line-helper  re-replacement)
 	(to-line-helper "^[[:space:]]*\\(.*?\\)[[:space:]]*$" re-replacement))))
 
-(defun nuke-all-buffers () 
+(defun nuke-all-buffers ()
   "Kill all buffers, leaving *scratch* only."
   (interactive)
-  (mapcar (lambda (x) (kill-buffer x)) (buffer-list)) 
+  (mapcar (lambda (x) (kill-buffer x)) (buffer-list))
   (delete-other-windows))
 
 (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
@@ -83,7 +83,7 @@ whitespace at end of line, unless negative arg is given."
 
 ;; Inserting file names
 ;; TODO: with arg, ask also relative to what.
-(defun insert-relative-path (path) 
+(defun insert-relative-path (path)
   (interactive "F")
   (insert (file-relative-name path)))
 
@@ -112,7 +112,7 @@ whitespace at end of line, unless negative arg is given."
      ,@body
      (ido-everywhere 1)))
 
-;; Movement 
+;; Movement
 
 ;; http://stackoverflow.com/questions/145291/smart-home-in-emacs
 (defun smart-beginning-of-line ()
@@ -139,7 +139,7 @@ line."
 (defun scroll-up-keep-cursor ()
    "Scroll the text one line up while keeping the cursor."
    (interactive)
-   (scroll-up 4)) 
+   (scroll-up 4))
 
 
 
@@ -184,7 +184,7 @@ Uses `current-date-time-format' for the formatting the date/time."
   (insert ": ")
   (comment-region (line-beginning-position) (line-end-position)))
 
-(defun insert-current-date () 
+(defun insert-current-date ()
   "Insert the current date into the current buffer."
   (interactive)
   (insert (format-time-string current-date-format (current-time))))
@@ -218,8 +218,8 @@ there's a region, all lines that region covers will be duplicated."
 
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;; Window handling
-(defun kill-other-window-2 
-  (&optional n) 
+(defun kill-other-window-2
+  (&optional n)
   "Kill buffer in other window"
   (interactive "p")
 
@@ -227,7 +227,7 @@ there's a region, all lines that region covers will be duplicated."
   (kill-buffer)
   (other-window (- 0 n)))
 
-;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph    
+;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph
 (defun unfill-paragraph ()
   "Takes a multi-line paragraph and makes it into a single line of text."
   (interactive)
@@ -253,7 +253,7 @@ there's a region, all lines that region covers will be duplicated."
    (t (comint-simple-send proc command))))
 
 ;; Various defuns for setting keybinding
-(defun report-intelligence-level () 
+(defun report-intelligence-level ()
   "Reports the current users level of intelligence in an user friendly manner."
   (interactive)
   (message "Idiot!"))
