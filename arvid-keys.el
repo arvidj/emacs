@@ -5,14 +5,23 @@
 (global-unset-keys
  '("C-Z"
    "\C-x C-z"
-   
+
    ;; Goal columns is bugging me out
    "C-x C-n"
    "C-x C-b"
-   ))
 
-(defun make-find-file (file) 
+   ;; Mail is bugging me
+   "C-x m"
+   "C-n" "C-p" "C-f" "C-b"))
+
+(defun make-find-file (file)
   `(lambda () (interactive) (find-file ,file)))
+
+(defun make-find-file-readonly (file)
+  `(lambda () (interactive) (find-file-read-only ,file)))
+
+;; use ido-file-internal instead, since we now cant open dired from
+;; ido-find-file-in-dir.
 (defun make-find-file-in-dir (dir)
   `(lambda () (interactive) (ido-find-file-in-dir ,dir)))
 
@@ -20,11 +29,11 @@
  `(("C-c d" duplicate-current-line-or-region)
 
    ;;; Quick access to some config files
-   ("<f9>" ,(make-find-file "~/gluteus/information.org"))
+   ("<f9>" ,(make-find-file-readonly "~/gluteus/information.org"))
    ("<f10>" ,(make-find-file "~/org/ideer.org"))
    ("<f11>" ,(make-find-file "~/.xmonad/xmonad.hs"))
    ("<f12>" ,(make-find-file "~/.emacs.d/init.el"))
-   
+
    ("C-x nf" ,(make-find-file-in-dir "~/.emacs.d/"))
    ("C-x nh" ,(make-find-file-in-dir "~/"))
 
@@ -35,9 +44,9 @@
    ("C-a" smart-beginning-of-line)
    ("M-p" scroll-down-keep-cursor)
    ("M-n" scroll-up-keep-cursor)
-   
+
    ("C-å" join-line)
-   
+
    ;; Window handling
    ("C-ä" (lambda () (interactive) (enlarge-window 3)))
    ("C-Ä" (lambda () (interactive) (enlarge-window -3)))
@@ -101,4 +110,40 @@
    ("C-c n" append-to-lines)
    ("C-c j" prepend-to-lines)
 
-   ("C-x B" ibuffer)))
+   ;; What is current directory?
+   ("C-c i " pwd)
+
+   ("C-x B" ibuffer)
+
+   ("C-c m" smerge-mode)
+
+   ;; Start getting used to the xah-lee bindings
+   ("M-j" backward-char)
+   ("M-l" forward-char)
+   ("M-i" previous-line)
+   ("M-k" next-line)
+
+   ("C-M-l" downcase-word)
+   ("C-n" comment-indent-new-line)
+   ("§" inc-selective-display)
+   ("M-§" dec-selective-display)))
+
+
+;; TODO function and key for reset-selective display
+;; TODO use only one function for dec/set/reset
+;; TODO some way of finding highest indentation level and using that as max.
+(defun inc-selective-display ()
+  ""
+  (interactive)
+  (setq selective-display
+		(if selective-display
+			(1+ selective-display)
+		  1)))
+
+(defun dec-selective-display ()
+  ""
+  (interactive)
+  (setq selective-display
+		(if selective-display
+			(1- selective-display)
+		  10)))

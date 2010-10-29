@@ -10,9 +10,11 @@
 			   ;; Various typo projects
 			   ("goodiebag-live"
 				(or (filename . "remote/live/goodiebag")
-					(filename . "remote/live/gc_gb")))
+					(filename . "remote/live/gc_gb")
+					(filename . "bgluteus_remote_dev/magenta/goodiebag/")))
                ("goodiebag-dev"
-                (filename . "remote/dev/goodiebag"))
+                (or (filename . "remote/dev/goodiebag")
+					(filename . "bgluteus_remote_dev/magenta_dev/goodiebag/")))
                ("goodiebag-local"
                 (or (filename . "local/gc_gb")
 					(filename . "local/goodiebag")
@@ -21,6 +23,10 @@
                 (filename . "remote/live/framtidensmat"))
                ("framtidensmat-dev"
                 (filename . "remote/dev/framtidensmat"))
+			   ("framtidensmat-local"
+                (or (filename . "public_html/framtidensmat")
+					(filename . "local/framtidensmat")
+					(filename . "local/gc_fm")))
                ("wwoof-dev"
                 (filename . "remote/dev/wwoof_community"))
 			   ("wwoof-live"
@@ -29,7 +35,14 @@
                 (filename . "remote/dev/quinyx/"))
 			   ("pulsteknik"
                 (filename . "remote/dev/pulsteknik/"))
-			   
+
+			   ("gc_collectors_social-local"
+                (or (filename . "local/gc_collectors_social/")
+					(filename . "quinyx/typo3conf/ext/gc_collectors_social/")))
+
+			   ("gc_veguestbook_hooks-local"
+                (or (filename . "local/gc_veguestbook_hooks/")
+					(filename . "quinyx/typo3conf/ext/gc_veguestbook_hooks/")))
 
 			   ("core-live"
                 (filename . "remote/live/core-live/"))
@@ -44,6 +57,9 @@
                 (or (filename . "public_html/core-magenta-2.0-git")
 					(filename . "local/gc_system")
 					(filename . "local/core-magenta-2.0-git")))
+
+			   ("ssfe-remote"
+				(or (filename . "bgluteus_remote_dev/magenta_dev/core-magenta2")))
 
 			   ;; Some other projects
 			   ("nevarforget"
