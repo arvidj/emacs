@@ -56,4 +56,9 @@ log-line."
 
 (timeclock-initialize)
 
+(defadvice timeclock-visit-timelog (after my-timeclock-visit-timelog () activate)
+  "Advice the timelog timeclock-visit-timelog function so that the
+timelog will be re-read after each save."
+  (add-hook 'after-save-hook 'timeclock-reread-log nil t))
+
 (provide 'arvid-timeclock)
