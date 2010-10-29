@@ -73,6 +73,8 @@ whitespace at end of line, unless negative arg is given."
   "Prevent annoying \"Active processes exist\" query when you quit Emacs."
   (let ((process-list ())) ad-do-it))
 
+;; TODO does not work when zapping backwards.
+;; TODO if already at char, zap a little more.
 (defadvice zap-to-char (after my-zap-to-char-advice (arg char) activate)
   "Kill up to the ARG'th occurrence of CHAR, and leave CHAR.
   The CHAR is replaced and the point is put before CHAR."

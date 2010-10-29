@@ -63,6 +63,9 @@
 (load "arvid-mk-project.el")
 (require 'arvid-auto-complete)
 (require 'arvid-ido)
+;; TODO It would be nice if we have a command vc-status that checks if
+;; default-dir is under svn or git and calls svn-status or
+;; magit-status.
 (require 'arvid-svn)
 (require 'arvid-magit)
 (require 'arvid-ibuffer)

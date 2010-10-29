@@ -1,6 +1,8 @@
 ;; TODO: smarter new-snippet
 ;;;  After creating a snippet, it should now what to save it as, and
 ;;;  where, using mode-name and key of the snippet.
+;; TODO: quick menu showing all available modes in the bottom of the
+;; screen, similar to how magit shows available switches.
 
 (require 'yasnippet)
 
