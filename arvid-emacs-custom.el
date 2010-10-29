@@ -55,7 +55,7 @@
  '(smerge-command-prefix "m")
  '(sql-mysql-options (quote ("-P 8888")))
  '(svn-log-edit-show-diff-for-commit t)
- '(svn-status-default-diff-arguments (quote ("-x --ignore-eol-style" "-x -w")))
+ '(svn-status-default-diff-arguments nil)
  '(tab-stop-list (quote (4 8 12 16 20 24 28 32 36 48 56 64 \.\.\.)))
  '(tab-width 4)
  '(timeclock-file "~/Dropbox/gluteus/timelogs/.timelog")
