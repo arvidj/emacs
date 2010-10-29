@@ -35,6 +35,8 @@
  '(js2-enter-indents-newline t)
  '(js2-mirror-mode t)
  '(js2-mode-escape-quotes nil)
+ '(magit-completing-read-function (quote ido-completing-read))
+ '(magit-process-popup-time 5)
  '(mk-proj-ack-cmd "ack-grep")
  '(mk-proj-ack-cmd-name "ack-grep")
  '(mk-proj-use-ido-selection t)
