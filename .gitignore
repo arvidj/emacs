@@ -9,3 +9,4 @@ session.*
 /backup-emacs
 /autosave-emacs
 *.elc
+/tramp

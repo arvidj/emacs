@@ -97,3 +97,18 @@
 [submodule "plugins/arvid-google-translate"]
 	path = plugins/arvid-google-translate
 	url = git@github.com:arvixx/arvid-google-translate.git
+[submodule "plugins/ethan-wspace"]
+	path = plugins/ethan-wspace
+	url = http://github.com/glasserc/ethan-wspace.git
+[submodule "plugins/ws-trim"]
+	path = plugins/ws-trim
+	url = http://github.com/emacsmirror/ws-trim.git
+[submodule "plugins/face-list"]
+	path = plugins/face-list
+	url = http://github.com/emacsmirror/face-list.git
+[submodule "plugins/js-comint"]
+	path = plugins/js-comint
+	url = https://github.com/emacsmirror/js-comint.git
+[submodule "plugins/highlight-tail"]
+	path = plugins/highlight-tail
+	url = https://github.com/emacsmirror/highlight-tail.git
