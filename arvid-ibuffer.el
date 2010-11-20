@@ -120,7 +120,10 @@
 			(ibuffer-auto-mode 1)
 			(ibuffer-switch-to-saved-filter-groups "default")))
 
+(define-keys ibuffer-mode-map
+  '(("TAB" ibuffer-toggle-filter-group)
+	("M-j" backward-char)))
+
 (define-key ibuffer-mode-map (kbd "TAB") 'ibuffer-toggle-filter-group)
 
 (provide 'arvid-ibuffer)
-
