@@ -34,6 +34,9 @@
   (setq imenu-generic-expression
   		'(("Selector" find-prev-css-selector 0))))
 
+;; Fails with when there are rules like:
+;; background-color: rgba(240,241,242,0.97);
+;; Add line number to make unique.
 (defun find-prev-css-selector ()
   "Find the preceding css selector relative to point.
 
