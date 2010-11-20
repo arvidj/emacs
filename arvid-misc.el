@@ -3,7 +3,6 @@
 ;; http://gist.github.com/452824
 
 (setq require-final-newline t)
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; I want to be able to just discard / revert buffers that I have left
 ;; changes in.
