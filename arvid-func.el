@@ -184,6 +184,7 @@ Uses `current-date-time-format' for the formatting the date/time."
 
 ;; Various
 
+;; TODO only make comment if not already in comment. see fontlock or somtf. font-lock-comment-face
 (defun arvid-add ()
   "Insert a comment with my name and date, for creating a comment about modifications"
   (interactive)

@@ -1,4 +1,5 @@
 ;; TODO: It would be nice to have a mode for trying out TS.
+;; TODO: "//" is not a comment in typoscript, but /* */ is.
 
 
 ;;; TypoScript-mode
