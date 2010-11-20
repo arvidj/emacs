@@ -86,10 +86,14 @@ arg is negative, also kill current."
   (forward-char -1))
 
 ;; Inserting file names
-;; TODO: with arg, ask also relative to what.
-(defun insert-relative-path (path)
-  (interactive "F")
-  (insert (file-relative-name path)))
+(defun insert-relative-path ()
+  (interactive)
+  (let ((path (read-file-name "File: "))
+		;; TODO Should only complete on dir but do not know how!
+		(rel-path (if (not current-prefix-arg)
+					  (read-file-name "Relative dir: ")
+					default-directory)))
+	(insert (file-relative-name path rel-path))))
 
 ;; Never understood why Emacs doesn't have this function.
 ;; http://steve.yegge.googlepages.com/my-dot-emacs-file
