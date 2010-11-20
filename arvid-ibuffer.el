@@ -1,5 +1,34 @@
 (require 'ibuffer)
 
+;; TODO if not a class, then how do you fallback to another column?
+;; The name column is defined in ebuffer.el but I don't want to copy
+;; it :S
+(define-ibuffer-column php-class-name-col
+  (:name "Class")
+  (let ((name (buffer-name buffer)))
+	(if (string-match "class.tx_\\(.*\\).php" name)
+		(concat "*" (match-string 1 name) "*")
+	  "")))
+
+(setq ibuffer-formats
+	  '((mark modified read-only " "
+			  (name 18 18 :left :elide)
+			  " "
+			  (size 9 -1 :right)
+			  " "
+			  (mode 16 16 :left :elide)
+			  " " filename-and-process)
+		(mark modified read-only " "
+			  (name 18 18 :left :elide)
+			  " "
+			  (php-class-name-col 30 30 :left :elide)
+			  " "
+			  (mode 16 16 :left :elide)
+			  " " filename-and-process)
+		(mark " "
+			  (name 16 -1)
+			  " " filename)))
+
 (setq ibuffer-saved-filter-groups
       (quote (("default"
                ("org"
