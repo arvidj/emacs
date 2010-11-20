@@ -56,7 +56,7 @@
   (local-unset-key (kbd "C-M-k"))
 
   ;; (flymake-mode 1)
-  (c-toggle-electric-state 1)
+  (c-toggle-electric-state -1)
 
   ;; Set fill width to 80 columns
   (setq fill-column 80)
