@@ -92,6 +92,7 @@
 (require 'arvid-google-translate)
 (require 'arvid-wspace)
 (require 'arvid-sublain)
+(require 'arvid-flyspell)
 
 (require 'arvid-machine-specific)
 
