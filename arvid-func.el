@@ -303,3 +303,23 @@ use. If the input is non-empty, it is inserted at point."
 	(open-line 1)
 	(next-line)
 	(indent-according-to-mode)))
+
+;; TODO make more nice
+(defun toggle-booleans-in-region-or-line ()
+  "Replaces each true with false. If no true is found, do the reverse."
+  (interactive)
+  (save-excursion
+	(let ((reg-beg (region-beginning))
+		  (reg-end (region-end))
+		  (found nil))
+	  (goto-char reg-beg)
+	  (while (re-search-forward "true" reg-end t)
+		(setq found t)
+		(replace-match "false" nil nil)
+		(setq reg-beg (1+ reg-beg)))
+	  (unless found
+		(message "trying other way")
+		(goto-char reg-beg)
+		(while (re-search-forward "false" reg-end t)
+		  (replace-match "true" nil nil)
+		  (setq reg-beg (1- reg-beg)))))))
