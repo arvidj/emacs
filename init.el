@@ -34,6 +34,7 @@
 (require 'arvid-sql)
 (require 'arvid-lisp)
 (require 'arvid-js)
+(require 'arvid-js-comint)
 (require 'arvid-python)
 (require 'arvid-css)
 (require 'arvid-autopair)
@@ -89,6 +90,8 @@
 (require 'arvid-fic)
 (require 'arvid-command-frequency)
 (require 'arvid-google-translate)
+(require 'arvid-wspace)
+(require 'arvid-sublain)
 
 (require 'arvid-machine-specific)
 
