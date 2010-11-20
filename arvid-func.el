@@ -295,3 +295,11 @@ use. If the input is non-empty, it is inserted at point."
 		 (input (minibuffer-with-setup-hook (lambda () (kbd-macro-query t))
 				  (read-from-minibuffer prompt))))
 	(unless (string= "" input) (insert input))))
+
+(defun open-line-and-indent ()
+  "Splits the current line using open-line, then indents."
+  (interactive)
+  (save-excursion
+	(open-line 1)
+	(next-line)
+	(indent-according-to-mode)))
