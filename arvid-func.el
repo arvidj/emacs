@@ -86,10 +86,14 @@ arg is negative, also kill current."
   (forward-char -1))
 
 ;; Inserting file names
-;; TODO: with arg, ask also relative to what.
-(defun insert-relative-path (path)
-  (interactive "F")
-  (insert (file-relative-name path)))
+(defun insert-relative-path ()
+  (interactive)
+  (let ((path (read-file-name "File: "))
+		;; TODO Should only complete on dir but do not know how!
+		(rel-path (if (not current-prefix-arg)
+					  (read-file-name "Relative dir: ")
+					default-directory)))
+	(insert (file-relative-name path rel-path))))
 
 ;; Never understood why Emacs doesn't have this function.
 ;; http://steve.yegge.googlepages.com/my-dot-emacs-file
@@ -180,6 +184,7 @@ Uses `current-date-time-format' for the formatting the date/time."
 
 ;; Various
 
+;; TODO only make comment if not already in comment. see fontlock or somtf. font-lock-comment-face
 (defun arvid-add ()
   "Insert a comment with my name and date, for creating a comment about modifications"
   (interactive)
@@ -279,5 +284,43 @@ there's a region, all lines that region covers will be duplicated."
 (defun define-keys (map bindings)
   (dolist (binding bindings)
     (let ((key (car binding)) (command (cadr binding)))
-      (define-key map (read-kbd-macro key) command))))
+	  (define-key map (read-kbd-macro key) command))))
 
+;; From http://www.emacswiki.org/emacs/KeyboardMacros#toc5
+(defun my-macro-query (arg)
+  "Prompt for input using minibuffer during kbd macro execution.
+With prefix argument, allows you to select what prompt string to
+use. If the input is non-empty, it is inserted at point."
+  (interactive "P")
+  (let* ((prompt (if arg (read-from-minibuffer "PROMPT: ") "Input: "))
+		 (input (minibuffer-with-setup-hook (lambda () (kbd-macro-query t))
+				  (read-from-minibuffer prompt))))
+	(unless (string= "" input) (insert input))))
+
+(defun open-line-and-indent ()
+  "Splits the current line using open-line, then indents."
+  (interactive)
+  (save-excursion
+	(open-line 1)
+	(next-line)
+	(indent-according-to-mode)))
+
+;; TODO make more nice
+(defun toggle-booleans-in-region-or-line ()
+  "Replaces each true with false. If no true is found, do the reverse."
+  (interactive)
+  (save-excursion
+	(let ((reg-beg (region-beginning))
+		  (reg-end (region-end))
+		  (found nil))
+	  (goto-char reg-beg)
+	  (while (re-search-forward "true" reg-end t)
+		(setq found t)
+		(replace-match "false" nil nil)
+		(setq reg-beg (1+ reg-beg)))
+	  (unless found
+		(message "trying other way")
+		(goto-char reg-beg)
+		(while (re-search-forward "false" reg-end t)
+		  (replace-match "true" nil nil)
+		  (setq reg-beg (1- reg-beg)))))))

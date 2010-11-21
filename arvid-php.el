@@ -29,7 +29,8 @@
   	  ("ä" ,(make-inserter "$"))
   	  ("$" report-intelligence-level)
   	  ("M-ä" ,(make-inserter "ä"))
-  	  ("ö" ,(make-inserter ";"))))
+	  ("ö" ,(make-inserter ";"))
+	  ("M-ö" ,(make-inserter "ö"))))
 
   ;; I prefer $ not being part of a word. That way, c-backward-subword
   ;; moves to a instead of $ when moving backward in a variable like this:

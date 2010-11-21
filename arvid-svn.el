@@ -18,6 +18,6 @@
 (global-set-key (kbd "C-x g") 'svn-status)
 
 ;; Add spell-checking when writing commit messages.
-(add-hook 'svn-log-edit-mode-hook flyspell-mode)
+(add-hook 'svn-log-edit-mode-hook 'flyspell-mode)
 
 (provide 'arvid-svn)

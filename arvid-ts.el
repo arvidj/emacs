@@ -1,4 +1,5 @@
 ;; TODO: It would be nice to have a mode for trying out TS.
+;; TODO: "//" is not a comment in typoscript, but /* */ is.
 
 
 ;;; TypoScript-mode
@@ -11,7 +12,8 @@
 								 "/tsconfig_tinymce_fe.txt"
 								 "/tsconfig_tinymce_be.txt"
 								 "/typoscript_setup.txt"
-								 "/tsconfig_page.txt"))))
+								 "/tsconfig_page.txt"
+								 "/fileadmin/templates/typoscript/"))))
   ;; What is up with the back tick monstrosity :(
   (add-to-list 'auto-mode-alist `(,ts-files-re . ts-mode)))
 

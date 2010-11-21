@@ -73,6 +73,7 @@
    ("C-x r a" append-to-register)
 
    ;; I never use this, but I should
+   ("M-DEL" report-intelligence-level)
    ("C-," backward-kill-word)
 
    ;; The formatting of these guys suck
@@ -131,7 +132,11 @@
    ("C-M-l" downcase-word)
    ("C-n" comment-indent-new-line)
    ("§" inc-selective-display)
-   ("M-§" dec-selective-display)))
+   ("M-§" dec-selective-display)
+
+   ("\C-xQ" my-macro-query)
+
+   ("M-o" open-line-and-indent)))
 
 
 ;; TODO function and key for reset-selective display
