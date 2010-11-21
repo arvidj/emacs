@@ -1,6 +1,10 @@
 (add-hook 'ruby-mode-hook 'arvid-ruby-mode-hook)
 
-(defun arvid-ruby-mode-hook () 
+(let ((rb-files-re (regexp-opt '("Gemfile"))))
+  ;; What is up with the back tick monstrosity :(
+  (add-to-list 'auto-mode-alist `(,rb-files-re . ruby-mode)))
+
+(defun arvid-ruby-mode-hook ()
   ""
   ;; "C-c C-e" ends a block.
   (define-key ruby-mode-map (kbd "C-c C-e")
