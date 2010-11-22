@@ -1,3 +1,10 @@
+(require 'ruby-end)
+(ruby-end-mode t)
+
+(setq
+ ruby-end-keywords-re
+ "\\(?:^\\|\\s-+\\)\\(?:def\\|if\\|class\\|module\\|unless\\|case\\|while\\|do\\|until\\|for\\|begin\\|it\\|describe\\|before\\)")
+
 (add-hook 'ruby-mode-hook 'arvid-ruby-mode-hook)
 
 (let ((rb-files-re (regexp-opt '("Gemfile"))))
@@ -20,5 +27,5 @@
   ;; one wants paired in the string-class of the syntax table. Let's
   ;; see how it works.
   (modify-syntax-entry ?| "\""))
-  
+
 (provide 'arvid-ruby)
