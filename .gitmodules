@@ -112,3 +112,6 @@
 [submodule "plugins/highlight-tail"]
 	path = plugins/highlight-tail
 	url = https://github.com/emacsmirror/highlight-tail.git
+[submodule "plugins/ruby-end"]
+	path = plugins/ruby-end
+	url = https://github.com/rejeep/ruby-end.git
