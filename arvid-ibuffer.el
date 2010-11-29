@@ -104,6 +104,9 @@
 		 ("nevarforget"
 		  (or (filename . "dev/nevarforget")))
 
+		 ("booksurfing"
+		  (or (filename . "dev/booksurfing")))
+
 		 ("magit"
 		  (name . "^\\*magit"))
 		 ("dired"
