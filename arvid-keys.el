@@ -136,7 +136,8 @@
 
    ("\C-xQ" my-macro-query)
 
-   ("M-o" open-line-and-indent)))
+   ("M-o" open-line-and-indent)
+   ("C-S-k" kill-whole-line)))
 
 
 ;; TODO function and key for reset-selective display
