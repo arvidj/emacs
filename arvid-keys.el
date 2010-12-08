@@ -35,7 +35,7 @@
    ("<f12>" ,(make-find-file "~/.emacs.d/init.el"))
 
    ("C-x nf" ,(make-find-file-in-dir "~/.emacs.d/"))
-   ("C-x nh" ,(make-find-file-in-dir "~/"))
+   ("C-x nj" ,(make-find-file-in-dir "~/"))
 
    ("M-g" goto-line)
    ("M-#" replace-string)
@@ -137,7 +137,11 @@
    ("\C-xQ" my-macro-query)
 
    ("M-o" open-line-and-indent)
-   ("C-S-k" kill-whole-line)))
+   ("C-S-k" kill-whole-line)
+
+   ("C-x nh" narrow-to-paragraph)))
+
+
 
 
 ;; TODO function and key for reset-selective display
