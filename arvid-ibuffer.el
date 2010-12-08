@@ -58,6 +58,8 @@
 			  (filename . "local/gc_fm")))
 		 ("wwoof-dev"
 		  (filename . "remote/dev/wwoof_community"))
+		 ("wwoof-local"
+		  (filename . "public_html/wwoof_community"))
 		 ("wwoof-live"
 		  (filename . "remote/live/wwoof_community"))
 		 ("quinyx"
