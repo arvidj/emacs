@@ -10,4 +10,8 @@
 			 (local-set-key "\C-cl" 'js-load-file-and-go)
 			 ))
 
+(add-hook 'inferior-js-mode-hook
+		  '(lambda ()
+			 (ansi-color-for-comint-mode-filter)))
+
 (provide 'arvid-js-comint)
