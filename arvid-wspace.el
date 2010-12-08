@@ -5,7 +5,7 @@
 (set-default 'ws-trim-level 0)
 (setq ws-trim-method-hook '(ws-trim-trailing ws-trim-leading-spaces))
 ;; Turn off ws-trim in message-mode and eshell-mode
-(setq ws-trim-global-modes '(guess (not message-mode eshell-mode)))
+(setq ws-trim-global-modes '(guess (not message-mode eshell-mode ruby-mode)))
 
 ;; Ethan-wspace keeps track of whether a file is "clean" (free of trailing
 ;; whitespace and tabs) when you open it, and will automatically
@@ -14,7 +14,6 @@
 ;; clean, and will leave alone any files that were
 ;; dirty (i.e. someone else didn't follow the rules).
 (require 'ethan-wspace)
-(set-default 'ethan-wspace-errors (remove 'tabs ethan-wspace-errors))
-(global-ethan-wspace-mode 1)
+(global-ethan-wspace-mode nil)
 
 (provide 'arvid-wspace)
