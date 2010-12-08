@@ -9,6 +9,7 @@
 				 "smex" "drag-stuff" "anything" "anything-config" "iedit"
 				 "etest" "fic-mode" "command-frequency" "arvid-google-translate"
 				 "ethan-wspace/lisp" "ws-trim" "js-comint" "sublain"
+				 "mozrepl/chrome/content"
 				 )))
   (dolist (plugin plugins)
 	(add-to-list 'load-path (concat "~/.emacs.d/plugins/" plugin))))
