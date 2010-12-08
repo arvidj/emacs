@@ -13,5 +13,7 @@
 ;;; http://orgmode.org/manual/Setting-up-Remember.html#Setting-up-Remember
 (org-remember-insinuate)
 (define-key global-map "\C-cr" 'org-remember)
+(define-keys org-mode-map
+  '(("C-," backward-kill-word)))
 
 (provide 'arvid-org-mode)
