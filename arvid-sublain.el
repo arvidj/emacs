@@ -5,13 +5,16 @@
 		  (lambda ()
 			(define-keys sublain-list-mode-map
 			  '(("RET" sublain-list-visit)
-				("o" sublain-list-visit)))))
+				("o" sublain-list-visit)
+				("w" (lambda ()
+					   (interactive)
+					   (message "%s copied to kill-ring"
+								(kill-new sublain-list-target))))))))
 
 (add-hook 'sublain-bookmark-mode-hook
 		  (lambda ()
 			(define-keys sublain-bookmark-mode-map
 			  '(("RET" sublain-bookmark-visit)
 				("o" sublain-bookmark-visit)))))
-
 
 (provide 'arvid-sublain)
