@@ -18,6 +18,7 @@
  '(ediff-window-setup-function (quote ediff-setup-windows-plain))
  '(fic-highlighted-words (quote ("REFACTOR" "FIXME" "TODO" "BUG" "KLUDGE")))
  '(flymake-start-syntax-check-on-newline nil)
+ '(grep-files-aliases (quote (("asm" . "*.[sS]") ("c" . "*.c") ("cc" . "*.cc *.cxx *.cpp *.C *.CC *.c++") ("cchh" . "*.cc *.[ch]xx *.[ch]pp *.[CHh] *.CC *.HH *.[ch]++") ("hh" . "*.hxx *.hpp *.[Hh] *.HH *.h++") ("ch" . "*.[ch]") ("el" . "*.el") ("h" . "*.h") ("l" . "[Cc]hange[Ll]og*") ("m" . "[Mm]akefile*") ("tex" . "*.tex") ("texi" . "*.texi") ("ts" . "*\.ts"))))
  '(haskell-program-name "ghci -XExistentialQuantification")
  '(ido-default-buffer-method (quote selected-window))
  '(ido-default-file-method (quote selected-window))
