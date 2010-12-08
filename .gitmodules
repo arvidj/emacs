@@ -115,3 +115,6 @@
 [submodule "plugins/ruby-end"]
 	path = plugins/ruby-end
 	url = https://github.com/rejeep/ruby-end.git
+[submodule "plugins/mozrepl"]
+	path = plugins/mozrepl
+	url = https://github.com/bard/mozrepl.git

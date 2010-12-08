@@ -18,6 +18,8 @@
 ;; TODO: Send chrome javascript errors to emacs. How to hook into
 ;;       console?
 
+(autoload 'moz-minor-mode "moz" "Mozilla Minor and Inferior Mozilla Modes" t)
+
 (add-to-list 'auto-mode-alist '("\\.js\\(on\\)?\\'" . js-mode))
 (autoload 'js-mode "js" nil t)
 (add-hook 'js-mode-hook 'my-js-mode-hook)
@@ -37,7 +39,7 @@
 		  (insert "$(")))
 	(insert "$")))
 
-(defun my-js-mode-hook ()
+ (defun my-js-mode-hook ()
   (c-subword-mode 1)
   (setq default-tab-width 4)
 
@@ -53,7 +55,8 @@
 	  ("C-n" c-indent-new-comment-line)
 	  ("RET" newline-and-indent)))
 
-  (flymake-js-load))
+  (flymake-js-load)
+  (moz-minor-mode 1))
 
 (defun escape-js-regex () "Escape javascript regex"
   (interactive)
@@ -105,7 +108,5 @@
   (flymake-mode t)
   (setq flymake-allowed-file-name-masks (append flymake-allowed-file-name-masks flymake-allowed-js-file-name-masks))
   (setq flymake-err-line-patterns flymake-js-err-line-patterns))
-
-(add-hook 'javascript-mode-hook '(lambda () ))
 
 (provide 'arvid-js)
