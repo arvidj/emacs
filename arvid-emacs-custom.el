@@ -55,7 +55,7 @@
  '(recentf-auto-cleanup (quote never))
  '(recentf-max-menu-items 30)
  '(ruby-indent-level 4)
- '(safe-local-variable-values (quote ((indent-tabs-mode nil))))
+ '(safe-local-variable-values (quote ((ethan-wspace-errors tabs eol no-nl-eof many-nls-eof) (ethan-wspace-errors quote (tabs eol no-nl-eof many-nls-eof)) (indent-tabs-mode nil))))
  '(sgml-basic-offset 4)
  '(smerge-command-prefix "m")
  '(sql-mysql-options (quote ("-P 8888")))
