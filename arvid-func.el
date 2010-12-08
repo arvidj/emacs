@@ -324,3 +324,13 @@ use. If the input is non-empty, it is inserted at point."
 		(while (re-search-forward "false" reg-end t)
 		  (replace-match "true" nil nil)
 		  (setq reg-beg (1- reg-beg)))))))
+
+(defun sudo-edit (&optional arg)
+  (interactive "p")
+  (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name)))
+
+(defun narrow-to-paragraph ()
+  (interactive)
+  "Narrow to paragraph (or its visible portion)."
+  (narrow-to-region (save-excursion (backward-sentence) (point))
+					(save-excursion (forward-paragraph) (point))))
