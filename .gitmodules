@@ -118,3 +118,12 @@
 [submodule "plugins/mozrepl"]
 	path = plugins/mozrepl
 	url = https://github.com/bard/mozrepl.git
+[submodule "plugins/php-doc"]
+	path = plugins/php-doc
+	url = https://github.com/emacsmirror/php-doc.git
+[submodule "plugins/tree-mode"]
+	path = plugins/tree-mode
+	url = https://github.com/emacsmirror/tree-mode.git
+[submodule "plugins/windata"]
+	path = plugins/windata
+	url = https://github.com/emacsmirror/windata.git
