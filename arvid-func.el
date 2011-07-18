@@ -362,3 +362,100 @@ use. If the input is non-empty, it is inserted at point."
   "Narrow to paragraph (or its visible portion)."
   (narrow-to-region (save-excursion (backward-sentence) (point))
 					(save-excursion (forward-paragraph) (point))))
+
+(defun buffer-char-frequency ()
+  (interactive)
+  (save-excursion
+	(goto-char (point-min))
+	(let ((char-freq-table (make-hash-table :test 'eql :size 256))
+		  (current-char (following-char)))
+	  (while (> current-char 0)
+		  (puthash current-char
+				   (1+ (gethash current-char char-freq-table 0))
+				   char-freq-table)
+		  (forward-char)
+		  (setq current-char (following-char)))
+
+	  ;; Hash is ready. Format each value, and sort by frequency
+	  ;; descending.
+	  (let ((frequency-list (hash-to-list char-freq-table)))
+		;; Sort by frequency
+		(setq frequency-list
+			  (sort frequency-list
+					(lambda (a b) (> (cadr a) (cadr b)))))
+
+		;; Format
+		(print (mapcar (lambda (el)
+						 ;; (print el)
+						 (let ((char (car el)))
+						   `(,(if enable-multibyte-characters
+								  (if (< char 128)
+									  (single-key-description char)
+									(buffer-substring-no-properties (point) (1+ (point))))
+								(single-key-description char))
+							 ,(cadr el))))
+					   frequency-list))))))
+
+(defun hash-to-list (hashtable)
+  "Return a list that represent the HASHTABLE."
+  (let (mylist)
+	(maphash (lambda (kk vv) (setq mylist (cons (list kk vv) mylist))) hashtable)
+	mylist))
+
+(defun spawn-shell ()
+  (interactive)
+  (start-process
+   "spawn-shell-proc"
+   nil
+   "urxvt" "-bg" "black" "-fg" "white" "-cd" default-directory))
+
+(defun arvid-occur (regexp &optional nlines)
+  (interactive (arvid-occur-read-primary-args))
+  (occur-1 regexp nlines (list (current-buffer))))
+
+(defun arvid-occur-read-primary-args ()
+  (list (read-regexp "List lines matching regexp"
+		     (arvid-occur-get-default-regexp))
+	(when current-prefix-arg
+	  (prefix-numeric-value current-prefix-arg))))
+
+(defun arvid-occur-get-default-regexp ()
+  (cond
+   ((region-active-p) (buffer-substring-no-properties (region-beginning) (region-end)))
+   ((symbol-name (symbol-at-point)))
+   (t (car regexp-history))))
+
+
+(defun arvid-query-replace-html-entitities ()
+  (interactive)
+  (let ((old-case case-fold-search))
+	(setq case-fold-search nil)
+	(query-replace "ä" "&auml;")
+	(beginning-of-buffer)
+	(query-replace "å" "&aring;")
+	(beginning-of-buffer)
+	(query-replace "ö" "&ouml;")
+	(beginning-of-buffer)
+	(query-replace "Ä" "&Auml;")
+	(beginning-of-buffer)
+	(query-replace "Å" "&Auml;")
+	(beginning-of-buffer)
+	(query-replace "Ö" "&Ouml;")
+	(beginning-of-buffer)
+	(setq case-fold-search old-case)))
+
+(defun get-ticket-nr-from-branch () 
+  ""
+  (interactive)
+  (let* ((branch (magit-get-current-branch))
+		 (matches (string-match "^t\\(.*?\\)-" branch))
+		 (tnr (match-string 1 branch)))
+	(insert (concat (get-current-project-code) "-" tnr))))
+
+(defun get-current-project-code ()
+  ""
+  (interactive)
+  (let ((dir default-directory))
+	(cond
+	 ((string-match "public_html/weback" dir) "WEBACK")
+	 ((string-match "typo3" dir) "MAGENTA"))))
