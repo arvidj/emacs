@@ -353,7 +353,9 @@ use. If the input is non-empty, it is inserted at point."
 
 (defun sudo-edit (&optional arg)
   (interactive "p")
-  (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name)))
+  (let ((p (point)))
+	(find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))
+	(goto-char p)))
 
 (defun narrow-to-paragraph ()
   (interactive)
