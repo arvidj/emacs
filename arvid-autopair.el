@@ -3,6 +3,17 @@
 (setq autopair-autowrap t)
 (setq autopair-blink nil)
 
+;; Enables delete-selection in when auto-pair is active.
+;; http://code.google.com/p/autopair/issues/detail?id=24
+(put 'autopair-insert-opening 'delete-selection t)
+(put 'autopair-skip-close-maybe 'delete-selection t)
+(put 'autopair-insert-or-skip-quote 'delete-selection t)
+(put 'autopair-extra-insert-opening 'delete-selection t)
+(put 'autopair-extra-skip-close-maybe 'delete-selection t)
+(put 'autopair-backspace 'delete-selection 'supersede)
+(put 'autopair-newline 'delete-selection t)
+
+
 ;; TODO
 ;;
 ;; * When transient mark in html-mode buffer, and < is pressed,
