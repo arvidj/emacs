@@ -77,13 +77,39 @@ arg is negative, also kill current."
   "Prevent annoying \"Active processes exist\" query when you quit Emacs."
   (let ((process-list ())) ad-do-it))
 
-;; TODO does not work when zapping backwards.
-;; TODO if already at char, zap a little more.
-(defadvice zap-to-char (after my-zap-to-char-advice (arg char) activate)
-  "Kill up to the ARG'th occurrence of CHAR, and leave CHAR.
-  The CHAR is replaced and the point is put before CHAR."
-  (insert char)
-  (forward-char -1))
+;; TODOOIt would be nice if it would notice that last command is
+;; zap-to-char and that we want to zap again.
+(defun zap-to-char (arg char)
+  "Kill up to and including ARGth occurrence of CHAR.
+Case is ignored if `case-fold-search' is non-nil in the current buffer.
+Goes backward if ARG is negative; error if CHAR not found."
+
+
+  ;; TODO: if (eq last-command 'zap-to-char)) ~ use last char ~
+
+
+  ;; Does not work, says that last-command is kill-region, quite
+  ;; correct.
+  (interactive (list current-prefix-arg
+					 (if (eq last-command 'zap-to-char)
+						 arvid-zap-last-char
+					  (message (symbol-name last-command))
+					  (read-char "Zap to char: "))))
+
+  ;; Avoid "obsolete" warnings for translation-table-for-input.
+  (setq arvid-zap-last-char char)
+  (with-no-warnings
+    (if (char-table-p translation-table-for-input)
+	(setq char (or (aref translation-table-for-input char) char))))
+  ;; If point is already at char, remove char, otherwise, remove up
+  ;; until next char, excluding char.
+  (kill-region (point)
+			   (progn
+				 (if (= (char-after) char)
+					 (1+ (point))
+				   (search-forward (char-to-string char) nil nil arg)
+				   (backward-char)
+				   (point)))))
 
 ;; Inserting file names
 (defun insert-relative-path ()
