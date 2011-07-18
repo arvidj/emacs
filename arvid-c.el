@@ -65,7 +65,8 @@
   ;; (setq autopair-handle-action-fns '(my-test-handler))
 
   (define-keys c-mode-map
-	`(("M-a" nil)
+	`(("M-a" smart-beginning-of-line)
+	  ("M-e" move-end-of-line)
 	  ("ä" ,(make-inserter "$"))
 	  ("ö" ,(make-inserter ";"))
 	  (";" report-intelligence-level)
