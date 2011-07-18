@@ -55,9 +55,6 @@
 [submodule "plugins/wrap-region"]
 	path = plugins/wrap-region
 	url = git://github.com/rejeep/wrap-region.git
-[submodule "plugins/espresso"]
-	path = plugins/espresso
-	url = http://github.com/emacsmirror/espresso.git
 [submodule "plugins/highlight-parentheses"]
 	path = plugins/highlight-parentheses
 	url = http://github.com/emacsmirror/highlight-parentheses.git
