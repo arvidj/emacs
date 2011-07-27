@@ -124,3 +124,6 @@
 [submodule "plugins/anything"]
 	path = plugins/anything
 	url = git@github.com:arvixx/anything.git
+[submodule "plugins/autopair"]
+	path = plugins/autopair
+	url = git@github.com:arvixx/autopair.git
