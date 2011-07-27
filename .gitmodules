@@ -124,3 +124,6 @@
 [submodule "plugins/kpm-list"]
 	path = plugins/kpm-list
 	url = https://github.com/KMahoney/kpm-list.git
+[submodule "plugins/anything"]
+	path = plugins/anything
+	url = git@github.com:arvixx/anything.git
