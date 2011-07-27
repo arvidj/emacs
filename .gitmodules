@@ -76,12 +76,6 @@
 [submodule "plugins/drag-stuff"]
 	path = plugins/drag-stuff
 	url = http://github.com/rejeep/drag-stuff.git
-[submodule "plugins/anything"]
-	path = plugins/anything
-	url = http://github.com/emacsmirror/anything.git
-[submodule "plugins/anything-config"]
-	path = plugins/anything-config
-	url = git://repo.or.cz/anything-config.git
 [submodule "plugins/wanderlust"]
 	path = plugins/wanderlust
 	url = http://github.com/emacsmirror/wanderlust.git
@@ -124,3 +118,9 @@
 [submodule "plugins/windata"]
 	path = plugins/windata
 	url = https://github.com/emacsmirror/windata.git
+[submodule "plugins/ace-jump-mode"]
+	path = plugins/ace-jump-mode
+	url = https://github.com/winterTTr/ace-jump-mode.git
+[submodule "plugins/kpm-list"]
+	path = plugins/kpm-list
+	url = https://github.com/KMahoney/kpm-list.git
