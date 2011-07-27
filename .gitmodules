@@ -61,9 +61,6 @@
 [submodule "plugins/browse-kill-ring"]
 	path = plugins/browse-kill-ring
 	url = http://github.com/emacsmirror/browse-kill-ring.git
-[submodule "plugins/autopair"]
-	path = plugins/autopair
-	url = http://github.com/emacsmirror/autopair.git
 [submodule "plugins/magit"]
 	path = plugins/magit
 	url = http://github.com/philjackson/magit.git
