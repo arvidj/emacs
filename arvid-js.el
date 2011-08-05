@@ -20,9 +20,9 @@
 
 (autoload 'moz-minor-mode "moz" "Mozilla Minor and Inferior Mozilla Modes" t)
 
-(add-to-list 'auto-mode-alist '("\\.js\\(on\\)?\\'" . js-mode))
-(autoload 'js-mode "js" nil t)
-(add-hook 'js-mode-hook 'my-js-mode-hook)
+(add-to-list 'auto-mode-alist '("\\.\\(js\\(on\\)?\\|as\\)\\'" . espresso-mode))
+(autoload 'espresso-mode "espresso" nil t)
+(add-hook 'espresso-mode-hook 'my-espresso-mode-hook)
 
 
 ;; TODO: if negative arg, wrap preceding word.
@@ -39,11 +39,13 @@
 		  (insert "$(")))
 	(insert "$")))
 
- (defun my-js-mode-hook ()
+(defun my-espresso-mode-hook ()
   (c-subword-mode 1)
   (setq default-tab-width 4)
 
-  (define-keys js-mode-map
+  (setq fill-column 80)
+
+  (define-keys espresso-mode-map
 	`(("ä" insert-dollar-or-jquery)
 	  ("$" report-intelligence-level)
 	  ("ö" ,(make-inserter ";"))
@@ -53,14 +55,15 @@
 	  ("C-c C-k" js-search-documentation)
 	  ("C-c C-j" jquery-search-documentation)
 	  ("C-n" c-indent-new-comment-line)
-	  ("RET" newline-and-indent)))
+	  ("RET" newline-and-indent)
+	  ("M-." find-tag)))
 
   (flymake-js-load)
   (moz-minor-mode 1))
 
 (defun escape-js-regex () "Escape javascript regex"
   (interactive)
-  (let ((re "\\([.?/]\\)")
+  (let ((re "\\([][.?/*+|(){}]\\)")
 	(to "\\\\\\1")
 	(txt (delete-and-extract-region (region-beginning) (region-end))))
     (insert (replace-regexp-in-string re to txt))))

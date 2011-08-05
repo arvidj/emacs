@@ -1,5 +1,5 @@
-(require 'ruby-end)
-(ruby-end-mode t)
+;; (require 'ruby-end)
+;; (ruby-end-mode t)
 
 (setq
  ruby-end-keywords-re

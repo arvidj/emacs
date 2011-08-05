@@ -33,4 +33,14 @@
 	(goto-char current-point)))
 (define-key occur-mode-map (kbd "C-k") 'arvid-kill-occurrence-at-point)
 
+(setq delete-selection-mode t)
+
+(setq-default save-place t)
+(require 'saveplace)
+
+(add-hook 'calc-mode-hook #'(lambda () (setq autopair-dont-activate t)))
+
+(add-to-list 'file-coding-system-alist
+			 '("user-extensions\\.js\\'" . iso-latin-8859))
+
 (provide 'arvid-misc)

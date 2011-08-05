@@ -18,6 +18,9 @@
 ;; * It should not matter if the project dirs does not exist.
 ;; * Tags, open files list and files list should be stored in the same
 ;;   dir by default.
+;; * Should be different read-only settings for different
+;;   projects. some projects lock the core by default, some lock
+;;   everything outside extension, etc
 
 (project-def "goodiebag-dev"
 	     '((basedir          "~/remote/dev/goodiebag/")
@@ -91,7 +94,9 @@
 	       (compile-cmd      "ant")
 	       (ack-args         "--php")
 	       (startup-hook     nil)
-	       (shutdown-hook    nil)))
+		   (shutdown-hook    nil)))
+
+
 
 (defun goodiebag-project-startup ()
   (setq c-basic-offset 4))
@@ -150,6 +155,50 @@
 	       (vcs              svn)
 	       (compile-cmd      "ant")
 	       (ack-args         "--cc")
+		   (shutdown-hook    nil)))
+
+(project-def "wwoof-local"
+		 '((basedir          "~/public_html/wwoof_community/")
+		   (src-patterns     ("*.php" "*.js"))
+		   (ignore-patterns  ("*.png" "*.jpg" "*.cache" "*.JPG" "*.gif" "*.db" "*.pdf"))
+           (ignore-dirs      
+			("typo3temp"
+			 "typo3conf/ext/captcha"
+             "typo3conf/ext/gc_femail"
+             "typo3conf/ext/kb_md5fepw"
+             "typo3conf/ext/llxmltranslate"
+             "typo3conf/ext/mm_forum"
+             "typo3conf/ext/newloginbox"
+			 "typo3conf/ext/sms_firephp"))
+
+		   (tags-file        "/home/arvid/.projects/wwoof-local/TAGS")
+	       (file-list-cache  "/home/arvid/.projects/wwoof-local/files")
+		   (open-files-cache "/home/arvid/.projects/wwoof-local/open-files")
+		   (vcs              git)
+	       (compile-cmd      "ant")
+		   (ack-args         "")
+		   (shutdown-hook    nil)))
+
+(project-def "framtiden-local"
+		 '((basedir          "~/public_html/framtidensmat/")
+		   (src-patterns     ("*.php"))
+		   (ignore-patterns  ("*.png" "*.jpg" "*.cache" "*.JPG" "*.gif" "*.db" "*.pdf"))
+           (ignore-dirs      
+			("typo3temp"
+			 "typo3conf/ext/captcha"
+             "typo3conf/ext/gc_femail"
+             "typo3conf/ext/kb_md5fepw"
+             "typo3conf/ext/llxmltranslate"
+             "typo3conf/ext/mm_forum"
+             "typo3conf/ext/newloginbox"
+			 "typo3conf/ext/sms_firephp"))
+
+		   (tags-file        "/home/arvid/.projects/framtiden-local/TAGS")
+	       (file-list-cache  "/home/arvid/.projects/framtiden-local/files")
+		   (open-files-cache "/home/arvid/.projects/framtiden-local/open-files")
+		   (vcs              git)
+	       (compile-cmd      "ant")
+		   (ack-args         "")
 	       (shutdown-hook    nil)))
 
 (project-def "javalette"
@@ -164,6 +213,31 @@
 	       (ack-args         "--haskell")
 	       (shutdown-hook    nil)))
 
+(project-def "sitespace-local"
+		 '((basedir          "~/public_html/core-magenta-2.0-git/")
+		   (src-patterns     ("*.php" "*.js"))
+		   (ignore-patterns  ("*.png" "*.jpg" "*.cache" "*.JPG" "*.gif" "*.db" "*.pdf"))
+		   (ignore-dirs ())
+		   (tags-file        "/home/arvid/.projects/sitespace-local/TAGS")
+	       (file-list-cache  "/home/arvid/.projects/sitespace-local/files")
+		   (open-files-cache "/home/arvid/.projects/sitespace-local/open-files")
+		   (vcs              git)
+	       (compile-cmd      "ant")
+		   (ack-args         "")
+		   (shutdown-hook    nil)))
+
+(project-def "weback-local"
+		 '((basedir          "~/public_html/weback/")
+		   (src-patterns     ("*.php" "*.js"))
+		   (ignore-patterns  ("*.png" "*.jpg" "*.cache" "*.JPG" "*.gif" "*.db" "*.pdf"))
+		   (ignore-dirs ())
+		   (tags-file        "/home/arvid/.projects/weback-local/TAGS")
+	       (file-list-cache  "/home/arvid/.projects/weback-local/files")
+		   (open-files-cache "/home/arvid/.projects/weback-local/open-files")
+		   (vcs              git)
+	       (compile-cmd      "ant")
+		   (ack-args         "")
+		   (shutdown-hook    nil)))
 
 (project-def "emacs"
 	     '((basedir          "~/.emacs.d/")
@@ -175,4 +249,84 @@
 	       (vcs              git)
 	       (compile-cmd      "make")
 	       (ack-args         "--type-add elisp=.el --elisp")
-	       (shutdown-hook    nil)))
+		   (shutdown-hook    nil)))
+
+(project-def "timglaset-local"
+		 '((basedir          "~/public_html/timglaset/")
+		   (src-patterns     ("*.php" "*.js"))
+		   (ignore-patterns  ("*.png" "*.jpg" "*.cache" "*.JPG" "*.gif" "*.db" "*.pdf"))
+           (ignore-dirs      
+			("typo3temp"
+			 "typo3conf/ext/captcha"
+             "typo3conf/ext/gc_femail"
+             "typo3conf/ext/kb_md5fepw"
+             "typo3conf/ext/llxmltranslate"
+             "typo3conf/ext/mm_forum"
+             "typo3conf/ext/newloginbox"
+			 "typo3conf/ext/sms_firephp"))
+
+		   (tags-file        "/home/arvid/.projects/timglaset-local/TAGS")
+	       (file-list-cache  "/home/arvid/.projects/timglaset-local/files")
+		   (open-files-cache "/home/arvid/.projects/timglaset-local/open-files")
+		   (vcs              git)
+	       (compile-cmd      "ant")
+		   (ack-args         "")
+		   (shutdown-hook    nil)))
+
+(project-def "goodiebag-local"
+		 '((basedir          "~/public_html/goodiebag/")
+		   (src-patterns     ("*.php" "*.js"))
+		   (ignore-patterns  ("*.png" "*.jpg" "*.cache" "*.JPG" "*.gif" "*.db" "*.pdf"))
+           (ignore-dirs      
+			("typo3temp"
+			 "typo3conf/ext/captcha"
+             "typo3conf/ext/gc_femail"
+             "typo3conf/ext/kb_md5fepw"
+             "typo3conf/ext/llxmltranslate"
+             "typo3conf/ext/mm_forum"
+             "typo3conf/ext/newloginbox"
+			 "typo3conf/ext/sms_firephp"))
+
+		   (tags-file        "/home/arvid/.projects/goodiebag-local/TAGS")
+	       (file-list-cache  "/home/arvid/.projects/goodiebag-local/files")
+		   (open-files-cache "/home/arvid/.projects/goodiebag-local/open-files")
+		   (vcs              git)
+	       (compile-cmd      "ant")
+		   (ack-args         "")
+		   (shutdown-hook    nil)))
+
+(project-def "csr-local"
+		 '((basedir          "~/public_html/csr/")
+		   (src-patterns     ("*.php" "*.js"))
+		   (ignore-patterns  ("*.png" "*.jpg" "*.cache" "*.JPG" "*.gif" "*.db" "*.pdf"))
+           (ignore-dirs      
+			("typo3temp"
+			 "typo3conf/ext/captcha"
+             "typo3conf/ext/gc_femail"
+             "typo3conf/ext/kb_md5fepw"
+             "typo3conf/ext/llxmltranslate"
+             "typo3conf/ext/mm_forum"
+             "typo3conf/ext/newloginbox"
+			 "typo3conf/ext/sms_firephp"))
+
+		   (tags-file        "/home/arvid/.projects/csr-local/TAGS")
+	       (file-list-cache  "/home/arvid/.projects/csr-local/files")
+		   (open-files-cache "/home/arvid/.projects/csr-local/open-files")
+		   (vcs              git)
+	       (compile-cmd      "ant")
+		   (ack-args         "")
+		   (shutdown-hook    nil)))
+
+
+(defun ack-dir (&optional phrase from-current-dir)
+	"Run ack from project's basedir, using the `ack-args' configuration.
+With C-u prefix, start ack from the current directory."
+	(interactive)
+	(let* ((wap (word-at-point))
+		   (regex (or phrase
+					  (if wap (read-string (concat "Ack dir for (default \"" wap "\"): ") nil nil wap)
+						(read-string "Ack dir for: "))))
+		   (whole-cmd (mk-proj-ack-cmd regex))
+		   (confirmed-cmd (read-string "Ack command: " whole-cmd nil whole-cmd))
+		   (default-directory (read-file-name "Relative dir: " default-directory "" t)))
+	  (compilation-start confirmed-cmd 'ack-mode)))

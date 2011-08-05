@@ -458,4 +458,5 @@ use. If the input is non-empty, it is inserted at point."
   (let ((dir default-directory))
 	(cond
 	 ((string-match "public_html/weback" dir) "WEBACK")
-	 ((string-match "typo3" dir) "MAGENTA"))))
+	 ((or (string-match "typo3" dir)
+		  (string-match ".*core-magenta-2.0-git.*" dir)) "MAGENTA"))))

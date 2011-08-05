@@ -12,7 +12,7 @@
 
    ;; Mail is bugging me
    "C-x m"
-   "C-n" "C-p" "C-f" "C-b"))
+   "C-n" "C-p" "C-f" "C-b" "C-e"))
 
 (defun make-find-file (file)
   `(lambda () (interactive) (find-file ,file)))
@@ -37,11 +37,13 @@
    ("C-x nf" ,(make-find-file-in-dir "~/.emacs.d/"))
    ("C-x nj" ,(make-find-file-in-dir "~/"))
 
-   ("M-g" goto-line)
+   ;; ("M-g" goto-line)
    ("M-#" replace-string)
    ("M-\"" align-regexp)
 
-   ("C-a" smart-beginning-of-line)
+   ("M-a" smart-beginning-of-line)
+   ("M-e" move-end-of-line)
+
    ("M-p" scroll-down-keep-cursor)
    ("M-n" scroll-up-keep-cursor)
 
@@ -73,7 +75,7 @@
    ("C-x r a" append-to-register)
 
    ;; I never use this, but I should
-   ("M-DEL" report-intelligence-level)
+   ;; ("M-DEL" report-intelligence-level)
    ("C-," backward-kill-word)
 
    ;; The formatting of these guys suck
@@ -85,6 +87,9 @@
 
    ;; Bindings for rejeep-comment
    ("C-7" comment-or-uncomment-current-line-or-region)
+
+   ;; For in cli-mode
+   ("C-c 7" comment-or-uncomment-current-line-or-region)
 
    ;; These keys are always a pain.
    ("M-U" ,(make-inserter "["))
@@ -139,9 +144,37 @@
    ("M-o" open-line-and-indent)
    ("C-S-k" kill-whole-line)
 
-   ("C-x nh" narrow-to-paragraph)))
+   ("C-x C-k" ido-kill-buffer)
+
+   ("C-x nh" narrow-to-paragraph)
+
+   ("M-s o" arvid-occur)
+
+   ("C-:" find-tag-other-window)
+
+   ("M-q" (lambda () (interactive) (kill-buffer nil)))
+   ("C-q" fill-paragraph)
+
+   ("M-g" keyboard-quit)
+   ("C-g" goto-line)
 
 
+   ("C-M-7" dup-and-comment)
+   ))
+
+(defun dup-and-comment ()
+  ""
+  (interactive)
+  (duplicate-current-line-or-region 1)
+  (previous-line)
+  (comment-or-uncomment-current-line-or-region)
+  (next-line))
+
+(define-keys minibuffer-local-map
+  `(("M-g" minibuffer-keyboard-quit)))
+
+(define-keys isearch-mode-map
+  `(("M-g" isearch-abort)))
 
 
 ;; TODO function and key for reset-selective display

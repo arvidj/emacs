@@ -6,6 +6,8 @@
 ;; error. This saves having to mouse over the error, which is a
 ;; keyboard user's annoyance
 
+(require 'flymake)
+
 ;;flymake-ler(file line type text &optional full-file)
 (defun show-fly-err-at-point ()
   "If the cursor is sitting on a flymake error, display the

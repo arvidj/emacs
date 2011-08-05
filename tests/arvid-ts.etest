@@ -1,0 +1,26 @@
+
+;; find-typo3-root-dir shall traverse the file tree upwards until an
+;; typo3-root dir is found. If it is found, it is returned, otherwise
+;; nil.
+;;
+;; If no arg, starts in pwd
+(etest
+
+ (ok (typo3-root-dir-p "~/public_html/core-arvid-local/"))
+ (ok (typo3-root-dir-p "~/public_html/core-magenta-2.0-git/"))
+ (ok (not (typo3-root-dir-p "~/")))
+ (ok (not (typo3-root-dir-p "~/.emacs.d")))
+
+ (ok (string= (find-typo3-root-dir "~/public_html/core-magenta-2.0-git/")
+ 			  "/home/arvid/public_html/core-magenta-2.0-git"))
+ (ok (string= (find-typo3-root-dir "~/public_html/core-magenta-2.0-git/typo3")
+ 			  "/home/arvid/public_html/core-magenta-2.0-git"))
+ (ok (string= (find-typo3-root-dir "~/public_html/core-magenta-2.0-git/typo3/ext/gc_system")
+ 			  "/home/arvid/public_html/core-magenta-2.0-git"))
+ (ok (string= (find-typo3-root-dir "~/public_html/quinyx/fileadmin/templates/typoscript")
+ 			  "/home/arvid/public_html/core-magenta-2.0-git"))
+
+ ;; this emacs dir is most probably not an typo3-installation,
+ ;; therefore nil shall be returned.
+ (null (find-typo3-root-dir)))
+

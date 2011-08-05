@@ -1,5 +1,6 @@
 (require 'recentf)
 (recentf-mode 1)
+(setq recentf-max-saved-items 500)
 
 
 (global-set-key (kbd "C-x C-r") 'recentf-ido-find-file)
@@ -13,7 +14,7 @@
 			   (collapse-file-path-list recentf-list)
 			   nil
 			   t)))
-    (when file
+	(when file
       (find-file file))))
 
 (defun collapse-file-path-list (list)

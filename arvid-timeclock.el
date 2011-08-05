@@ -8,6 +8,7 @@
 ;;  * Update mode-line when rereading log (defadvice the reread-log function?)
 ;;  * Generate report. Check the report-generation already there.
 ;;  * When using timeclock-change, one is prompted for comments twice.
+;;  * Set fill-prefix to ">> " when editing timelog.
 
 (defun timeclock-out (&optional arg reason find-reason)
   "Clock out like normal but add minutes spent to the end of the

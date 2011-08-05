@@ -46,6 +46,7 @@
 (require 'arvid-sh)
 (require 'arvid-etest)
 (require 'arvid-ruby)
+(require 'php-comint)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Keybindings
@@ -56,6 +57,8 @@
 ;; Interface
 (load "arvid-gui.el")
 (require 'arvid-windows)
+;; (require 'fill-column-indicator)
+;; (setq fci-style 'rule)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Misc. modes
@@ -76,6 +79,7 @@
 (require 'arvid-dired)
 (require 'arvid-jira)
 (require 'rejeep-comment)
+;; Cant find the timeclock in cli mode?
 (require 'arvid-timeclock)
 (require 'wrap-region)
 (wrap-region-mode t)
@@ -93,6 +97,11 @@
 (require 'arvid-wspace)
 (require 'arvid-sublain)
 (require 'arvid-flyspell)
+(require 'arvid-w3m)
+(require 'arvid-smart-scan)
+(require 'emacs-spotify)
+(require 'arvid-todostack)
+(require 'arvid-ace-jump-mode)
 
 (require 'arvid-machine-specific)
 
@@ -111,4 +120,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Customization
-(load "arvid-custom.el")
+(load "arvid-custom.el") 
