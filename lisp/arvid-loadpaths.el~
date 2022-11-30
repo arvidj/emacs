@@ -1,0 +1,10 @@
+;; TODO there are smarter ways of doing this, see
+;; http://stackoverflow.com/questions/221365/emacs-lisp-how-to-add-a-folder-and-all-its-first-level-sub-folders-to-the-load-p
+
+;; Add plugins
+(let ((default-directory "~/.emacs.d/plugins/"))
+  (normal-top-level-add-subdirs-to-load-path))
+
+(provide 'arvid-loadpaths)
+
+
