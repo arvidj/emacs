@@ -22,11 +22,11 @@
   (define-key coq-mode-map (kbd "<M-wheel-up>") 'proof-undo-last-successful-command)
   (define-key coq-mode-map (kbd "<M-wheel-down>") 'proof-assert-next-command-interactive)
 
-  (define-key coq-mode-map (kbd "C-c p 1") '(lambda () (interactive) (coq-printing-depth-intset 10)))
-  (define-key coq-mode-map (kbd "C-c p 2") '(lambda () (interactive) (coq-printing-depth-intset 20)))
-  (define-key coq-mode-map (kbd "C-c p 3") '(lambda () (interactive) (coq-printing-depth-intset 30)))
-  (define-key coq-mode-map (kbd "C-c p 4") '(lambda () (interactive) (coq-printing-depth-intset 40)))
-  (define-key coq-mode-map (kbd "C-c p 5") '(lambda () (interactive) (coq-printing-depth-intset 50)))
+  (define-key coq-mode-map (kbd "C-c p 1") #'(lambda () (interactive) (coq-printing-depth-intset 10)))
+  (define-key coq-mode-map (kbd "C-c p 2") #'(lambda () (interactive) (coq-printing-depth-intset 20)))
+  (define-key coq-mode-map (kbd "C-c p 3") #'(lambda () (interactive) (coq-printing-depth-intset 30)))
+  (define-key coq-mode-map (kbd "C-c p 4") #'(lambda () (interactive) (coq-printing-depth-intset 40)))
+  (define-key coq-mode-map (kbd "C-c p 5") #'(lambda () (interactive) (coq-printing-depth-intset 50)))
 
 
 

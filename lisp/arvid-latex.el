@@ -11,7 +11,6 @@
 ;; (setq TeX-view-program-list
 ;;       '(("Sumatra PDF" ("\"C:\\\\Program Files (x86)\\\\SumatraPDF\\\\SumatraPDF.exe\" -reuse-instance"
 ;;                         (mode-io-correlate " -forward-search %b %n ") " %o"))))
-(server-start)
 
 ;; (eval-after-load 'tex
 ;;   '(progn
@@ -24,6 +23,14 @@
 (add-to-list 'safe-local-variable-values
              '(TeX-command-extra-options . "-shell-escape"))
 
+;; Inserting file names
+(defun aj/tex-input ()
+  (interactive)
+  (let ((path (f-no-ext (read-file-name "File: ")))
+		;; TODO Should only complete on dir but do not know how!
+        (rel-path (if TeX-master (f-dirname TeX-master) ".")))
+    (insert (concat "\\input{" (file-relative-name path rel-path) "}"))))
+
 (defun arvid-LaTeX-mode-hook ()
     ""
   (interactive)
@@ -33,7 +40,7 @@
                                            ))
   (define-key latex-mode-map (kbd "C-{") (lambda (arg) (interactive "P")
                                            (insert-pair arg ?\\ ?\\)
-                                           (insert-pair arg ?[ ?])
+                                           (insert-pair arg ?\[ ?\])
                                            ))
 
   ;; (define-key latex-mode-map (kbd "C-c `") 'next-error)
@@ -46,7 +53,7 @@
   (define-key reftex-mode-map (kbd "C-c \\") 'TeX-next-error)
   ;; (define-key reftex-mode-map [remap next-error] nil)
   ;; (define-key reftex-mode-map (kbd "C-x -") 'next-error)
-  (define-key TeX-mode-map (kbd "C-c C-i") 'arvid-tex-input)
+  (define-key TeX-mode-map (kbd "C-c C-i") 'aj/tex-input)
   (reftex-mode)
 
   (define-key TeX-mode-map (kbd "C-c C-o") 'arvid-latex-open)
@@ -287,3 +294,4 @@ label (in reference-macros)."
 
 ;; automatic synchronization: on point change, post-command-hook, if poitn is different from last, call TeX-viewx
 
+(provide 'arvid-latex)

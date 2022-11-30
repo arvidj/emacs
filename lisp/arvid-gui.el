@@ -7,13 +7,14 @@
 ;; (add-to-list 'custom-theme-load-path "~/.emacs.d/plugins/solarized")
 ;; (add-to-list 'custom-theme-load-path "~/.emacs.d/plugins/zenburn")
 ;; (load-theme 'purple-haze t)
-(load-theme 'zenburn t)
+;; (load-theme 'zenburn t)
 
-(add-to-list 'custom-theme-load-path "/home/arvid/.emacs.d/elpa/birds-of-paradise-plus-theme-0.1.1")
-(require 'birds-of-paradise-plus-theme)
-(load-theme 'birds-of-paradise-plus t)
+;; (add-to-list 'custom-theme-load-path "/home/arvid/.emacs.d/elpa/birds-of-paradise-plus-theme-0.1.1")
+;; (require 'birds-of-paradise-plus-theme)
+;; (load-theme 'birds-of-paradise-plus t)
 
-(add-to-list 'custom-theme-load-path "/home/arvid/.emacs.d/elpa/nord-theme-0.5.0")
+(use-package nord-theme :ensure t)
+;; (add-to-list 'custom-theme-load-path "/home/arvid/.emacs.d/elpa/nord-theme-0.5.0")
 (load-theme 'nord t)
 
 (with-eval-after-load "ample-theme"
@@ -36,7 +37,7 @@
 ;; (load-theme 'pinkbliss t)
 
 ;; Highlight surrounding parentheses.
-(require 'highlight-parentheses)
+(use-package highlight-parentheses :ensure t)
 (highlight-parentheses-mode 1)
 (add-hook 'find-file-hook 'highlight-parentheses-mode t)
 (show-paren-mode 1)
@@ -83,3 +84,4 @@
 ;; (cua-mode)
 
 
+(provide 'arvid-gui)

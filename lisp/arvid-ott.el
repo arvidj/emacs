@@ -1,4 +1,4 @@
-(load "ott-mode.el")
+;; (load "ott-mode.el")
 
 (require 'ott-mode)
 

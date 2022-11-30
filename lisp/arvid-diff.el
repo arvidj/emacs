@@ -3,7 +3,7 @@
 ;; (require 'diff-mode)
 (use-package diff-mode 
   :config
-  (define-keys diff-mode-map
+  (aj/define-keys diff-mode-map
     '(("M-n" scroll-up-keep-cursor)
       ("M-p" scroll-down-keep-cursor)
       ("M-k" next-line)

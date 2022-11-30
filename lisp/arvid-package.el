@@ -1,4 +1,5 @@
 (require 'package)
+(require 'use-package)
 
 (defun get-ip-address (&optional dev)
   "get the IP-address for device DEV (default: eth0)"
@@ -22,11 +23,10 @@
   (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
   (add-to-list 'package-archives (cons "org" (concat proto "://orgmode.org/elpa/"))) t)
 
-
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
 (package-initialize)
-
-;; as per https://emacs.stackexchange.com/questions/34201/emacs-cant-find-node-when-node-was-installed-using-nvm
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
 
 (provide 'arvid-package)

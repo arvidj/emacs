@@ -17,4 +17,6 @@
 ;; (setq flycheck-checkers (cdr flycheck-checkers))
 ;; ;; (provide 'arvid-flycheck)
 
+(provide 'arvid-flycheck)
 ;;; arvid-flycheck.el ends here
+

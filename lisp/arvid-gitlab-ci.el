@@ -63,7 +63,9 @@
   (read-only-mode))
 
 (define-minor-mode gitlab-ci-focused-job-mode
-  "GitLab CI: Focused job" nil "glj" gitlab-ci-focused-job-mode-map
+  "GitLab CI: Focused job"
+  :global nil
+  :lighter "glj"
   (define-key gitlab-ci-focused-job-mode-map (kbd "q") 'quit-window)
   (define-key gitlab-ci-focused-job-mode-map (kbd "g") 'gitlab-ci-focused-job-update))
 

@@ -20,8 +20,8 @@
 ;; Font lock for px, em, %, url-keywords and colors. From rejeep.
 (eval-after-load 'css-mode
   '(progn
-	 (define-keys css-mode-map
-	   `(("ö" ,(make-inserter ";"))
+     (aj/define-keys css-mode-map
+	   `(("ö" ,(aj/make-inserter ";"))
 		 ;; (";" report-intelligence-level)
 		 ("}" css-electric-brace)))
 	 
@@ -57,7 +57,7 @@ Is probably a bit to convoluted. "
 			)))
 	nil))
 
-(require 'rainbow-mode)
+(use-package rainbow-mode :ensure t)
 
 ;; CSS and Rainbow modes
 (defun all-css-modes() (css-mode) (rainbow-mode))

@@ -6,13 +6,6 @@
 ;; (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
 (add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
 
-(require 'w3m-haddock)
-(add-hook 'w3m-display-hook 'w3m-haddock-display)
-
-(setq haskell-w3m-haddock-dirs
-      '("~/.cabal/share/doc/x86_64-linux-ghc-8.0.2"))
-
-
 (defun my-haskell-mode-hook ()
     ""
   (interactive)
@@ -169,7 +162,7 @@
 
 ;; (add-hook
 ;;  'haskell-mode-hook
-;;  '(lambda ()
+;;  #'(lambda ()
 ;;     (define-key haskell-mode-map "\C-cd"
 ;;       'credmp/flymake-display-err-minibuf)))
 
@@ -183,5 +176,5 @@
 ;; if you want to use flymake always, then add the following hook.
 ;; (add-hook
 ;;  'haskell-mode-hook
-;;  '(lambda ()
+;;  #'(lambda ()
 ;;     (if (not (null buffer-file-name)) (flymake-mode))))

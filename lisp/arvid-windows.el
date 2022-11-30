@@ -36,7 +36,7 @@
 (global-set-key (kbd "C-c wf") 'winner-redo)
 (global-set-key (kbd "C-c wb") 'winner-undo)
 
-(global-set-key (kbd "C-M-j") '(lambda () (interactive) (other-window 1)))
-(global-set-key (kbd "C-M-k") '(lambda () (interactive) (other-window -1)))
+(global-set-key (kbd "C-M-j") #'(lambda () (interactive) (other-window 1)))
+(global-set-key (kbd "C-M-k") #'(lambda () (interactive) (other-window -1)))
 
 (provide 'arvid-windows)

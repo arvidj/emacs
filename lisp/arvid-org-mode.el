@@ -8,8 +8,6 @@
 
 (require 'ox-beamer)
 (require 'ox-latex)
-(require 'ox-taskjuggler)
-(require 'ox-reveal)
 (require 'ox-md)
 
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
@@ -125,12 +123,12 @@
 ;;; http://orgmode.org/manual/Setting-up-Remember.html#Setting-up-Remember
 ;; (org-remember-insinuate)
 ;; (define-key global-map "\C-cr" 'org-remember)
-(define-keys org-mode-map
+(aj/define-keys org-mode-map
   `(("C-," backward-kill-word)
     ("C-<return>" nil)
 
     ("C-'" nil)
-    ("C-y" arvid-yank-or-pop)
+    ("C-y" aj/yank-or-pop)
 
 	("M-a" org-beginning-of-line)
     ("C-e" nil)
@@ -173,7 +171,7 @@
   ""
   (save-excursion
 	(catch 'break
-	  (loop for col-num upfrom 0 do
+	  (cl-loop for col-num upfrom 0 do
 			(org-table-goto-column col-num)
 			(when (org-find-overlays 'invisible)
 			  (throw 'break col-num))
@@ -183,7 +181,7 @@
 (defun find-number-columns ()
     (save-excursion
 	(catch 'break
-	  (loop for col-num upfrom 0 do
+	  (cl-loop for col-num upfrom 0 do
 			(org-table-goto-column col-num)
 			(if (= (point) (point-at-eol))
 			  (throw 'break (1- col-num)))))))
@@ -195,7 +193,7 @@
   )
 
 ;; Doesn't work.
-(defun arvid-org-mode-hook ()
+(defun aj/org-mode-hook ()
   ;; (push '(?* . ?*)
   ;; 		(getf autopair-extra-pairs :everywhere))
   ;; (set-visual-wrap-column 70)
@@ -233,7 +231,7 @@
     (flyspell-buffer))
   (auto-fill-mode))
 
-(add-hook 'org-mode-hook 'arvid-org-mode-hook)
+(add-hook 'org-mode-hook 'aj/org-mode-hook)
 
 
 
@@ -262,14 +260,14 @@
 ;; (add-to-list 'org-latex-packages-alist '("" "listings"))
 ;; (add-to-list 'org-latex-packages-alist '("" "color"))
 
-(defun arvid-org-export-latest ()
+(defun aj/org-export-latest ()
     ""
   (interactive)
   ""
   (org-export-dispatch 4))
 
-;; (remove-hook 'org-ctrl-c-ctrl-c-hook 'arvid-org-export-latest)
-(add-hook 'org-ctrl-c-ctrl-c-final-hook 'arvid-org-export-latest)
+;; (remove-hook 'org-ctrl-c-ctrl-c-hook 'aj/org-export-latest)
+(add-hook 'org-ctrl-c-ctrl-c-final-hook 'aj/org-export-latest)
 
 (add-to-list 'org-latex-classes
              '("conference{llncs}"
@@ -348,15 +346,13 @@
       (goto-char (match-end 0))))
 
 
-(defun arvid-fixer-get (euro)
+(defun aj/fixer-get (euro)
     ""
   (interactive)
   
   )
 
 (org-clock-persistence-insinuate)
-
-(require 'org-drill)
 
 ;; Stuff for org-mode at Nomadic Labs
 
@@ -390,5 +386,34 @@
  'org-babel-load-languages
  '((python . t)))
 
+(defun aj/org-to-latex-error ()
+  ""
+  (interactive)
+  (find-file (f-swap-ext (buffer-file-name) "tex"))
+  (read-only-mode t)
+
+  (TeX-next-error))
+
+(defun aj/org-screenshot-at-point ()
+  "Interactively pick a region to screen shot,
+    save it to the current folder and insert an org-link to it"
+  (interactive)
+  (let ((file-name (trim-string (shell-command-to-string "tempfile -d . -p 'ss-' -s '.png'"))))
+    (shell-command (concat "import " file-name))
+    (insert (concat "[["  file-name "]]"))))
+
+(defun aj/org-google-scholar-heading ()
+  ""
+  (interactive)
+  (let ((heading (nth 4 (ignore-errors (org-heading-components)))))
+    (browse-url (concat "https://scholar.google.com/scholar?hl=en&q=" heading))))
+
+(defun aj/org-toggle-noexport-tag ()
+  ""
+  (interactive)
+  (let ((tags (org-get-tags)))
+    (if (member "noexport" tags)
+        (org-set-tags-to (delete "noexport" tags))
+      (org-set-tags-to (cons "noexport" (if (string= (car tags) "") nil tags))))))
 
 (provide 'arvid-org-mode)

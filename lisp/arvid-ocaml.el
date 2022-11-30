@@ -1,3 +1,6 @@
+(use-package tuareg :ensure t)
+(use-package ocp-indent :ensure t)
+
 (when (featurep 'ocp-indent)
   (add-to-list 'load-path
 			   (concat
@@ -10,7 +13,7 @@
 
 ;;; load with noerror, since depending on the state of the global
 ;;; switch, this file may not be available.
-(require 'ocamlformat nil t)
+(use-package ocamlformat :ensure t)
 
 (defun arvid-ocaml-compile-here (parent)
 	""
@@ -48,8 +51,6 @@
   (define-key tuareg-mode-map (kbd "C-h o") 'merlin-document)
   (define-key tuareg-mode-map (kbd "C-c y f") 'aj/tezt-this-file)
   (company-mode)
-  (utop-minor-mode)
-  (define-key utop-minor-mode-map (kbd "C-x C-r") nil)
   ;; (define-key tuareg-mode-map (kbd "TAB") 'company-complete)
 
   
@@ -92,8 +93,6 @@
 ;;   (add-to-list 'company-backends 'merlin-company-backend))
 
 ;; (require 'merlin-company)
-
-(setq utop-command "opam config exec -- utop -emacs")
 
 (add-to-list 'auto-mode-alist '("\\.atd\\'" . tuareg-mode))
 

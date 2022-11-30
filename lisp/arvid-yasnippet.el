@@ -6,8 +6,6 @@
 
 (require 'yasnippet)
 
-(require 'org-sync-snippets)
-
 (use-package auto-yasnippet :ensure t)
 
 (setq yas/snippet-dirs '("~/.emacs.d/snippets"))

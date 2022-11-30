@@ -1,10 +1,5 @@
-(use-package deferred
-  :ensure t
-
-  )
-
-(load "michelson-mode.el")
-(load "albert-mode.el")
+(require 'michelson-mode)
+(require 'albert-mode)
 
 ;; (setq michelson-client-command "/home/arvid/dev/nomadic-labs/tezos/tezos-client -d /home/arvid/.tezos-client-mockup")
 ;; (setq michelson-client-mode "mockup")

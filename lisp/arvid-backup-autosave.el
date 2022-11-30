@@ -21,3 +21,5 @@
 ;; backed up in the corresponding directory. Emacs will mkdir it if necessary.)
 (defvar backup-dir (concat "~/.emacs.d/backup-emacs/"))
 (setq backup-directory-alist (list (cons "." backup-dir)))
+
+(provide 'arvid-backup-autosave)

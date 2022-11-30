@@ -166,7 +166,7 @@
 			(ibuffer-auto-mode 1)
 			(ibuffer-switch-to-saved-filter-groups "default")))
 
-(define-keys ibuffer-mode-map
+(aj/define-keys ibuffer-mode-map
   '(("TAB" ibuffer-toggle-filter-group)
 	("M-j" backward-char)
 	("G" (lambda () (interactive) (ibuffer-switch-to-saved-filter-groups "default")))

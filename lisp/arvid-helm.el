@@ -1,8 +1,4 @@
-;; (unless (member "helm.el" (directory-files default-directory))
-;;   (setq package-load-list '((helm-core t) (helm t) (async t) (popup t)))
-;;   (package-initialize))
-
-(require 'helm)
+(use-package helm :ensure t)
 (require 'helm-config)
 
 

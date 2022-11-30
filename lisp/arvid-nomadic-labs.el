@@ -1,4 +1,5 @@
-;; (require 'arvid-mr)
+(require 'arvid-mr)
+(require 'arvid-worklog)
 
 (defun nl-select-gitlab-ident ()
   ""
@@ -19,6 +20,5 @@
                         person-table)
                 nil nil 'string=))
          ) (insert data)))
-
 
 (provide 'arvid-nomadic-labs)

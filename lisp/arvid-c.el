@@ -64,7 +64,7 @@
   ;; Try to make auto-pair + electric mode work together.
   ;; (setq autopair-handle-action-fns '(my-test-handler))
 
-  (define-keys c-mode-map
+  (aj/define-keys c-mode-map
 	`(("M-a" smart-beginning-of-line)
 	  ("M-e" move-end-of-line)
 	  ("C-c C-c" compile)

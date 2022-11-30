@@ -10,7 +10,7 @@
 
   (flycheck-mode)
 
-  (define-keys
+  (aj/define-keys
 	sh-mode-map
 	`(("RET" newline-and-indent)
 	  ("ö" ,(make-inserter ";"))

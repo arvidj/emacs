@@ -19,7 +19,7 @@
 	   (revert-buffer)))
    "revert this buffer"))
 
-(defun arvid-kill-occurrence-at-point ()
+(defun aj/kill-occurrence-at-point ()
   "Kills the occurence at point"
   (interactive)
   ;; Store the point here. It seems like save-excursion does not work
@@ -32,26 +32,10 @@
 	;; current-point could now be larger than the buffer, but
 	;; goto-char doesnt care. It
 	(goto-char current-point)))
-(define-key occur-mode-map (kbd "C-k") 'arvid-kill-occurrence-at-point)
+(define-key occur-mode-map (kbd "C-k") 'aj/kill-occurrence-at-point)
 
-(setq delete-selection-mode t)
-
-;; (setq-default save-place t)
 (require 'saveplace)
 (save-place-mode)
-
-(add-hook 'calc-mode-hook #'(lambda () (setq autopair-dont-activate t)))
-
-(add-to-list 'file-coding-system-alist
-			 '("user-extensions\\.js\\'" . iso-latin-8859))
-
-(setq dired-listing-switches "-alh")
-
-;; Which-func-mode
-;; (require 'which-func)
-;; (add-to-list 'which-func-modes 'php-mode)
-;; (which-func-mode t)
-
 
 ;; Indent after yank
 ;; http://www.emacswiki.org/emacs/AutoIndentation
@@ -70,63 +54,31 @@
 		  (indent-region (region-beginning) (region-end) nil))))))
 
 
-(defun capitalize-first (string)
-  ""
-  (if (string= string "") ""
-	(concat (capitalize (substring string 0 1)) (substring string 1))))
-
-;; Not sure what this is for
+;; Stops the point from entering the mini-buffer prompt
 (setq minibuffer-prompt-properties
-	  (plist-put minibuffer-prompt-properties 'point-entered 'minibuffer-avoid-prompt))
+      (plist-put minibuffer-prompt-properties 'point-entered 'minibuffer-avoid-prompt))
 
 (setq-default abbrev-mode t)
 (read-abbrev-file "~/.emacs.d/misc/abbrev_defs")
 (setq save-abbrevs t)
 
-(defun arvid-yank-or-pop ()
+(defun aj/yank-or-pop ()
   "Yanks the first time called, pops otherwise."
   (interactive)
   (if (eq last-command 'yank)
 	  (yank-pop)
 	(yank)))
 
-(defun arvid-yank-pop-forwards (arg)
+(defun aj/yank-pop-forwards (arg)
   "Pop forward in kill-ring."
   (interactive "p")
   (yank-pop (- arg)))
 
-(global-set-key (kbd "M-y") 'arvid-yank-pop-forwards)
-(global-set-key (kbd "C-y") 'arvid-yank-or-pop)
+(global-set-key (kbd "M-y") 'aj/yank-pop-forwards)
+(global-set-key (kbd "C-y") 'aj/yank-or-pop)
 
-;; arvid-yank-or-pop deletes selection if there is one.
-(put 'arvid-yank-or-pop 'delete-selection 'yank)
-
-;; Creates a new empty buffer
-(defun arvid-new-note (name)
-  "Opens a new empty buffer."
-  (interactive "MName: ")
-  (let* ((buf-name (concat
-					"note"
-					(if (string= name "") "" (concat "-" name))
-					(concat "-" (format-time-string "%Y-%m-%d_%H:%M"))
-					))
-		 (path (concat "~/notes/" buf-name)))
-	(find-file path)))
-(global-set-key (kbd "C-c b") 'arvid-new-note)
-
-(defun arvid-nxml-mode-hook ()
-  (setq comment-continue ""))
-(add-hook 'nxml-mode-hook 'arvid-nxml-mode-hook)
-
-(add-hook 'c++-mode-hook 'arvid-c++-mode-hook)
-(defun arvid-c++-mode-hook ()
-  (local-set-key (kbd "C-c C-c") 'compile)
-  (subword-mode))
-
-(add-hook 'java-mode-hook 'arvid-java-mode-hook)
-(defun arvid-java-mode-hook ()
-  (local-set-key (kbd "C-c C-c") 'compile)
-  (subword-mode))
+;; aj/yank-or-pop deletes selection if there is one.
+(put 'aj/yank-or-pop 'delete-selection 'yank)
 
 (setq visible-bell t)
 
@@ -149,7 +101,8 @@
 		(when (window-live-p (car windows))
 		  (with-selected-window (car windows)
 			(update-visual-wrap-column)))
-		(setq windows (cdr windows))))))
+        (setq windows (cdr windows))))))
+
 (defun update-visual-wrap-column ()
   (if (not visual-wrap-column)
 	  (set-window-margins nil nil)
@@ -162,30 +115,6 @@
 		(set-window-margins nil (car current-margins)
 							(- current-available visual-wrap-column))))))
 
-
-(defun revert-files (&rest files)
-  "Reload all specified files from disk.
-Only files that are currently visited in some buffer are reverted.
-Do not ask confirmation unless the buffer is modified."
-  (save-excursion
-    (let ((revert-without-query '("")))
-      (dolist (file-name files)
-        (message "Considering whether to revert file %s" file-name)
-        (let ((buf (find-buffer-visiting file-name)))
-          (when buf
-            (message "Reverting file in buffer %s" (buffer-name buf))
-            (set-buffer buf)
-			(revert-buffer t nil t)))))))
-
-;; (defun arvid-quick-calc () 
-;;   ""
-;;   (interactive "r")
-;;   calc-do-quick-calc
-;;   )
-
-;; Convert comma separated lines to org-table
-(fset 'convert-csv-org-table
-   [?\M-< ?\M-# ?, return ?| return ?\M-< ?\C-  ?\M-> ?\M-i C-return ?| ?\C-g tab])
 
 ;; http://stackoverflow.com/questions/2081577/setting-emacs-split-to-horizontal
 (setq split-height-threshold 80)
@@ -202,43 +131,14 @@ Do not ask confirmation unless the buffer is modified."
 ;; indentation
 (setq indent-tabs-mode nil)
 
-(defun note-event (event file)
-  ""
-  (interactive)
-
-
-  (let ((date (format-time-string "%FT%H:%M:%S%z"))
-        (line (concat date "\t" event "\n")))
-    (write-region line nil file 'append)))
-
-(defun note-noise ()
-    ""
-  (interactive)
-  (note-event "Noise" "~/noise.csv"))
-
-(defun registers-list-symbols ()
-  ""
-  (interactive)
-  (let ((compilation-buffer-name-function
-         '(lambda (mode) "*Registration Formalization Symbols*")))
-    (ack "ag --tex newcommand ../report ../ott ../analysis")
-    ))
-
-(global-set-key (kbd "<f9>") 'note-noise)
-
-;; Turn off the pomidor sound
-(setq pomidor-play-sound-file nil)
-
-
 (use-package visual-regexp :ensure t)
 
-(defun chords-mode ()
+(defun aj/chords-mode ()
   ""
   (interactive)
   (follow-mode)
   (split-window-right)
-  (balance-windows)
-  )
+  (balance-windows))
 
 (add-to-list 'auto-mode-alist '("\\.gnu\\'" . gnuplot-mode))
 
