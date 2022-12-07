@@ -34,8 +34,10 @@
 	(goto-char current-point)))
 (define-key occur-mode-map (kbd "C-k") 'aj/kill-occurrence-at-point)
 
-(require 'saveplace)
-(save-place-mode)
+(use-package saveplace
+  :ensure t
+  :config
+  (save-place-mode))
 
 ;; Indent after yank
 ;; http://www.emacswiki.org/emacs/AutoIndentation

@@ -1,4 +1,5 @@
 (use-package gitlab
+  :commands aj/gitlab-start-review
   :ensure t)
 
 (setq gitlab-host "https://gitlab.com"

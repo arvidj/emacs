@@ -16,7 +16,10 @@
     )
   )
 
-(setq display-buffer-alist '((".*compilation.*" (display-buffer-in-atom-window))))
+;;  The idea seems to be to combine the window from which a
+;;  compilation is launched with the compilation window in an atomic
+;;  unit. However, it does not work.
+;; (add-to-list display-buffer-alist '((".*compilation.*" (display-buffer-in-atom-window))))
 
 (defun compilatation-finish (buf str)
   (if (null (string-match ".*exited abnormally.*" str))
@@ -36,3 +39,12 @@
 
                                         ; from enberg on #emacs
 (add-hook 'compilation-finish-functions 'compilatation-finish)
+
+;; Colorize in compilation buffers
+(use-package ansi-color)
+(defun colorize-compilation-buffer ()
+  (ansi-color-apply-on-region compilation-filter-start (point)))
+(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+
+
+(provide 'arvid-compile)

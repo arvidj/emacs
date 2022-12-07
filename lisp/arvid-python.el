@@ -1,40 +1,3 @@
-(use-package pytest :ensure t)
-;; (use-package python-pytest :ensure t)
-
-;; Uses the pyenv-mode package to set the appropriate pyenv
-;; automatically:
-(use-package pyenv-mode :ensure t)
-
-;; Uses the blacken formatter to format code automatically on each
-;; save.
-(use-package blacken
-  :ensure t
-  :config
-  ;; Only blacken if pyprojet.toml contains black.
-  (setq blacken-only-if-project-is-blackened t)
-  ;; Set the line length 79
-  (setq blacken-line-length 80)
-  (add-hook 'python-mode-hook 'blacken-mode)
-   )
-
-
-(use-package elpy
-  :ensure t
-  :config
-  (elpy-enable)
-  )
-
-
-;; (use-package jedi
-;;   :ensure t
-;;   :config
-;;   (add-hook 'python-mode-hook 'jedi:setup)
-;;   (setq jedi:complete-on-dot t)                 ; optional
-;;   )
-
-
-;; (add-to-list 'exec-path "/home/arvid/.pyenv/bin")
-
 (setenv "PATH"
 		(concat
          "/home/arvid/.pyenv/shims" ":"
@@ -74,20 +37,59 @@
 
   (make-variable-buffer-local 'whitespace-style)
   (setq whitespace-style '(face lines-tail))
-  (whitespace-mode)
-
-  )
+  (whitespace-mode))
 
 ;;; Python
-(add-hook 'python-mode-hook 'my-python-hook)
+(use-package python :commands python-mode
+  :config
+  (add-hook 'python-mode-hook 'my-python-hook))
 
-(defun my-python-beginning-of-block () 
+(use-package pytest :ensure t :commands python-mode)
+;; (use-package python-pytest :ensure t)
+
+;; Uses the pyenv-mode package to set the appropriate pyenv
+;; automatically:
+(use-package
+  pyenv-mode
+  :commands pyenv-mode
+  :ensure t)
+
+;; Uses the blacken formatter to format code automatically on each
+;; save.
+(use-package blacken
+  :commands blacken-mode
+  :ensure t
+  :config
+  ;; Only blacken if pyprojet.toml contains black.
+  (setq blacken-only-if-project-is-blackened t)
+  ;; Set the line length 79
+  (setq blacken-line-length 80)
+  (add-hook 'python-mode-hook 'blacken-mode))
+
+(use-package elpy
+  :after python
+  :ensure t
+  :config
+  ;; (elpy-enable)
+  )
+
+;; (use-package jedi
+;;   :ensure t
+;;   :config
+;;   (add-hook 'python-mode-hook 'jedi:setup)
+;;   (setq jedi:complete-on-dot t)                 ; optional
+;;   )
+
+
+;; (add-to-list 'exec-path "/home/arvid/.pyenv/bin")
+
+(defun aj/python-beginning-of-block ()
   " Goes to the start of current block, and move point to indentation."
   (interactive)
   (python-nav-beginning-of-block)
   (back-to-indentation))
 
-(defun my-python-end-of-block ()
+(defun aj/python-end-of-block ()
   " Goes to the end of current block, and move point to end of line."
   (interactive)
   (python-nav-end-of-block)
@@ -95,6 +97,7 @@
 
 
 (use-package pydoc-info
+  :after python
   :ensure t)
 
 ;; (setq python-buffer-main nil)
@@ -133,7 +136,7 @@
 
 ;; (define-key python-mode-map (kbd "C-c C-c") 'load-or-reload-python)
 
-(defun break-string-python ()
+(defun aj/break-string-python ()
   ""
   (interactive)
   (while (> (save-excursion (end-of-line) (current-column)) 70)
@@ -144,7 +147,7 @@
     ))
 
 
-(defun arvid-python/re-string-re-python (re-string)
+(defun aj/re-string-re-python (re-string)
   ""
   (interactive)
   (replace-regexp-in-string

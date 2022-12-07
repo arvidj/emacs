@@ -1,107 +1,96 @@
-(use-package tuareg :ensure t)
-(use-package ocp-indent :ensure t)
+(use-package tuareg
+  :custom
+  (tuareg-opam-insinuate t)
+  :config
+  (tuareg-opam-update-env (tuareg-opam-current-compiler))
+  :hook
+  (tuareg-mode . aj/tuareg-mode-hook)
+  :config
+  (defun aj/ocaml-compile-here (parent)
+    ""
+    (interactive "p")
+    (compile (concat "dune build "
+                     (if (= parent 1)
+                         "."
+                       ".."))))
 
-(when (featurep 'ocp-indent)
-  (add-to-list 'load-path
-			   (concat
-				(replace-regexp-in-string "\n$" ""
-										  (shell-command-to-string "opam config var share"))
-				"/emacs/site-lisp"))
-  (require 'ocp-indent))
+  (defun aj/tezt-this-file ()
+    ""
+    (interactive)
+    (compile (concat
+              "cd ../../ && "
+              "dune exec tezt/tests/main.exe -- --color -j 7 --file "
+              (file-name-nondirectory (buffer-file-name)))))
 
-;; ocamlformat
+  (defun aj/tuareg-mode-hook ()
+    (aj/define-keys tuareg-mode-map
+     `(("C-M-p" nil)
+       ("C-c i" nil)
+       ("C-c C-c" 'aj/ocaml-compile-here)
+       ("C-M-n" nil)
+       ("C-q" 'tuareg-indent-phrase)
+       ("C-h o" 'merlin-document)
+       ("C-c y f" 'aj/tezt-this-file)))
 
-;;; load with noerror, since depending on the state of the global
-;;; switch, this file may not be available.
-(use-package ocamlformat :ensure t)
+    ;; (display-fill-column-indicator-mode)
+    ;; (setq-local display-fill-column-indicator-column 80)
+    (setq-local comment-style "indent")
+    (setq-local comment-multi-line t)
 
-(defun arvid-ocaml-compile-here (parent)
-	""
-  (interactive "p")
-  (compile (concat "dune build "
-                   (if (= parent 1)
-                       "."
-                     ".."))))
+    ;; Highlight lines that depass 80 columns
+    (setq-local whitespace-line-column 80)
+    (make-variable-buffer-local 'whitespace-style)
+    (setq whitespace-style '(face lines-tail))
+    (whitespace-mode)))
 
-(defun aj/tezt-this-file ()
-  ""
-  (interactive)
-  (compile (concat
-            "cd ../../ && "
-            "dune exec tezt/tests/main.exe -- --color -j 7 --file "
-            (file-name-nondirectory (buffer-file-name)))))
+;; It is mandatory to load 'ocp-indent' *after* 'ocamlformat', because
+;; 'ocamlfomat' installs broken hooks to indent after newline.
+(use-package ocp-indent
+  :after ocamlformat
+  :commands (ocp-indent-caml-mode-setup)
+  :hook (tuareg-mode . ocp-indent-caml-mode-setup))
 
-(require 'ansi-color)
+(use-package ocamlformat
+  :after merlin
+  :custom
+  (ocamlformat-show-errors nil)
+  :hook (before-save . ocamlformat-before-save))
 
-(defun colorize-compilation-buffer ()
-  (ansi-color-apply-on-region compilation-filter-start (point)))
+(use-package merlin
+  :ensure t
+  :custom
+  (merlin-locate-in-new-window 'never)
+  (merlin-locate-preference 'ml)
+  (merlin-command 'opam)
+  (merlin-completion-with-doc t)
+  :hook
+  ((tuareg-mode . merlin-mode)
+   (merlin-mode . init-merlin))
+  :init
+  (defun init-merlin ()
+    (company-mode)))
 
-(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+;; These two lines are necessary for Merlin to display docstrings in
+;; the *Quick help* buffer (that is displayed by 'company-box')
+(use-package merlin-company
+  :ensure t
+  :demand
+  :after merlin)
 
-(defun my-tuareg-mode-hook ()
-  ""
-  (interactive)
-  (message "arvid tuareg")
-  (define-key tuareg-mode-map (kbd "C-M-p") nil)
-  (define-key tuareg-mode-map (kbd "C-c i") nil)
-  (define-key tuareg-mode-map (kbd "C-c C-c") 'arvid-ocaml-compile-here)
-  (define-key tuareg-mode-map (kbd "C-x C-r") nil)
-  (define-key tuareg-mode-map (kbd "C-M-n") nil)
-  (define-key tuareg-mode-map (kbd "C-q") 'tuareg-indent-phrase)
-  (define-key tuareg-mode-map (kbd "C-h o") 'merlin-document)
-  (define-key tuareg-mode-map (kbd "C-c y f") 'aj/tezt-this-file)
-  (company-mode)
-  ;; (define-key tuareg-mode-map (kbd "TAB") 'company-complete)
+(use-package merlin-eldoc
+  :hook (merlin-mode . merlin-eldoc-setup)
+  :custom
+  (eldoc-echo-area-use-multiline-p t))
 
-  
-  ;; See https://github.com/ocaml/tuareg/issues/216
-  (setq-local comment-style "indent")
-  (setq-local comment-multi-line t)
+(use-package flycheck-ocaml
+  :ensure t
+  :after merlin
+  :hook
+  (merlin-mode . init-flycheck-ocaml)
+  :config
+  (defun init-flycheck-ocaml ()
+    (setq-local merlin-error-after-save nil)
+    (flycheck-ocaml-setup)
+    (flycheck-mode)))
 
-  (setq-local whitespace-line-column 80)
-  (make-variable-buffer-local 'whitespace-style)
-  (setq whitespace-style '(face lines-tail))
-  (whitespace-mode)
-
-  (opam-update-env
-   (car (split-string (opam-shell-command-to-string "opam switch show --safe"))))
-
-  ;; ocamlformat
-  (define-key tuareg-mode-map (kbd "C-M-<tab>") #'ocamlformat)
-  (add-hook 'before-save-hook #'ocamlformat-before-save)
-
-  ;; merlin-mode
-  (let ((opam-share (ignore-errors (car (process-lines "opam" "var" "share")))))
-    (when (and opam-share (file-directory-p opam-share))
-      (add-to-list 'load-path (expand-file-name "emacs/site-lisp" opam-share))
-      (autoload 'merlin-mode "merlin" nil t nil)
-
-      (merlin-mode)
-      (merlin-use-merlin-imenu)
-      (merlin-eldoc-setup)
-
-      (add-hook 'tuareg-mode-hook 'merlin-mode t)
-      (add-hook 'caml-mode-hook 'merlin-mode t)
-      ;; (add-hook 'company-mode-hook 'merlin-mode t)
-      ))
-
-  )
-
-(add-hook 'tuareg-mode-hook 'my-tuareg-mode-hook)
-
-;; (with-eval-after-load 'company
-;;   (add-to-list 'company-backends 'merlin-company-backend))
-
-;; (require 'merlin-company)
-
-(add-to-list 'auto-mode-alist '("\\.atd\\'" . tuareg-mode))
-
-;; building & browsing documentation
-
-;; (compile "dune build @doc && xdg-open `git rev-parse --show-toplevel`/_build/default/_doc/_html/`grep 'public_name ' dune | sed 's/.*public_name \\(.*\\))/\\1/'`/index.html")
-
-;; (shell-command
-;;  "echo `git rev-parse --show-toplevel`/_build/default/_doc/_html/`grep 'public_name ' dune | sed 's/.*public_name \\(.*\\))/\\1/'`/index.html")
-
-(provide 'arvid-ocaml)
-
+(provide 'thomas-ocaml)

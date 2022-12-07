@@ -25,8 +25,6 @@
 	 (let ((default-directory ,dir))
 	   (ido-find-file))))
 
-
-
 (aj/global-set-keys
  `(("C-c d" aj/duplicate-current-line-or-region)
 
@@ -96,7 +94,7 @@
    ;; ("C-c C-t" insert-current-time)
 
    ;; Renames current buffer and visiting file.
-   ("C-c C-r" rename-file-and-buffer)
+   ("C-c C-r" aj/rename-file-and-buffer)
 
    ;; Bindings for rejeep-comment
    ("C-7" comment-or-uncomment-current-line-or-region)

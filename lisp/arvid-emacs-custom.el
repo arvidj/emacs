@@ -82,11 +82,11 @@
    '("/Users/arvidjakobsson/public_html/wwoof_community/typo3conf/ext/gc_wwoof/"))
  '(magit-revert-buffers 'silent)
  '(markdown-command "pandoc -f markdown -t html")
+ '(markdown-header-scaling t)
  '(merlin-eldoc-type-verbosity 'min)
  '(mk-proj-ack-cmd "ag")
  '(mk-proj-ack-cmd-name "ack")
  '(mk-proj-use-ido-selection t)
- '(ocamlformat-show-errors 'echo)
  '(ocp-indent-path "ocp-indent")
  '(org-clock-display-default-range 'thisweek)
  '(org-clock-history-length 20)
@@ -100,6 +100,7 @@
      ("\\.pdf\\'" . "evince %s")))
  '(org-highlight-latex-and-related '(latex))
  '(org-latex-listings t)
+ '(org-latex-src-block-backend t)
  '(org-modules
    '(ol-bbdb ol-bibtex ol-docview ol-eww ol-gnus ol-info ol-irc ol-mhe ol-rmail ol-w3m))
  '(org-refile-use-outline-path t)
@@ -118,7 +119,7 @@
      ("melpa" . "http://melpa.org/packages/")
      ("melpa-stable" . "http://stable.melpa.org/packages/")))
  '(package-selected-packages
-   '(ocp-indent tuareg tuareg-mode emojify company-lsp lsp-ui dhall-mode diff-hl git-gutter-fringe ox-rst csv-mode jedi jq-mode arduino-mode graphviz-dot-mode magit-delta exwm gitlab nvm ocamlformat mermaid-mode tide highlight-indentation-guides highlight-indent-guides dumb-jump coverage magit-forge browse-at-remote ligo-mode elfeed org-drill-table org-drill nord-theme birds-of-paradise-plus-theme gitlab-ci-mode-flycheck gitlab-ci-mode org-present blacken org-mobile-sync elpygen dockerfile-mode michelson-mode json-mode lsp-mode auto-yasnippet pyenv-mode org-sync helm-c-yasnippet org-sync-snippets nyan-mode utop default-text-scale org-noter pdf-tools hydra py-yapf feature-mode ecukes htmlize "htmlize" dune centered-window python-pytest merlin-eldoc reason-mode visual-regexp pydoc-info deferred proof-general chronometer dired-icon-mode dired-icon all-the-icons-dired request writegood-mode pomidor projectile latex-preview-pane fill-column-indicator leuven-theme github-theme ahungry-theme w3m org-plus-contrib gitignore-templates company-math boogie-friends fstar-mode web-server guess-language helm-dictionary dictionary howdoi hc-zenburn-theme magit-svn math-symbols zenburn-theme yaml-mode ws-trim wrap-region wc-mode use-package twig-mode solarized-theme soft-stone-theme smex rust-mode purple-haze-theme phpunit password-generator org-journal org-jira nginx-mode minimap lorem-ipsum less-css-mode iedit hl-spotlight highlight-thing highlight-symbol highlight-parentheses highlight-indentation helm-bibtex hackernews gradle-mode gnuplot git-gutter exec-path-from-shell ebib dtrt-indent drag-stuff company-coq browse-kill-ring autopair anything ada-mode ack ace-jump-mode))
+   '(flycheck-ocaml flycheck typescript-mode org markdown-mode ox-latex esup ocp-indent tuareg tuareg-mode emojify company-lsp lsp-ui dhall-mode diff-hl git-gutter-fringe ox-rst csv-mode jedi jq-mode arduino-mode graphviz-dot-mode magit-delta exwm gitlab nvm ocamlformat mermaid-mode tide highlight-indentation-guides highlight-indent-guides dumb-jump coverage magit-forge browse-at-remote ligo-mode elfeed org-drill-table org-drill nord-theme birds-of-paradise-plus-theme gitlab-ci-mode-flycheck gitlab-ci-mode org-present blacken org-mobile-sync elpygen dockerfile-mode michelson-mode json-mode lsp-mode auto-yasnippet pyenv-mode org-sync helm-c-yasnippet org-sync-snippets nyan-mode utop default-text-scale org-noter pdf-tools hydra py-yapf feature-mode ecukes htmlize "htmlize" dune centered-window python-pytest merlin-eldoc reason-mode visual-regexp pydoc-info deferred proof-general chronometer dired-icon-mode dired-icon all-the-icons-dired request writegood-mode pomidor projectile latex-preview-pane fill-column-indicator leuven-theme github-theme ahungry-theme w3m org-plus-contrib gitignore-templates company-math boogie-friends fstar-mode web-server guess-language helm-dictionary dictionary howdoi hc-zenburn-theme magit-svn math-symbols zenburn-theme yaml-mode ws-trim wrap-region wc-mode use-package twig-mode solarized-theme soft-stone-theme smex rust-mode purple-haze-theme phpunit password-generator org-journal org-jira nginx-mode minimap lorem-ipsum less-css-mode iedit hl-spotlight highlight-thing highlight-symbol highlight-parentheses highlight-indentation helm-bibtex hackernews gradle-mode gnuplot git-gutter exec-path-from-shell ebib dtrt-indent drag-stuff company-coq browse-kill-ring autopair anything ada-mode ack ace-jump-mode))
  '(preview-default-preamble
    '("\\RequirePackage["
      ("," . preview-default-option-list)
@@ -400,6 +401,7 @@
  '(font-lock-doc-face ((t (:foreground "#818da5"))))
  '(highlight-thing ((t (:inherit 'underline))))
  '(merlin-compilation-error-face ((t (:inherit default :underline (:color "#E44" :style wave)))))
+ '(merlin-type-face ((t (:inherit caml-types-expr-face :background "SkyBlue4!100"))))
  '(message-header-subject ((t (:foreground "#88C0D0" :weight bold :height 1.2))))
  '(org-level-2 ((t (:inherit outline-8))))
  '(org-level-4 ((t (:inherit outline-6))))

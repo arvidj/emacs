@@ -1,24 +1,28 @@
-(use-package nvm
-  :ensure t)
+(use-package nvm :ensure t)
 
-(defun setup-tide-mode ()
-  (interactive)
-  (tide-setup)
-  (flycheck-mode +1)
+(defun aj/typescript-mode-hook ()
+  "My typescript-mode hook."
+  ;; Set correct node version
+  (nvm-use-for-buffer)
+  (subword-mode 1))
+
+(use-package typescript-mode
+  :ensure t
+  :hook aj/typescript-mode-hook
+  :config
+  ;; aligns annotation to the right hand side
+  (add-to-list 'typescript-mode-hook 'aj/typescript-mode-hook))
+
+(use-package tide
+  :ensure t
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode)
+         ;; (before-save . tide-format-before-save)
+         )
+  :config
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
   (eldoc-mode +1)
-  (tide-hl-identifier-mode +1)
-  ;; company is an optional dependency. You have to
-  ;; install it separately via package-install
-  ;; `M-x package-install [ret] company`
   (company-mode +1))
-
-;; aligns annotation to the right hand side
-(setq company-tooltip-align-annotations t)
-
-;; formats the buffer before saving
-;; (add-hook 'before-save-hook 'tide-format-before-save)
-
-(add-hook 'typescript-mode-hook #'setup-tide-mode)
 
 (provide 'arvid-typescript)
