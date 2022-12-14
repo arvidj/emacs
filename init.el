@@ -54,10 +54,10 @@
 (require 'arvid-docker) (profile-package "'arvid-docker")
 (require 'arvid-typescript) (profile-package "'arvid-typescript")
 
-(require 'arvid-compile)
+(require 'arvid-compile) (profile-package "'arvid-compile")
 
 ;; Nomadic Labs specific
-(provide 'arvid-nomadic-labs)
+(require 'arvid-nomadic-labs) (profile-package "'arvid-nomadic-labs")
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Keybindings
@@ -113,8 +113,6 @@
 (require 'arvid-latex) (profile-package "'arvid-latex")
 (require 'arvid-rst) (profile-package "'arvid-rst")
 (require 'arvid-bashmarks) (profile-package "'arvid-bashmarks")
-
-(require 'arvid-nomadic-labs) (profile-package "'arvid-nomadic-labs")
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Encodings

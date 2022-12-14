@@ -1,5 +1,5 @@
 (use-package gitlab
-  :commands aj/gitlab-start-review
+  :commands perform-gitlab-request
   :ensure t)
 
 (setq gitlab-host "https://gitlab.com"
@@ -39,8 +39,6 @@ ISSUE-ID : The ID of a project issue"
                            (format "%s" mr-id))
                           nil
                           200))
-
-;; (gitlab-get-merge-request aj/gitlab-tezos-project-id 1000)
 
 (defun aj/laboxy-go-to-heading (heading-title)
   (outline-show-all)
@@ -91,9 +89,7 @@ ISSUE-ID : The ID of a project issue"
       (insert (format "** !%d - %s\n" mr-id title))
       (previous-line)
       (org-clock-in)
-      (message "Clocked into new review heading: %s" (org-display-outline-path nil t)))
-
-    ))
+      (message "Clocked into new review heading: %s" (org-display-outline-path nil t)))))
 
 (defun aj/laboxy-set-proj-cat (project category)
 	""
@@ -102,6 +98,5 @@ ISSUE-ID : The ID of a project issue"
          (category (org-read-property-value "xy_category")))
     (org-set-property "xy_project" project)
     (org-set-property "xy_category" category)))
-
 
 (provide 'arvid-gitlab)
