@@ -207,7 +207,7 @@
 
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((python . t))))
+   '((sqlite . t))))
 
 (use-package remember :ensure t :after org)
 (use-package org-clock :after org)

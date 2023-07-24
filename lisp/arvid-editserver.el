@@ -7,7 +7,7 @@
   (unless (process-status "edit-server")
     (edit-server-start)))
 
-(defun arvid-edit-server-edit-mode-hook ()
+(defun aj/edit-server-edit-mode-hook ()
 	""
   (interactive)
   (let ((bn (buffer-name)))
@@ -19,6 +19,7 @@
       (markdown-mode)))))
 
 ;; this does not work it seems
-;; (add-to-list 'edit-server-edit-mode-hook 'arvid-edit-server-edit-mode-hook)
+;; (add-to-list 'edit-server-edit-mode-hook 'aj/edit-server-edit-mode-hook t)
+(add-to-list 'edit-server-start-hook 'aj/edit-server-edit-mode-hook t)
 
 (provide 'arvid-editserver)

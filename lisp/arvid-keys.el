@@ -178,7 +178,7 @@
    ("C-e" goto-line)
 
 
-   ("C-M-7" dup-and-comment)
+   ("C-M-7" aj/dup-and-comment)
 
    ("C-x C-x" exchange-point-and-mark)
 
@@ -221,10 +221,10 @@
    ("C-c C-w" elfeed)
    ))
 
-(defun dup-and-comment ()
+(defun aj/dup-and-comment ()
   ""
   (interactive)
-  (duplicate-current-line-or-region 1)
+  (aj/duplicate-current-line-or-region 1)
   (previous-line)
   (comment-or-uncomment-current-line-or-region)
   (next-line))

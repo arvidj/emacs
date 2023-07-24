@@ -144,4 +144,9 @@
 
 (add-to-list 'auto-mode-alist '("\\.gnu\\'" . gnuplot-mode))
 
+(setenv "PATH" (concat (getenv "PATH") ":/home/arvid/bin"))
+(setenv "PATH" (concat (getenv "PATH") ":/home/arvid/.cabal/bin"))
+(setq exec-path (append exec-path '("/home/arvid/bin")))
+
+
 (provide 'arvid-misc)

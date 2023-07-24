@@ -99,7 +99,6 @@
      ("\\.x?html?\\'" . default)
      ("\\.pdf\\'" . "evince %s")))
  '(org-highlight-latex-and-related '(latex))
- '(org-latex-listings t)
  '(org-latex-src-block-backend t)
  '(org-modules
    '(ol-bbdb ol-bibtex ol-docview ol-eww ol-gnus ol-info ol-irc ol-mhe ol-rmail ol-w3m))
@@ -119,7 +118,7 @@
      ("melpa" . "http://melpa.org/packages/")
      ("melpa-stable" . "http://stable.melpa.org/packages/")))
  '(package-selected-packages
-   '(flycheck-ocaml flycheck typescript-mode org markdown-mode ox-latex esup ocp-indent tuareg tuareg-mode emojify company-lsp lsp-ui dhall-mode diff-hl git-gutter-fringe ox-rst csv-mode jedi jq-mode arduino-mode graphviz-dot-mode magit-delta exwm gitlab nvm ocamlformat mermaid-mode tide highlight-indentation-guides highlight-indent-guides dumb-jump coverage magit-forge browse-at-remote ligo-mode elfeed org-drill-table org-drill nord-theme birds-of-paradise-plus-theme gitlab-ci-mode-flycheck gitlab-ci-mode org-present blacken org-mobile-sync elpygen dockerfile-mode michelson-mode json-mode lsp-mode auto-yasnippet pyenv-mode org-sync helm-c-yasnippet org-sync-snippets nyan-mode utop default-text-scale org-noter pdf-tools hydra py-yapf feature-mode ecukes htmlize "htmlize" dune centered-window python-pytest merlin-eldoc reason-mode visual-regexp pydoc-info deferred proof-general chronometer dired-icon-mode dired-icon all-the-icons-dired request writegood-mode pomidor projectile latex-preview-pane fill-column-indicator leuven-theme github-theme ahungry-theme w3m org-plus-contrib gitignore-templates company-math boogie-friends fstar-mode web-server guess-language helm-dictionary dictionary howdoi hc-zenburn-theme magit-svn math-symbols zenburn-theme yaml-mode ws-trim wrap-region wc-mode use-package twig-mode solarized-theme soft-stone-theme smex rust-mode purple-haze-theme phpunit password-generator org-journal org-jira nginx-mode minimap lorem-ipsum less-css-mode iedit hl-spotlight highlight-thing highlight-symbol highlight-parentheses highlight-indentation helm-bibtex hackernews gradle-mode gnuplot git-gutter exec-path-from-shell ebib dtrt-indent drag-stuff company-coq browse-kill-ring autopair anything ada-mode ack ace-jump-mode))
+   '(keychain-environment keychain-refresh-environment vterm sqlformat helm async forge dune-format dune-mode flycheck-ocaml flycheck typescript-mode org markdown-mode ox-latex esup ocp-indent tuareg tuareg-mode emojify company-lsp lsp-ui dhall-mode diff-hl git-gutter-fringe ox-rst csv-mode jedi jq-mode arduino-mode graphviz-dot-mode magit-delta exwm gitlab nvm ocamlformat mermaid-mode tide highlight-indentation-guides highlight-indent-guides dumb-jump coverage magit-forge browse-at-remote ligo-mode elfeed org-drill-table org-drill nord-theme birds-of-paradise-plus-theme gitlab-ci-mode-flycheck gitlab-ci-mode org-present blacken org-mobile-sync elpygen dockerfile-mode michelson-mode json-mode lsp-mode auto-yasnippet pyenv-mode org-sync helm-c-yasnippet org-sync-snippets nyan-mode utop default-text-scale org-noter pdf-tools hydra py-yapf feature-mode ecukes htmlize "htmlize" dune centered-window python-pytest merlin-eldoc reason-mode visual-regexp pydoc-info deferred proof-general chronometer dired-icon-mode dired-icon all-the-icons-dired request writegood-mode pomidor projectile latex-preview-pane fill-column-indicator leuven-theme github-theme ahungry-theme w3m org-plus-contrib gitignore-templates company-math boogie-friends fstar-mode web-server guess-language helm-dictionary dictionary howdoi hc-zenburn-theme magit-svn math-symbols zenburn-theme yaml-mode ws-trim wrap-region wc-mode use-package twig-mode solarized-theme soft-stone-theme smex rust-mode purple-haze-theme phpunit password-generator org-journal org-jira nginx-mode minimap lorem-ipsum less-css-mode iedit hl-spotlight highlight-thing highlight-symbol highlight-parentheses highlight-indentation helm-bibtex hackernews gradle-mode gnuplot git-gutter exec-path-from-shell ebib dtrt-indent drag-stuff company-coq browse-kill-ring autopair anything ada-mode ack ace-jump-mode))
  '(preview-default-preamble
    '("\\RequirePackage["
      ("," . preview-default-option-list)
@@ -393,21 +392,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-blue ((t (:background "deep sky blue" :foreground "deep sky blue"))))
  '(caml-types-expr-face ((t (:background "gray28"))))
  '(compilation-error ((t (:inherit font-lock-warning-face))))
- '(diff-added ((t (:inherit diff-changed :foreground "green"))))
- '(diff-removed ((t (:inherit diff-changed :foreground "red"))))
- '(font-lock-comment-face ((t (:foreground "#8691a8" :slant italic))))
- '(font-lock-doc-face ((t (:foreground "#818da5"))))
+ '(font-lock-comment-face ((t (:foreground "light gray"))))
  '(highlight-thing ((t (:inherit 'underline))))
  '(merlin-compilation-error-face ((t (:inherit default :underline (:color "#E44" :style wave)))))
  '(merlin-type-face ((t (:inherit caml-types-expr-face :background "SkyBlue4!100"))))
- '(message-header-subject ((t (:foreground "#88C0D0" :weight bold :height 1.2))))
- '(org-level-2 ((t (:inherit outline-8))))
- '(org-level-4 ((t (:inherit outline-6))))
  '(proof-eager-annotation-face ((t (:background "peach puff"))))
- '(show-paren-match ((((class color) (background dark)) (:background "light sea green"))))
  '(smerge-refined-added ((t (:inherit smerge-refined-change :background "olive drab"))))
- '(tuareg-font-lock-extension-node-face ((t (:inherit tuareg-font-lock-infix-extension-node-face :background "DodgerBlue4"))))
- '(which-func ((t (:foreground "SpringGreen3"))))
- '(whitespace-line ((t (:foreground nil :background "#2E3440" :underline (:color "dark khaki" :style wave))))))
+ '(tuareg-font-lock-extension-node-face ((t (:inherit tuareg-font-lock-infix-extension-node-face :background "DodgerBlue4")))))

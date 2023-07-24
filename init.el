@@ -53,6 +53,7 @@
 (require 'arvid-ligo) (profile-package "'arvid-ligo")
 (require 'arvid-docker) (profile-package "'arvid-docker")
 (require 'arvid-typescript) (profile-package "'arvid-typescript")
+(require 'arvid-sql) (profile-package "'arvid-sql")
 
 (require 'arvid-compile) (profile-package "'arvid-compile")
 
@@ -91,6 +92,8 @@
 (require 'arvid-uniquify) (profile-package "'arvid-uniquify")
 (use-package browse-kill-ring :ensure t)
 (require 'arvid-dired) (profile-package "'arvid-dired")
+(require 'arvid-vterm) (profile-package "'arvid-vterm")
+(require 'arvid-shell) (profile-package "'arvid-shell")
 
 ;; Must load after org-mode
 (require 'arvid-ott) (profile-package "'arvid-ott")
@@ -149,5 +152,11 @@
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
 
-;; 2. after GC change: Emacs ready in 4.50 seconds with 18 garbage collections
+;; Used in i3 to make sure that Emacs communicates with the keychain
+;; program to automatically unlock ssh keys.
+(use-package keychain-environment
+  :ensure t
+  :config
+  (keychain-refresh-environment))
 
+;; 2. after GC change: Emacs ready in 4.50 seconds with 18 garbage collections

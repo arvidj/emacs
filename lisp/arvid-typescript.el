@@ -4,6 +4,7 @@
   "My typescript-mode hook."
   ;; Set correct node version
   (nvm-use-for-buffer)
+  (message "Now using node version: %s" (shell-command-to-string "node --version"))
   (subword-mode 1))
 
 (use-package typescript-mode

@@ -1,47 +1,48 @@
+(defun aj/ocaml-compile-here (parent)
+  ""
+  (interactive "p")
+  (compile (concat "dune build "
+                   (if (= parent 1)
+                       "."
+                     ".."))))
+
+(defun aj/tuareg-mode-hook ()
+  (aj/define-keys tuareg-mode-map
+                  `(("C-M-p" nil)
+                    ("C-c i" nil)
+                    ("C-c C-c" aj/ocaml-compile-here)
+                    ("C-M-n" nil)
+                    ("C-q" tuareg-indent-phrase)
+                    ("C-h o" merlin-document)
+                    ("C-c y f" aj/tezt-this-file)))
+
+  ;; (display-fill-column-indicator-mode)
+  ;; (setq-local display-fill-column-indicator-column 80)
+  (setq-local comment-style "indent")
+  (setq-local comment-multi-line t)
+
+  ;; Highlight lines that depass 80 columns
+  (setq-local whitespace-line-column 80)
+  (make-variable-buffer-local 'whitespace-style)
+  (setq whitespace-style '(face lines-tail))
+  (whitespace-mode))
+
+(defun aj/tezt-this-file ()
+  ""
+  (interactive)
+  (compile (concat
+            "cd ../../ && "
+            "dune exec tezt/tests/main.exe -- --color -j 7 --file "
+            (file-name-nondirectory (buffer-file-name)))))
+
 (use-package tuareg
   :custom
   (tuareg-opam-insinuate t)
-  :config
-  (tuareg-opam-update-env (tuareg-opam-current-compiler))
   :hook
   (tuareg-mode . aj/tuareg-mode-hook)
   :config
-  (defun aj/ocaml-compile-here (parent)
-    ""
-    (interactive "p")
-    (compile (concat "dune build "
-                     (if (= parent 1)
-                         "."
-                       ".."))))
-
-  (defun aj/tezt-this-file ()
-    ""
-    (interactive)
-    (compile (concat
-              "cd ../../ && "
-              "dune exec tezt/tests/main.exe -- --color -j 7 --file "
-              (file-name-nondirectory (buffer-file-name)))))
-
-  (defun aj/tuareg-mode-hook ()
-    (aj/define-keys tuareg-mode-map
-     `(("C-M-p" nil)
-       ("C-c i" nil)
-       ("C-c C-c" 'aj/ocaml-compile-here)
-       ("C-M-n" nil)
-       ("C-q" 'tuareg-indent-phrase)
-       ("C-h o" 'merlin-document)
-       ("C-c y f" 'aj/tezt-this-file)))
-
-    ;; (display-fill-column-indicator-mode)
-    ;; (setq-local display-fill-column-indicator-column 80)
-    (setq-local comment-style "indent")
-    (setq-local comment-multi-line t)
-
-    ;; Highlight lines that depass 80 columns
-    (setq-local whitespace-line-column 80)
-    (make-variable-buffer-local 'whitespace-style)
-    (setq whitespace-style '(face lines-tail))
-    (whitespace-mode)))
+  (tuareg-opam-update-env (tuareg-opam-current-compiler))
+  )
 
 ;; It is mandatory to load 'ocp-indent' *after* 'ocamlformat', because
 ;; 'ocamlfomat' installs broken hooks to indent after newline.
@@ -93,4 +94,11 @@
     (flycheck-ocaml-setup)
     (flycheck-mode)))
 
-(provide 'thomas-ocaml)
+(use-package dune
+  :ensure t)
+
+(use-package dune-format
+  :ensure t
+  :hook (dune-mode . dune-format-on-save-mode))
+
+(provide 'arvid-ocaml)

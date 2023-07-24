@@ -6,7 +6,11 @@
 (use-package nord-theme
   :ensure t
   :config
-  (load-theme 'nord t))
+  (if (daemonp)
+	  (add-hook 'after-make-frame-functions 
+		        (lambda (frame) 
+			      (with-selected-frame frame (load-theme 'nord t)))) 
+    (load-theme 'nord t)))
 
 ;; Highlight surrounding parentheses.
 (use-package

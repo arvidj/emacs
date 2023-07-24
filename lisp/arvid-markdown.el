@@ -3,7 +3,7 @@
 (defun aj/markdown-mode-hook ()
 	""
   (interactive)
-  (flyspell-mode)
+  ;; (flyspell-mode)
   ;; (with-timeout (2) (flyspell-buffer))
 
   (make-local-variable 'electric-pair-pairs)

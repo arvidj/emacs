@@ -1,2 +1,2 @@
-;; org-clock-save.el - arvid-XPS-13-9310 at <2022-12-06 tis 10:44>
-(setq org-clock-stored-history '(("/home/arvid/Dropbox/Jobb/Nomadic_Labs/Org/laboxy.org" . 47896) ("/home/arvid/Dropbox/Jobb/Nomadic_Labs/Org/laboxy.org" . 48041)))
+;; org-clock-save.el - arvid-XPS-13-9310 at <2023-07-24 mån 09:03>
+(setq org-clock-stored-history '(("/home/arvid/Dropbox/Jobb/Nomadic_Labs/Org/laboxy.org" . 48426) ("/home/arvid/Dropbox/Jobb/Nomadic_Labs/Org/laboxy.org" . 48571) ("/home/arvid/Dropbox/Jobb/Nomadic_Labs/Org/laboxy.org" . 12658) ("/home/arvid/Dropbox/Jobb/Nomadic_Labs/Org/laboxy.org" . 48705) ("/home/arvid/Dropbox/Jobb/Nomadic_Labs/Org/laboxy.org" . 12793) ("/home/arvid/Dropbox/Jobb/Nomadic_Labs/Org/laboxy.org" . 12945) ("/home/arvid/Dropbox/Jobb/Nomadic_Labs/Org/laboxy.org" . 39191) ("/home/arvid/Dropbox/Jobb/Nomadic_Labs/Org/laboxy.org" . 20034)))
