@@ -95,6 +95,7 @@
 (require 'arvid-dired) (profile-package "'arvid-dired")
 (require 'arvid-vterm) (profile-package "'arvid-vterm")
 (require 'arvid-shell) (profile-package "'arvid-shell")
+(require 'arvid-tramp) (profile-package "'arvid-tramp")
 
 ;; Must load after org-mode
 (require 'arvid-ott) (profile-package "'arvid-ott")
