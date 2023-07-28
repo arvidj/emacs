@@ -33,7 +33,7 @@
 (require 'arvid-recentf) (profile-package "'arvid-recentf") ; For opening recently opened files
 (require 'arvid-editserver) (profile-package "'arvid-editserver")
 
-;; Generalities for programmign
+;; Generalities for programming
 (require 'arvid-flycheck) (profile-package "'arvid-flycheck")
 (require 'arvid-company) (profile-package "'arvid-company")
 
