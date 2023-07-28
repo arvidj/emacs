@@ -84,6 +84,18 @@
 
 (setq visible-bell t)
 
+;; From https://emacs.stackexchange.com/questions/19461/insert-lines-when-yanking-rectangle-rather-than-inserting-among-following-lines
+(defun aj/insert-rectangle-push-lines ()
+  "Yank a rectangle as if it was an ordinary kill."
+  (interactive "*")
+  (when (and (use-region-p) (delete-selection-mode))
+    (delete-region (region-beginning) (region-end)))
+  (save-restriction
+    (narrow-to-region (point) (mark))
+    (yank-rectangle)))
+
+(global-set-key (kbd "C-x r C-y") #'aj/insert-rectangle-push-lines)
+
 (defvar visual-wrap-column nil)
 (defun set-visual-wrap-column (new-wrap-column &optional buffer)
   "Force visual line wrap at NEW-WRAP-COLUMN in BUFFER (defaults
