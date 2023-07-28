@@ -54,6 +54,7 @@
 (require 'arvid-docker) (profile-package "'arvid-docker")
 (require 'arvid-typescript) (profile-package "'arvid-typescript")
 (require 'arvid-sql) (profile-package "'arvid-sql")
+(require 'arvid-nix) (profile-package "'arvid-nix")
 
 (require 'arvid-compile) (profile-package "'arvid-compile")
 
