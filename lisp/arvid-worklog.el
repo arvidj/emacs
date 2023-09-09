@@ -74,7 +74,7 @@ POS may also be a marker."
 (defun arvid-wl/org-remove-drawer-from-heading ()
   "Remove the first drawer from under an heading"
   (save-excursion
-    (assert (outline-on-heading-p) nil "arvid-wl/org-remove-drawer-from-heading: must be called on an outline heading")
+    (cl-assert (outline-on-heading-p) nil "arvid-wl/org-remove-drawer-from-heading: must be called on an outline heading")
     (forward-line)
     (if (org-at-drawer-p)
         (arvid-wl/org-remove-drawer-at (point)))))
@@ -86,7 +86,7 @@ POS may also be a marker."
   (let ((time (or (get-text-property (point) time-range-prop) 0))
         (title (arvid-wl/org-heading-title))
         (todo (arvid-wl/org-heading-todo)))
-    (assert todo nil (format "arvid-wl/heading-to-list-item: missing TODO state in %s" title))
+    (cl-assert todo nil (format "arvid-wl/heading-to-list-item: missing TODO state in %s" title))
     (org-cut-subtree)
     (insert (format " - %s %s <%sh%02d>\n" todo title (/ time 60) (% time 60))))
   ;; (org-clock-remove-overlays)
@@ -94,7 +94,7 @@ POS may also be a marker."
 
 (defun arvid-wl/heading-has-leaves-p ()
   "Return t if heading has children"
-  (assert (outline-on-heading-p) nil "arvid-wl/heading-has-leaves-p: must be called on an outline heading")
+  (cl-assert (outline-on-heading-p) nil "arvid-wl/heading-has-leaves-p: must be called on an outline heading")
   (save-excursion
     (< (org-current-level)
            (progn (outline-next-heading)
@@ -124,8 +124,8 @@ POS may also be a marker."
       `(,(match-string 1 title) . ,(match-string 2 title))
     `(,title . nil)))
 
-(assert (equal (arvid-wl/workitem-info "Foo (sd#bar)") '("Foo" . "sd#bar")))
-(assert (equal (arvid-wl/workitem-info "Foo") '("Foo" . nil)))
+(cl-assert (equal (arvid-wl/workitem-info "Foo (sd#bar)") '("Foo" . "sd#bar")))
+(cl-assert (equal (arvid-wl/workitem-info "Foo") '("Foo" . nil)))
 
 (defun arvid-wl/org-heading-todo ()
   (pcase (org-heading-components)
@@ -136,13 +136,13 @@ POS may also be a marker."
   (format "<%sh%02d>" (/ time 60) (% time 60)))
 
 (defun arvid-wl/heading-add-time-suffix (total-time)
-  (assert (outline-on-heading-p) nil "arvid-wl/heading-add-time-suffix: must be called on an outline heading")
+  (cl-assert (outline-on-heading-p) nil "arvid-wl/heading-add-time-suffix: must be called on an outline heading")
   (save-excursion
     (end-of-line)
     (insert " " (arvid-wl/format-time total-time))))
 
 (defun arvid-wl/org-remove-contents ()
-  (assert (outline-on-heading-p) nil "arvid-wl/heading-add-time-suffix: must be called on an outline heading")
+  (cl-assert (outline-on-heading-p) nil "arvid-wl/heading-add-time-suffix: must be called on an outline heading")
   (save-excursion
     (forward-line)
     (beginning-of-line)
@@ -150,7 +150,7 @@ POS may also be a marker."
                    (progn (outline-next-heading) (point)))))
 
 (defun arvid-wl/prune2-composed-workitem (time-range time-range-prop)
-  (assert (outline-on-heading-p) nil "arvid-wl/prune2-composed-workitem: must be called on an outline heading")
+  (cl-assert (outline-on-heading-p) nil "arvid-wl/prune2-composed-workitem: must be called on an outline heading")
 
   ;; (org-clock-display time-range)
   (let* ((init-level (org-current-level))
@@ -171,7 +171,7 @@ POS may also be a marker."
             (title (arvid-wl/org-heading-title))
             (todo (arvid-wl/org-heading-todo)))
 
-        (assert
+        (cl-assert
          (not (arvid-wl/heading-has-leaves-p))
          "Children of composed items cannot themselves have leaves")
 
@@ -187,7 +187,7 @@ POS may also be a marker."
                             "")
                           (arvid-wl/format-time time))))))
 
-    (assert (= total-time subheading-time)
+    (cl-assert (= total-time subheading-time)
             t
             "arvid-wl/prune2-composed-workitem: sum of sub-item times at %d in workitem "
             (line-number-at-pos)
@@ -202,7 +202,7 @@ POS may also be a marker."
 
 ;; simple approximation: just check there is no drawer. this doesn't work
 ;; because composed work items will have a property drawer
-;; (assert (not
+;; (cl-assert (not
 ;;          (save-excursion
 ;;            (forward-line)
 ;;            (not (org-at-drawer-p))))
@@ -291,16 +291,16 @@ POS may also be a marker."
     (print weekday)
     (encode-time (decoded-time-add (decode-time time) delta))))
 
-(assert (string= "2021w01" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'thisweek (date-to-time "2021-01-10 00:00")))))
-(assert (string= "2021w02" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'thisweek (date-to-time "2021-01-11 00:00")))))
-(assert (string= "2021w02" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'thisweek (date-to-time "2021-01-14 00:00")))))
-(assert (string= "2021w02" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'thisweek (date-to-time "2021-01-17 00:00")))))
-(assert (string= "2021w03" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'thisweek (date-to-time "2021-01-18 00:00")))))
-(assert (string= "2020w53" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'lastweek (date-to-time "2021-01-10 00:00")))))
-(assert (string= "2021w01" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'lastweek (date-to-time "2021-01-11 00:00")))))
-(assert (string= "2021w01" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'lastweek (date-to-time "2021-01-14 00:00")))))
-(assert (string= "2021w01" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'lastweek (date-to-time "2021-01-17 00:00")))))
-(assert (string= "2021w02" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'lastweek (date-to-time "2021-01-18 00:00")))))
+(cl-assert (string= "2021w01" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'thisweek (date-to-time "2021-01-10 00:00")))))
+(cl-assert (string= "2021w02" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'thisweek (date-to-time "2021-01-11 00:00")))))
+(cl-assert (string= "2021w02" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'thisweek (date-to-time "2021-01-14 00:00")))))
+(cl-assert (string= "2021w02" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'thisweek (date-to-time "2021-01-17 00:00")))))
+(cl-assert (string= "2021w03" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'thisweek (date-to-time "2021-01-18 00:00")))))
+(cl-assert (string= "2020w53" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'lastweek (date-to-time "2021-01-10 00:00")))))
+(cl-assert (string= "2021w01" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'lastweek (date-to-time "2021-01-11 00:00")))))
+(cl-assert (string= "2021w01" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'lastweek (date-to-time "2021-01-14 00:00")))))
+(cl-assert (string= "2021w01" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'lastweek (date-to-time "2021-01-17 00:00")))))
+(cl-assert (string= "2021w02" (format-time-string "%Yw%V" (arvid-wl/get-week-start-from-relative 'lastweek (date-to-time "2021-01-18 00:00")))))
 
 (defun arvid-wl/spinoff-filename (week &optional time)
   ""
@@ -311,8 +311,8 @@ POS may also be a marker."
          (time (encode-time (decoded-time-add (decode-time time) delta))))
     (format-time-string "%Yw%V.org" time)))
 
-(assert (string= (arvid-wl/spinoff-filename 'thisweek (date-to-time "2020-04-15 00:00")) "2020w16.org"))
-(assert (string= (arvid-wl/spinoff-filename 'lastweek (date-to-time "2020-04-15 00:00")) "2020w15.org"))
+(cl-assert (string= (arvid-wl/spinoff-filename 'thisweek (date-to-time "2020-04-15 00:00")) "2020w16.org"))
+(cl-assert (string= (arvid-wl/spinoff-filename 'lastweek (date-to-time "2020-04-15 00:00")) "2020w15.org"))
 
 (defun arvid-wl/decode-buffer-name (file-name)
 	""
@@ -389,7 +389,7 @@ POS may also be a marker."
   (interactive (list (intern (ido-completing-read "Spin-off work log for which week? "
                                                   '("thisweek" "lastweek") nil t))))
 
-  (assert (file-exists-p arvid-wl/worklog-file))
+  (cl-assert (file-exists-p arvid-wl/worklog-file))
 
   (if (arvid-wl/worklog-check-sanity week)
 
@@ -405,7 +405,7 @@ POS may also be a marker."
 
 (defun arvid-wl/org-clock-in-hook-no-workitem ()
   "Hook that verifies that the user is not logging into a composed workitem"
-  (assert (not (string= (org-entry-get (point) "WORKITEM") "t"))
+  (cl-assert (not (string= (org-entry-get (point) "WORKITEM") "t"))
           nil
           "Cannot clock into to workitems: clock into one of its sub-headings"))
 
