@@ -32,3 +32,4 @@
 */_build
 /auto-save-list/
 /backup-emacs/
+/elisp-autofmt-cache/
