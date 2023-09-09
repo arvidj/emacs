@@ -61,6 +61,8 @@
       (plist-put minibuffer-prompt-properties 'point-entered 'minibuffer-avoid-prompt))
 
 (setq-default abbrev-mode t)
+;; On new machines, call [write-abbrev-file] if  [~/.emacs.d/misc/abbrev_defs] does not exist:
+;;   (write-abbrev-file "~/.emacs.d/misc/abbrev_defs")
 (read-abbrev-file "~/.emacs.d/misc/abbrev_defs")
 (setq save-abbrevs t)
 
