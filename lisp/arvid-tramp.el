@@ -4,6 +4,9 @@
 ;; host. See
 ;; https://www.gnu.org/software/emacs/manual/html_node/tramp/Remote-programs.html
 ;; for more information.
-(add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+(use-package
+  tramp
+  :config
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 
 (provide 'arvid-tramp)
