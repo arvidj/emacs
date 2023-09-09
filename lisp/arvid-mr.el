@@ -9,7 +9,7 @@
                (shell-quote-argument query))))
 
     (copy-file db dbtmp t)
-    (assert (and (file-exists-p dbtmp) (> (file-attribute-size (file-attributes dbtmp)) 0)))
+    (cl-assert (and (file-exists-p dbtmp) (> (file-attribute-size (file-attributes dbtmp)) 0)))
 
     (let* ((results (shell-command-to-string cmd)))
       (mapcar (lambda (s) (let ((s (split-string s "|")))
@@ -66,8 +66,8 @@
                          :org org :repo repo :number number))))
 
 
-(assert (equal (arvid-mr/mr-parse-gitlab-url "https://gitlab.com/tezos/tezos/-/merge_requests/1887")
-               (make-mergerequest :title nil :org "tezos" :repo "tezos" :number 1887 :url "https://gitlab.com/tezos/tezos/merge_requests/1887")))
+(cl-assert (equal (arvid-mr/mr-parse-gitlab-url "https://gitlab.com/tezos/tezos/-/merge_requests/1887")
+                  (make-mergerequest :title nil :org "tezos" :repo "tezos" :number 1887 :url "https://gitlab.com/tezos/tezos/merge_requests/1887")))
 
 (defun arvid-mr/issue-parse-gitlab-url (url)
   ""
@@ -80,20 +80,19 @@
                 :repo (match-string 2 url)
                 :number (string-to-number (match-string 4 url)))))
 
-(assert (equal (arvid-mr/issue-parse-gitlab-url "https://gitlab.com/nomadic-labs/tezos/issues/29")
-               (make-issue :title nil :org "nomadic-labs" :repo "tezos" :number 29 :url "https://gitlab.com/nomadic-labs/tezos/issues/29")))
+(cl-assert (equal (arvid-mr/issue-parse-gitlab-url "https://gitlab.com/nomadic-labs/tezos/issues/29")
+                  (make-issue :title nil :org "nomadic-labs" :repo "tezos" :number 29 :url "https://gitlab.com/nomadic-labs/tezos/issues/29")))
 
 (defun arvid-mr/parse-gitlab-url (url)
   (or (arvid-mr/mr-parse-gitlab-url url)
       (arvid-mr/issue-parse-gitlab-url url)))
 
 
-(assert (equal (arvid-mr/parse-gitlab-url "https://gitlab.com/nomadic-labs/tezos/issues/29")
-               (make-issue :title nil :org "nomadic-labs" :repo "tezos" :number 29 :url "https://gitlab.com/nomadic-labs/tezos/issues/29")))
+(cl-assert (equal (arvid-mr/parse-gitlab-url "https://gitlab.com/nomadic-labs/tezos/issues/29")
+                  (make-issue :title nil :org "nomadic-labs" :repo "tezos" :number 29 :url "https://gitlab.com/nomadic-labs/tezos/issues/29")))
 
-(assert (equal (arvid-mr/parse-gitlab-url "https://gitlab.com/tezos/tezos/-/merge_requests/1887")
-               (make-mergerequest :title nil :org "tezos" :repo "tezos" :number 1887 :url "https://gitlab.com/tezos/tezos/merge_requests/1887")))
-
+(cl-assert (equal (arvid-mr/parse-gitlab-url "https://gitlab.com/tezos/tezos/-/merge_requests/1887")
+                  (make-mergerequest :title nil :org "tezos" :repo "tezos" :number 1887 :url "https://gitlab.com/tezos/tezos/merge_requests/1887")))
 
 (defun arvid-mr/obj-title (obj)
   (cond
@@ -110,9 +109,9 @@
     (setf (issue-title obj) title))))
 
 (let ((m (make-mergerequest :title "test" :org "tezos" :repo "tezos" :number 1887 :url "https://gitlab.com/tezos/tezos/merge_requests/1887")))
-  (assert (equal (arvid-mr/obj-title m) "test"))
-  (arvid-mr/obj-set-title m "foo")
-  (assert (equal (arvid-mr/obj-title m) "foo")))
+ (cl-assert (equal (arvid-mr/obj-title m) "test"))
+ (arvid-mr/obj-set-title m "foo")
+ (cl-assert (equal (arvid-mr/obj-title m) "foo")))
 
 (defun arvid-mr/parse-candidate (obj-candidate)
   ""
@@ -123,14 +122,14 @@
     (arvid-mr/obj-set-title obj title)
     obj))
 
-(assert (equal
-         (arvid-mr/parse-candidate '("foo" "https://gitlab.com/tezos/tezos/merge_requests/1887"))
-         (make-mergerequest :title "foo" :org "tezos" :repo "tezos" :number 1887
-                            :url "https://gitlab.com/tezos/tezos/merge_requests/1887")))
-(assert (equal
-         (arvid-mr/parse-candidate '("foo" "https://gitlab.com/tezos/tezos/issues/1887"))
-         (make-issue :title "foo" :org "tezos" :repo "tezos" :number 1887
-                     :url "https://gitlab.com/tezos/tezos/issues/1887")))
+(cl-assert (equal
+            (arvid-mr/parse-candidate '("foo" "https://gitlab.com/tezos/tezos/merge_requests/1887"))
+            (make-mergerequest :title "foo" :org "tezos" :repo "tezos" :number 1887
+                               :url "https://gitlab.com/tezos/tezos/merge_requests/1887")))
+(cl-assert (equal
+            (arvid-mr/parse-candidate '("foo" "https://gitlab.com/tezos/tezos/issues/1887"))
+            (make-issue :title "foo" :org "tezos" :repo "tezos" :number 1887
+                        :url "https://gitlab.com/tezos/tezos/issues/1887")))
 
 
 
@@ -151,19 +150,19 @@
   arvid-mr/shortlink-regexp-1
   "\\([!\\#]\\)\\([[:digit:]]*\\)")
 
-(assert (string-match arvid-mr/shortlink-regexp "!1123"))
-(assert (string-match arvid-mr/shortlink-regexp-1 "!1123"))
-(assert (string-match arvid-mr/shortlink-regexp "foo!1123"))
-(assert (string-match arvid-mr/shortlink-regexp-2 "foo!1123"))
-(assert (string-match arvid-mr/shortlink-regexp "foo/bar!1123"))
-(assert (string-match arvid-mr/shortlink-regexp-3 "foo/bar!1123"))
+(cl-assert (string-match arvid-mr/shortlink-regexp "!1123"))
+(cl-assert (string-match arvid-mr/shortlink-regexp-1 "!1123"))
+(cl-assert (string-match arvid-mr/shortlink-regexp "foo!1123"))
+(cl-assert (string-match arvid-mr/shortlink-regexp-2 "foo!1123"))
+(cl-assert (string-match arvid-mr/shortlink-regexp "foo/bar!1123"))
+(cl-assert (string-match arvid-mr/shortlink-regexp-3 "foo/bar!1123"))
 
-(assert (string-match arvid-mr/shortlink-regexp "#1123"))
-(assert (string-match arvid-mr/shortlink-regexp-1 "#1123"))
-(assert (string-match arvid-mr/shortlink-regexp "foo#1123"))
-(assert (string-match arvid-mr/shortlink-regexp-2 "foo#1123"))
-(assert (string-match arvid-mr/shortlink-regexp "foo/bar#1123"))
-(assert (string-match arvid-mr/shortlink-regexp-3 "foo/bar#1123"))
+(cl-assert (string-match arvid-mr/shortlink-regexp "#1123"))
+(cl-assert (string-match arvid-mr/shortlink-regexp-1 "#1123"))
+(cl-assert (string-match arvid-mr/shortlink-regexp "foo#1123"))
+(cl-assert (string-match arvid-mr/shortlink-regexp-2 "foo#1123"))
+(cl-assert (string-match arvid-mr/shortlink-regexp "foo/bar#1123"))
+(cl-assert (string-match arvid-mr/shortlink-regexp-3 "foo/bar#1123"))
 
 (defvar arvid-mr/default-org "tezos")
 
@@ -175,8 +174,8 @@
    ((string= type "!") 'arvid-mr/mergerequest)
    ((string= type "#") 'arvid-mr/issue)))
 
-(assert (eql (arvid-mr/type-string-to-type "#") 'arvid-mr/issue))
-(assert (eql (arvid-mr/type-string-to-type "!") 'arvid-mr/mergerequest))
+(cl-assert (eql (arvid-mr/type-string-to-type "#") 'arvid-mr/issue))
+(cl-assert (eql (arvid-mr/type-string-to-type "!") 'arvid-mr/mergerequest))
 
 (defun arvid-mr/parse-shortlink (shortlink)
   (when (and shortlink (string-match arvid-mr/shortlink-regexp shortlink))
@@ -184,7 +183,7 @@
           (org (or (match-string 2 shortlink) arvid-mr/default-org))
           (repo (or (match-string 3 shortlink) arvid-mr/default-repo))
           (number (string-to-number (match-string 5 shortlink))))
-      (case type
+      (pcase type
         ('arvid-mr/mergerequest
          (make-mergerequest :title nil
                             :org org
@@ -199,20 +198,19 @@
                      :url (format
                            (arvid-mr/issue-make-url-aux org repo number)
                            org repo number)))
-        )
-      )))
+        ))))
 
-(assert (equal (arvid-mr/parse-shortlink "foo/bar!1123")
-               (make-mergerequest :org "foo" :repo "bar" :number 1123 :url "https://gitlab.com/foo/bar/merge_requests/1123")))
-(assert (equal (arvid-mr/parse-shortlink "foo/tezos!123123")
-               (make-mergerequest :org "foo" :repo "tezos" :number 123123 :url "https://gitlab.com/foo/tezos/merge_requests/123123")))
-(assert (equal (arvid-mr/parse-shortlink "https://gitlab.com/nomadic-labs/albert-lang.io/-/jobs/605404211") nil))
+(cl-assert (equal (arvid-mr/parse-shortlink "foo/bar!1123")
+                  (make-mergerequest :org "foo" :repo "bar" :number 1123 :url "https://gitlab.com/foo/bar/merge_requests/1123")))
+(cl-assert (equal (arvid-mr/parse-shortlink "foo/tezos!123123")
+                  (make-mergerequest :org "foo" :repo "tezos" :number 123123 :url "https://gitlab.com/foo/tezos/merge_requests/123123")))
+(cl-assert (equal (arvid-mr/parse-shortlink "https://gitlab.com/nomadic-labs/albert-lang.io/-/jobs/605404211") nil))
 
-(assert (equal (arvid-mr/parse-shortlink "foo/bar#1123")
-               (make-issue :org "foo" :repo "bar" :number 1123 :url "https://gitlab.com/foo/bar/issues/1123")))
-(assert (equal (arvid-mr/parse-shortlink "foo/tezos#123123")
-               (make-issue :org "foo" :repo "tezos" :number 123123 :url "https://gitlab.com/foo/tezos/issues/123123")))
-(assert (equal (arvid-mr/parse-shortlink "https://gitlab.com/nomadic-labs/albert-lang.io/-/jobs/605404211") nil))
+(cl-assert (equal (arvid-mr/parse-shortlink "foo/bar#1123")
+                  (make-issue :org "foo" :repo "bar" :number 1123 :url "https://gitlab.com/foo/bar/issues/1123")))
+(cl-assert (equal (arvid-mr/parse-shortlink "foo/tezos#123123")
+                  (make-issue :org "foo" :repo "tezos" :number 123123 :url "https://gitlab.com/foo/tezos/issues/123123")))
+(cl-assert (equal (arvid-mr/parse-shortlink "https://gitlab.com/nomadic-labs/albert-lang.io/-/jobs/605404211") nil))
 
 
 (defun arvid-mr/mergerequest-make-url (mr-candidate)
@@ -224,15 +222,7 @@
      (mergerequest-repo mr)
      (mergerequest-number mr))))
 
-;; (assert (equal
-;;          (arvid-mr/mergerequest-make-url
-;;           ()
-;;           "https://gitlab.com/tezos/tezos/-/merge_requests/1887"
-;;           )
-;;          )
-
-;;  )
-
+;; (cl-assert (equal (arvid-mr/mergerequest-make-url () "https://gitlab.com/tezos/tezos/-/merge_requests/1887")))
 
 (defun arvid-mr/make-shortlink-aux (symbol org repo number full)
     ""
@@ -257,9 +247,9 @@
         (nr (issue-number issue)))
     (arvid-mr/make-shortlink-aux "#" org repo nr full)))
 
-(assert (equal "nomadic-labs/tezos#23"
-               (arvid-mr/issue-make-shortlink
-                (arvid-mr/issue-parse-gitlab-url "https://gitlab.com/nomadic-labs/tezos/-/issues/23"))))
+(cl-assert (equal "nomadic-labs/tezos#23"
+                  (arvid-mr/issue-make-shortlink
+                   (arvid-mr/issue-parse-gitlab-url "https://gitlab.com/nomadic-labs/tezos/-/issues/23"))))
 
 (defun arvid-mr/mergerequest-make-shortlink (mr &optional full)
   ""
@@ -269,21 +259,19 @@
         (nr (mergerequest-number mr)))
     (arvid-mr/make-shortlink-aux "!" org repo nr full)))
 
-(assert (equal "!1887"
-               (arvid-mr/mergerequest-make-shortlink
-                (arvid-mr/mr-parse-gitlab-url "https://gitlab.com/tezos/tezos/-/merge_requests/1887"))))
+(cl-assert (equal "!1887"
+                  (arvid-mr/mergerequest-make-shortlink
+                   (arvid-mr/mr-parse-gitlab-url "https://gitlab.com/tezos/tezos/-/merge_requests/1887"))))
 
-(assert (equal "tezos/tezos!1887"
-               (arvid-mr/mergerequest-make-shortlink
-                (arvid-mr/mr-parse-gitlab-url "https://gitlab.com/tezos/tezos/-/merge_requests/1887")
-                t
-                )))
+(cl-assert (equal "tezos/tezos!1887"
+                  (arvid-mr/mergerequest-make-shortlink
+                   (arvid-mr/mr-parse-gitlab-url "https://gitlab.com/tezos/tezos/-/merge_requests/1887")
+                   t
+                   )))
 
-(assert (equal "nomadic-labs/tezos!1887"
-               (arvid-mr/mergerequest-make-shortlink
-                (arvid-mr/mr-parse-gitlab-url "https://gitlab.com/nomadic-labs/tezos/-/merge_requests/1887"))))
-
-
+(cl-assert (equal "nomadic-labs/tezos!1887"
+                  (arvid-mr/mergerequest-make-shortlink
+                   (arvid-mr/mr-parse-gitlab-url "https://gitlab.com/nomadic-labs/tezos/-/merge_requests/1887"))))
 
 (defun arvid-mr/obj-make-shortlink (obj &optional full)
     ""
@@ -300,13 +288,13 @@
    ((issue-p obj) (issue-url obj))))
 
 
-(assert (equal "nomadic-labs/tezos!1887"
-               (arvid-mr/obj-make-shortlink
-                (arvid-mr/parse-gitlab-url "https://gitlab.com/nomadic-labs/tezos/-/merge_requests/1887"))))
+(cl-assert (equal "nomadic-labs/tezos!1887"
+                  (arvid-mr/obj-make-shortlink
+                   (arvid-mr/parse-gitlab-url "https://gitlab.com/nomadic-labs/tezos/-/merge_requests/1887"))))
 
-(assert (equal "nomadic-labs/tezos#32"
-               (arvid-mr/obj-make-shortlink
-                (arvid-mr/parse-gitlab-url "https://gitlab.com/nomadic-labs/tezos/issues/32"))))
+(cl-assert (equal "nomadic-labs/tezos#32"
+                  (arvid-mr/obj-make-shortlink
+                   (arvid-mr/parse-gitlab-url "https://gitlab.com/nomadic-labs/tezos/issues/32"))))
 
 (defun arvid-mr/insert-org-link (mr-candidate)
     ""
