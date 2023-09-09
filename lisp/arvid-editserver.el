@@ -8,7 +8,7 @@
     (edit-server-start)))
 
 (defun aj/edit-server-edit-mode-hook ()
-	""
+  ""
   (interactive)
   (let ((bn (buffer-name)))
     (cond

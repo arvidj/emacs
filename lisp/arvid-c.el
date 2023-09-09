@@ -19,12 +19,12 @@
 
 ;; Create my personal style.
 (defconst my-c-style
-  '((c-hanging-braces-alist     . ((defun-open after)
-								   (substatement-open after)))
-    (c-offsets-alist            . ((case-label        . +)
-								   (arglist-close     . 0)
-								   (comment-intro     . 0)))
-    (c-hanging-semi&comma-criteria nil))  ;; Does not work
+  '((c-hanging-braces-alist
+     .
+     ((defun-open after) (substatement-open after)))
+    (c-offsets-alist
+     . ((case-label . +) (arglist-close . 0) (comment-intro . 0)))
+    (c-hanging-semi&comma-criteria nil)) ;; Does not work
   "My C Programming Style")
 (c-add-style "PERSONAL" my-c-style)
 
@@ -64,21 +64,20 @@
   ;; Try to make auto-pair + electric mode work together.
   ;; (setq autopair-handle-action-fns '(my-test-handler))
 
-  (aj/define-keys c-mode-map
-	`(("M-a" smart-beginning-of-line)
-	  ("M-e" move-end-of-line)
-	  ("C-c C-c" compile)
-	  ;; ("ä" ,(make-inserter "$"))
-	  ;; ("ö" ,(make-inserter ";"))
-	  ;; (";" report-intelligence-level)
-	  ;; ("$" report-intelligence-level)
-	  ;; ("M-ä" ,(make-inserter "ä"))
+  (aj/define-keys
+   c-mode-map
+   `(("M-a" smart-beginning-of-line)
+     ("M-e" move-end-of-line)
+     ("C-c C-c" compile)
+     ;; ("ä" ,(make-inserter "$"))
+     ;; ("ö" ,(make-inserter ";"))
+     ;; (";" report-intelligence-level)
+     ;; ("$" report-intelligence-level)
+     ;; ("M-ä" ,(make-inserter "ä"))
 
-	  ("C-c r r" ptests-run)
-	  ("C-c r u" ptests-update)
-	  ("C-c r g" ptests-gdb)
-
-	  )))
+     ("C-c r r" ptests-run)
+     ("C-c r u" ptests-update)
+     ("C-c r g" ptests-gdb))))
 
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
@@ -86,54 +85,57 @@
   "Run ptest on the current file"
   (interactive)
   (let* ((old-def default-directory)
-		 (root (find-ptests-root-dir))
-		 (base (file-name-nondirectory (file-name-sans-extension buffer-file-name)))
-		 (test-folder (file-name-directory buffer-file-name))
-		 (test-path (substring (buffer-file-name)
-							   (+ (length root) 1))))
-	(gdb (concat "gdb -i=mi " test-folder "result/gen_" base ".out"))))
+         (root (find-ptests-root-dir))
+         (base
+          (file-name-nondirectory
+           (file-name-sans-extension buffer-file-name)))
+         (test-folder (file-name-directory buffer-file-name))
+         (test-path
+          (substring (buffer-file-name) (+ (length root) 1))))
+    (gdb
+     (concat "gdb -i=mi " test-folder "result/gen_" base ".out"))))
 
 (defun ptests-run ()
   "Run ptest on the current file"
   (interactive)
   (let* ((old-def default-directory)
-		 (root (find-ptests-root-dir))
-		 (test-path (substring (buffer-file-name)
-							   (+ (length root) 1))))
-	(cd root)
-	(shell-command (concat "ptests.opt " test-path " &"))
-	(cd old-def)
-	))
+         (root (find-ptests-root-dir))
+         (test-path
+          (substring (buffer-file-name) (+ (length root) 1))))
+    (cd root)
+    (shell-command (concat "ptests.opt " test-path " &"))
+    (cd old-def)))
 
 (defun ptests-update ()
   "Run ptest -update on the current file"
   (interactive)
   (let* ((old-def default-directory)
-		 (root (find-ptests-root-dir))
-		 (test-path (substring (buffer-file-name)
-							   (+ (length root) 1))))
-	(cd root)
-	(shell-command (concat "ptests.opt -update " test-path " &"))
-	(cd old-def)
-	))
+         (root (find-ptests-root-dir))
+         (test-path
+          (substring (buffer-file-name) (+ (length root) 1))))
+    (cd root)
+    (shell-command (concat "ptests.opt -update " test-path " &"))
+    (cd old-def)))
 
 (defun find-ptests-root-dir (&optional root)
   "find parent folder with ptest_local_config.ml"
   (let ((root (or root default-directory)))
-	(cond
-	 ;; Is this root?
-	 ((ptests-root-dir-p root)
-	  (directory-file-name (expand-file-name root)))
-	 ;; If at /, quitp
-	 ((equal (expand-file-name root) "/") nil)
-	 ;; Otherwise go upwards
-	 (t (find-ptests-root-dir (arvid-parent-dir root))))))
+    (cond
+     ;; Is this root?
+     ((ptests-root-dir-p root)
+      (directory-file-name (expand-file-name root)))
+     ;; If at /, quitp
+     ((equal (expand-file-name root) "/")
+      nil)
+     ;; Otherwise go upwards
+     (t
+      (find-ptests-root-dir (arvid-parent-dir root))))))
 
 (defun ptests-root-dir-p (dir)
   "Returns t if `DIR` is the root directory of a TYPO3 installation."
   (let ((files (directory-files dir))
-		(match t))
-	(member "ptests_local_config.ml" files)))
+        (match t))
+    (member "ptests_local_config.ml" files)))
 
 ;; (defun my-test-handler (a b c)
 ;;   (autopair-default-handle-action a b c)

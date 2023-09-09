@@ -23,10 +23,11 @@
 (setq ido-auto-merge-delay-time 2)
 (setq ido-file-extensions-order '(".tex" ".log"))
 
-(define-key ido-file-dir-completion-map (kbd "C-c C-s") 
-  (lambda() 
-    (interactive)
-    (ido-initiate-auto-merge (current-buffer))))
+(define-key
+ ido-file-dir-completion-map (kbd "C-c C-s")
+ (lambda ()
+   (interactive)
+   (ido-initiate-auto-merge (current-buffer))))
 
 ;; ;; TODO: this exists in newer versions of magit, remove after
 ;; ;; upgrading
@@ -37,12 +38,14 @@
 ;;   (exit-minibuffer))
 
 
-(add-hook 'ido-minibuffer-setup-hook
-		  (lambda () (interactive)
-			(define-key ido-completion-map (kbd "C-,") 'backward-kill-word)
-            ;; (define-key ido-completion-map (kbd "C-x g") 'arvid-ido-enter-magit-status)
-			(define-key ido-file-dir-completion-map (kbd "C-,") 'backward-kill-word)
-			))
+(add-hook
+ 'ido-minibuffer-setup-hook
+ (lambda ()
+   (interactive)
+   (define-key ido-completion-map (kbd "C-,") 'backward-kill-word)
+   ;; (define-key ido-completion-map (kbd "C-x g") 'arvid-ido-enter-magit-status)
+   (define-key
+    ido-file-dir-completion-map (kbd "C-,") 'backward-kill-word)))
 
 
 (global-set-key (kbd "C-x C-b") 'ido-switch-buffer)

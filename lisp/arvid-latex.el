@@ -20,28 +20,37 @@
 
 ;; Setup for externalize
 
-(add-to-list 'safe-local-variable-values
-             '(TeX-command-extra-options . "-shell-escape"))
+(add-to-list
+ 'safe-local-variable-values
+ '(TeX-command-extra-options . "-shell-escape"))
 
 ;; Inserting file names
 (defun aj/tex-input ()
   (interactive)
   (let ((path (f-no-ext (read-file-name "File: ")))
-		;; TODO Should only complete on dir but do not know how!
-        (rel-path (if TeX-master (f-dirname TeX-master) ".")))
-    (insert (concat "\\input{" (file-relative-name path rel-path) "}"))))
+        ;; TODO Should only complete on dir but do not know how!
+        (rel-path
+         (if TeX-master
+             (f-dirname TeX-master)
+           ".")))
+    (insert
+     (concat "\\input{" (file-relative-name path rel-path) "}"))))
 
 (defun arvid-LaTeX-mode-hook ()
-    ""
+  ""
   (interactive)
-  (define-key latex-mode-map (kbd "M-{") (lambda (arg) (interactive "P")
-                                           (insert-pair arg ?\\ ?\\)
-                                           (insert-pair arg ?{ ?})
-                                           ))
-  (define-key latex-mode-map (kbd "C-{") (lambda (arg) (interactive "P")
-                                           (insert-pair arg ?\\ ?\\)
-                                           (insert-pair arg ?\[ ?\])
-                                           ))
+  (define-key
+   latex-mode-map (kbd "M-{")
+   (lambda (arg)
+     (interactive "P")
+     (insert-pair arg ?\\ ?\\)
+     (insert-pair arg ?{ ?})))
+  (define-key
+   latex-mode-map (kbd "C-{")
+   (lambda (arg)
+     (interactive "P")
+     (insert-pair arg ?\\ ?\\)
+     (insert-pair arg ?\[ ?\])))
 
   ;; (define-key latex-mode-map (kbd "C-c `") 'next-error)
   ;; (define-key tex-mode-map (kbd "C-c `") 'next-error)
@@ -70,28 +79,27 @@
       (progn
         (message "do spell")
         (flyspell-mode)
-        (flyspell-buffer)
-        )
+        (flyspell-buffer))
     (message "no spell"))
 
   (setq ispell-tex-skip-alists
         (list
-         (append (car ispell-tex-skip-alists) '(("\\\\nospellcheck"       ispell-tex-arg-end)))
-         (cadr ispell-tex-skip-alists)))
-
-  )
+         (append
+          (car ispell-tex-skip-alists)
+          '(("\\\\nospellcheck" ispell-tex-arg-end)))
+         (cadr ispell-tex-skip-alists))))
 
 (setq ispell-tex-skip-alists
       (list
-       (append (car ispell-tex-skip-alists)
-               '(("\\\\universite"       ispell-tex-arg-end)
-                 ("\\\\laboratoire"       ispell-tex-arg-end)
-                 ("\\\\specialite"       ispell-tex-arg-end)
-                 ("\\\\colophon"       ispell-tex-arg-end)
-                 ("\\\\rsevalprog"       ispell-tex-arg-end)
-                 ("\\\\prref"       ispell-tex-arg-end)
-                 ("\\\\rl"       ispell-tex-arg-end)
-                 ))
+       (append
+        (car ispell-tex-skip-alists)
+        '(("\\\\universite" ispell-tex-arg-end)
+          ("\\\\laboratoire" ispell-tex-arg-end)
+          ("\\\\specialite" ispell-tex-arg-end)
+          ("\\\\colophon" ispell-tex-arg-end)
+          ("\\\\rsevalprog" ispell-tex-arg-end)
+          ("\\\\prref" ispell-tex-arg-end)
+          ("\\\\rl" ispell-tex-arg-end)))
        (cadr ispell-tex-skip-alists)))
 
 (add-hook 'LaTeX-mode-hook 'arvid-LaTeX-mode-hook)
@@ -110,7 +118,7 @@
   (backward-char 2))
 
 
-(defun latex-insert-inline-math-brackets-before () 
+(defun latex-insert-inline-math-brackets-before ()
   (interactive)
   (backward-char 1)
   (insert "\\(")
@@ -122,8 +130,7 @@
 ;  (2) om transient mark inte är aktiverat, omslut nästa hela ord med \( \)
 ; hur fungerar C-c C-o in latex mode? den gör ungefär vad jag vill
 
-(fset 'latex-compile
-   "\C-x\C-s\C-c\C-f\C-x1")
+(fset 'latex-compile "\C-x\C-s\C-c\C-f\C-x1")
 
 ;; (setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
 ;; (setq TeX-view-program-list
@@ -133,36 +140,36 @@
 ; region-beginning region-end
 ; point är pekaren just nu
 ;     word-at-point hade hoppats på att använda den för (1) men den verkar inte göra vad jag vill, den har en striktare definition av word än vad jag har.
-; save-excursion: 
+; save-excursion:
 ; re-search-forward
 
-(defun latex-insert-inline-math-brackets-magic () 
+(defun latex-insert-inline-math-brackets-magic ()
   (interactive)
   (if transient-mark-mode
-      (wrap-from-to-with (region-beginning) (region-end) "\\(" "\\)" ) ;; funkar!
+      (wrap-from-to-with (region-beginning) (region-end) "\\(" "\\)") ;; funkar!
     (let ((nn (next-non-whitespace (point))))
-       (wrap-from-to-with nn (next-whitespace nn) "\\(" "\\)" ))))
+      (wrap-from-to-with nn (next-whitespace nn) "\\(" "\\)"))))
 
 (defun next-whitespace (beg)
-  (save-excursion 
+  (save-excursion
     (goto-char beg)
     (re-search-forward "\\([^[:blank:]]\\)\\([[:blank:]]\\|$\\)")
     (+ (match-beginning 1) 1)))
 
 (defun next-non-whitespace (beg)
-  (save-excursion 
+  (save-excursion
     (goto-char beg)
     (re-search-forward "[^[:blank:]]")
     (- (point) 1)))
 
-(defun test-mark-active () 
+(defun test-mark-active ()
   (interactive)
   (if transient-mark-mode
       (message "mark is active")
     (message "mark is inactive")))
 
 (defun wrap-from-to-with (beg end left right)
-  (save-excursion 
+  (save-excursion
     (goto-char beg)
     (insert left)
     (goto-char (+ end (length left)))
@@ -186,11 +193,11 @@
         (write-region start end filename)
         (delete-region start end)
         (insert (concat "\\input{" filename "}"))
-        (message (concat "Wrote " filename))
-        ))) 
+        (message (concat "Wrote " filename)))))
 
-(use-package ffap
-  :config
+(use-package
+ ffap
+ :config
  (add-to-list 'ffap-alist '(latex-mode . arvid-ffap-latex-mode) t))
 
 (defun arvid-ffap-latex-mode (name)
@@ -216,17 +223,23 @@ label prefix determines the wording of a reference."
          newlabel)
     (if (not (stringp label))
         (error "This is not a label entry"))
-    (setq newlabel (read-string (format "Rename label \"%s\" to:" label) label))
+    (setq newlabel
+          (read-string (format "Rename label \"%s\" to:" label)
+                       label))
     (if (assoc newlabel (symbol-value reftex-docstruct-symbol))
-        (if (not (y-or-n-p
-                  (format-message "Label `%s' exists.  Use anyway? " label)))
+        (if (not
+             (y-or-n-p
+              (format-message "Label `%s' exists.  Use anyway? "
+                              label)))
             (error "Abort")))
     (save-excursion
       (save-window-excursion
         ;; (reftex-toc-visit-location t)
         (condition-case nil
             (reftex-query-replace-document
-             (concat "{" (regexp-quote label) "}")
+             (concat
+              "{"
+              (regexp-quote label) "}")
              (format "{%s}" newlabel))
           (error t))))
     (reftex-toc-rescan)))
@@ -242,16 +255,21 @@ Optional prefix argument OTHER-WINDOW goes to the label in another window."
          ;; If point is inside a \ref{} or \pageref{}, use that as
          ;; default value.
          (default (thing-at-point 'symbol))
-         (label (completing-read (if default
-                                     (format "Label (default %s): " default)
-                                   "Label: ")
-                                 docstruct
-                                 (lambda (x) (stringp (car x))) t nil nil
-                                 default))
+         (label
+          (completing-read (if default
+                               (format "Label (default %s): " default)
+                             "Label: ")
+                           docstruct
+                           (lambda (x) (stringp (car x)))
+                           t
+                           nil
+                           nil
+                           default))
          (selection (assoc label docstruct))
-         (where (progn
-                  (reftex-show-label-location selection t nil 'stay)
-                  (point-marker))))
+         (where
+          (progn
+            (reftex-show-label-location selection t nil 'stay)
+            (point-marker))))
     (unless other-window
       (set-window-configuration wcfg)
       (switch-to-buffer (marker-buffer where))
@@ -259,7 +277,7 @@ Optional prefix argument OTHER-WINDOW goes to the label in another window."
     (reftex-unhighlight 0)))
 
 (defun arvid-latex-open ()
-    "Find file at point (in input/include macros) or goes to definition of
+  "Find file at point (in input/include macros) or goes to definition of
 label (in reference-macros)."
   (interactive)
   (let ((macro (TeX-current-macro)))
@@ -271,11 +289,10 @@ label (in reference-macros)."
      ((member macro '("cref" "ref" "prref"))
       (arvid-reftex-goto-label-at-point))
      ((stringp macro)
-      (message (format "unknown macro type %s" macro) ))
-     )))
+      (message (format "unknown macro type %s" macro))))))
 
 (defun arvid-goto-TeX-master ()
-    ""
+  ""
   (interactive)
   (find-file TeX-master))
 

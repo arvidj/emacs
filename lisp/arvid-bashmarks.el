@@ -1,23 +1,29 @@
 (defun bashmarks-alist ()
   ""
   (interactive)
-  (let ((str (string-trim-right (shell-command-to-string (concat "source ~/.sdirs && env | grep ^DIR_")))))
-    (mapcar (lambda (s)
-              (let* ((spl (split-string s "=" ))
-                     (mark (cadr (split-string (car spl) "DIR_" )))
-                     (dir (cadr spl)))
-                `(,mark . ,dir)
-                ))
-            (split-string str "\n" ))))
+  (let ((str
+         (string-trim-right
+          (shell-command-to-string
+           (concat "source ~/.sdirs && env | grep ^DIR_")))))
+    (mapcar
+     (lambda (s)
+       (let* ((spl (split-string s "="))
+              (mark (cadr (split-string (car spl) "DIR_")))
+              (dir (cadr spl)))
+         `(,mark . ,dir)))
+     (split-string str "\n"))))
 
 (defun setup-bashmarks ()
   ""
   (interactive)
-  (cl-loop for (mark . dir) in (bashmarks-alist)
-           do (global-set-key (kbd (concat "C-c g " mark))
-                              `(lambda () (interactive)
-                                 (let ((default-directory ,dir)) (ido-find-file))
-                              ))))
+  (cl-loop
+   for (mark . dir) in (bashmarks-alist) do
+   (global-set-key
+    (kbd (concat "C-c g " mark))
+    `(lambda ()
+       (interactive)
+       (let ((default-directory ,dir))
+         (ido-find-file))))))
 
 ;; (setup-bashmarks)
 

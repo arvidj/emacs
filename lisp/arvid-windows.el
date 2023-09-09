@@ -15,7 +15,6 @@
 ;;         (set-window-start  other-window this-start)))))
 
 
-
 ;; (global-set-key (kbd "C-M-J") (lambda () (interactive) (swap-with 'down)))
 ;; (global-set-key (kbd "C-M-K") (lambda () (interactive) (swap-with 'up)))
 ;; (global-set-key (kbd "C-M-H") (lambda () (interactive) (swap-with 'left)))
@@ -36,7 +35,15 @@
 (global-set-key (kbd "C-c wf") 'winner-redo)
 (global-set-key (kbd "C-c wb") 'winner-undo)
 
-(global-set-key (kbd "C-M-j") #'(lambda () (interactive) (other-window 1)))
-(global-set-key (kbd "C-M-k") #'(lambda () (interactive) (other-window -1)))
+(global-set-key
+ (kbd "C-M-j")
+ #'(lambda ()
+     (interactive)
+     (other-window 1)))
+(global-set-key
+ (kbd "C-M-k")
+ #'(lambda ()
+     (interactive)
+     (other-window -1)))
 
 (provide 'arvid-windows)

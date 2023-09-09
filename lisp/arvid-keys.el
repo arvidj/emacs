@@ -3,27 +3,29 @@
 
 ;; Nice guide: http://xahlee.org/emacs/keyboard_shortcuts.html
 (aj/global-unset-keys
- '("C-Z"
-   "\C-x C-z"
+ '("C-Z" "\C-x C-z"
 
-   "C-x C-n"
-   "C-x C-b"
+   "C-x C-n" "C-x C-b"
 
-   "C-x m"
-   "C-n" "C-p" "C-b" "C-e" "C-a"))
+   "C-x m" "C-n" "C-p" "C-b" "C-e" "C-a"))
 
 (defun aj/make-find-file (file)
-  `(lambda () (interactive) (find-file ,file)))
+  `(lambda ()
+     (interactive)
+     (find-file ,file)))
 
 (defun aj/make-find-file-readonly (file)
-  `(lambda () (interactive) (find-file-read-only ,file)))
+  `(lambda ()
+     (interactive)
+     (find-file-read-only ,file)))
 
 ;; use ido-file-internal instead, since we now cant open dired from
 ;; ido-find-file-in-dir.
 (defun aj/make-find-file-in-dir (dir)
-  `(lambda () (interactive)
-	 (let ((default-directory ,dir))
-	   (ido-find-file))))
+  `(lambda ()
+     (interactive)
+     (let ((default-directory ,dir))
+       (ido-find-file))))
 
 (aj/global-set-keys
  `(("C-c d" aj/duplicate-current-line-or-region)
@@ -35,7 +37,8 @@
    ;; ("<f12>" ,(aj/make-find-file "~/.emacs.d/init.el"))
 
    ("<f11>" aj/date-arvid)
-   ("<f10>" ,(aj/make-find-file "~/Dropbox/Jobb/Nomadic_Labs/notes.org"))
+   ("<f10>"
+    ,(aj/make-find-file "~/Dropbox/Jobb/Nomadic_Labs/notes.org"))
 
    ("C-x nf" ,(aj/make-find-file-in-dir "~/.emacs.d/"))
    ("C-x nj" ,(aj/make-find-file-in-dir "~/"))
@@ -54,15 +57,24 @@
    ("C-\\" join-line)
 
    ;; Window handling
-   ("C-ä" (lambda () (interactive) (enlarge-window 3)))
-   ("C-Ä" (lambda () (interactive) (enlarge-window -3)))
-   ("C-'" (lambda () (interactive) (enlarge-window-horizontally 3)))
-   ("C-*" (lambda () (interactive) (enlarge-window-horizontally -3)))
-   ("C-M-3" (lambda () (interactive)
-			  (delete-other-windows)
-			  (split-window-horizontally)
-			  (split-window-horizontally)
-			  (balance-windows)))
+   ("C-ä" (lambda ()
+      (interactive)
+      (enlarge-window 3)))
+   ("C-Ä" (lambda ()
+      (interactive)
+      (enlarge-window -3)))
+   ("C-'" (lambda ()
+      (interactive)
+      (enlarge-window-horizontally 3)))
+   ("C-*" (lambda ()
+      (interactive)
+      (enlarge-window-horizontally -3)))
+   ("C-M-3" (lambda ()
+      (interactive)
+      (delete-other-windows)
+      (split-window-horizontally)
+      (split-window-horizontally)
+      (balance-windows)))
 
    ;; TODO: in temporary windows (define windows?) bind alt-q to kill
    ;; buffer instead of just quitting. Also kill all dired some time
@@ -122,7 +134,9 @@
    ;; Bindings for controlling text scale
    ("C-M-+" text-scale-increase)
    ("C-M--" text-scale-decrease)
-   ("C-M-0" (lambda () (interactive) (text-scale-increase 0)))
+   ("C-M-0" (lambda ()
+      (interactive)
+      (text-scale-increase 0)))
 
    ("M-j" backward-char)
    ("M-k" next-line)
@@ -218,8 +232,7 @@
    ("<C-M-S-mouse-4>" default-text-scale-increase)
    ("<C-M-S-mouse-5>" default-text-scale-decrease)
 
-   ("C-c C-w" elfeed)
-   ))
+   ("C-c C-w" elfeed)))
 
 (defun aj/dup-and-comment ()
   ""
@@ -229,11 +242,10 @@
   (comment-or-uncomment-current-line-or-region)
   (next-line))
 
-(aj/define-keys minibuffer-local-map
-  `(("M-g" minibuffer-keyboard-quit)))
+(aj/define-keys
+ minibuffer-local-map `(("M-g" minibuffer-keyboard-quit)))
 
-(aj/define-keys isearch-mode-map
-  `(("M-g" isearch-abort)))
+(aj/define-keys isearch-mode-map `(("M-g" isearch-abort)))
 
 
 ;; TODO function and key for reset-selective display
@@ -243,16 +255,16 @@
   ""
   (interactive)
   (setq selective-display
-		(if selective-display
-			(1+ selective-display)
-		  1)))
+        (if selective-display
+            (1+ selective-display)
+          1)))
 
 (defun dec-selective-display ()
   ""
   (interactive)
   (setq selective-display
-		(if selective-display
-			(1- selective-display)
-		  10)))
+        (if selective-display
+            (1- selective-display)
+          10)))
 
 (provide 'arvid-keys)

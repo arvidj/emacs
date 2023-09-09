@@ -3,21 +3,29 @@
 
 ;; (setq michelson-client-command "/home/arvid/dev/nomadic-labs/tezos/tezos-client -d /home/arvid/.tezos-client-mockup")
 ;; (setq michelson-client-mode "mockup")
-(setq michelson-client-command "/home/arvid/dev/nomadic-labs/tezos/master/tezos-client")
-(setq michelson-client-command "/home/arvid/dev/nomadic-labs/tezos/master/tezos-client --base-dir /tmp/mockup --mode mockup --protocol ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK")
+(setq michelson-client-command
+      "/home/arvid/dev/nomadic-labs/tezos/master/tezos-client")
+(setq
+ michelson-client-command
+ "/home/arvid/dev/nomadic-labs/tezos/master/tezos-client --base-dir /tmp/mockup --mode mockup --protocol ProtoALphaALphaALphaALphaALphaALphaALphaALphaDdp3zK")
 ;; (setq michelson-client-mode "client")
 
 ;; (autoload 'michelson-mode "/home/arvid/dev/nomadic-labs/tezos/emacs/michelson-mode.el")
 
 (defun michelson-documentation-at-point ()
-	""
+  ""
   (interactive)
   (let* ((atp (thing-at-point 'symbol))
-         (type (cond ((s-uppercase? atp) "instr")
-                     ((s-lowercase? atp) "type"))))
+         (type
+          (cond
+           ((s-uppercase? atp)
+            "instr")
+           ((s-lowercase? atp)
+            "type"))))
     (if (not type)
         (message "Unknown object: " atp)
-      (let ((url (concat "https://arvidj.eu/michelson/#" type  "-" atp))
+      (let ((url
+             (concat "https://arvidj.eu/michelson/#" type "-" atp))
             (buf (get-buffer-create "*Michelson doc*")))
         (browse-url url)
         ;; (shell-command (concat "w3m " "'" url "'") buf)
@@ -33,14 +41,16 @@
 ;; (modify-syntax-entry ?_ "w"  michelson-mode-syntax-table)
 
 (defun my-michelson-mode-hook ()
-	""
+  ""
   (interactive)
-  (modify-syntax-entry ?_ "."  michelson-mode-syntax-table)
+  (modify-syntax-entry ?_ "." michelson-mode-syntax-table)
   (setq comment-start "#")
-  (define-key michelson-mode-map (kbd "C-c C-d C-d") 'michelson-documentation-at-point)
-  (define-key michelson-mode-map (kbd "C-c C-c") 'michelson-client-run-script)
-
-  )
+  (define-key
+   michelson-mode-map
+   (kbd "C-c C-d C-d")
+   'michelson-documentation-at-point)
+  (define-key
+   michelson-mode-map (kbd "C-c C-c") 'michelson-client-run-script))
 
 (add-to-list 'auto-mode-alist '("\\.tz\\'" . michelson-mode))
 (add-to-list 'auto-mode-alist '("\\.tez\\'" . michelson-mode))
@@ -73,12 +83,19 @@
   ""
   (interactive "fScript: \nMStorage: \nMInput: \nMArgs: ")
   (shell-command
-   (concat michelson-client-command
-           " run " " script " (shell-quote-argument (or script (buffer-file-name)))
-           " on " " storage " (shell-quote-argument storage)
-           " and " " input " (shell-quote-argument input)
-           " " args)))
-
+   (concat
+    michelson-client-command
+    " run "
+    " script "
+    (shell-quote-argument (or script (buffer-file-name)))
+    " on "
+    " storage "
+    (shell-quote-argument storage)
+    " and "
+    " input "
+    (shell-quote-argument input)
+    " "
+    args)))
 
 
 (defun michelson-client-typecheck-script (script &optional args)
@@ -86,8 +103,12 @@
   (interactive "fScript: \n")
   (shell-command
    (michelson-client-command
-    (append (list "typecheck" "script" (shell-quote-argument (or script (buffer-file-name))))
-            args))))
+    (append
+     (list
+      "typecheck"
+      "script"
+      (shell-quote-argument (or script (buffer-file-name))))
+     args))))
 
 ;; (michelson-client-typecheck-script "foo.tz" nil)
 

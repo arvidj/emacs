@@ -1,8 +1,7 @@
 ;; Put autosave files (ie #foo#) in one place, *not*
 ;; scattered all over the file system!
 ;; http://snarfed.org/space/gnu%20emacs%20backup%20files
-(defvar autosave-dir
- (concat "~/.emacs.d/autosave-emacs/"))
+(defvar autosave-dir (concat "~/.emacs.d/autosave-emacs/"))
 
 (make-directory autosave-dir t)
 
@@ -10,11 +9,11 @@
   (string-match "^#.*#$" (file-name-nondirectory filename)))
 
 (defun make-auto-save-file-name ()
-  (concat autosave-dir
+  (concat
+   autosave-dir
    (if buffer-file-name
-      (concat "#" (file-name-nondirectory buffer-file-name) "#")
-    (expand-file-name
-     (concat "#%" (buffer-name) "#")))))
+       (concat "#" (file-name-nondirectory buffer-file-name) "#")
+     (expand-file-name (concat "#%" (buffer-name) "#")))))
 
 ;; Put backup files (ie foo~) in one place too. (The backup-directory-alist
 ;; list contains regexp=>directory mappings; filenames matching a regexp are

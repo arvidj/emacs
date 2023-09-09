@@ -12,12 +12,13 @@
         (flyspell-buffer)
         ;; Look at all flyspell overlays and extract the words.
         (let* ((overlays (overlays-in (point-min) (point-max)))
-               (words (mapcar
-                       (lambda (o)
-                         (when (flyspell-overlay-p o)
-                           (buffer-substring-no-properties
-                            (overlay-start o) (overlay-end o))))
-                       overlays)))
+               (words
+                (mapcar
+                 (lambda (o)
+                   (when (flyspell-overlay-p o)
+                     (buffer-substring-no-properties
+                      (overlay-start o) (overlay-end o))))
+                 overlays)))
           ;; Insert the words in the main spell check buffer.
           (with-current-buffer buf
             (mapcar (lambda (w) (insert "-   " w "\n")) words)

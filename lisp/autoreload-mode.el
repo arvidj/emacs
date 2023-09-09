@@ -49,8 +49,8 @@ reloads the active tab in Google Chrome"
 
 
   (if autoreload-mode
-	  (add-hook 'write-contents-functions 'arvid-save-reload-hook)
-	(remove-hook 'write-contents-functions 'arvid-save-reload-hook)))
+      (add-hook 'write-contents-functions 'arvid-save-reload-hook)
+    (remove-hook 'write-contents-functions 'arvid-save-reload-hook)))
 
 (defun arvid-save-reload-hook ()
   "Reloads Chrome."
@@ -60,5 +60,3 @@ reloads the active tab in Google Chrome"
 (provide 'autoreload-mode)
 
 ;;; autoreload-mode.el ends here
-
-

@@ -1,13 +1,14 @@
 ;; (load-file "~/.emacs.d/plugin/PG/generic/proof-site.el")
 
-(use-package proof-general
-  :ensure t
-  :config
-  
-  (add-hook 'coq-mode-hook 'my-coq-hook))
+(use-package
+ proof-general
+ :ensure t
+ :config
+
+ (add-hook 'coq-mode-hook 'my-coq-hook))
 
 ;; On proofgeneral mode load, disabled abbrevs
-(defun my-coq-hook () 
+(defun my-coq-hook ()
   ""
   (interactive)
   ;; (opam-update-env ".")
@@ -19,16 +20,40 @@
   (define-key coq-mode-map (kbd "M-e") nil)
   (define-key coq-mode-map (kbd "M-n") nil)
   (define-key coq-mode-map (kbd "M-p") nil)
-  (define-key coq-mode-map (kbd "<M-wheel-up>") 'proof-undo-last-successful-command)
-  (define-key coq-mode-map (kbd "<M-wheel-down>") 'proof-assert-next-command-interactive)
+  (define-key
+   coq-mode-map
+   (kbd "<M-wheel-up>")
+   'proof-undo-last-successful-command)
+  (define-key
+   coq-mode-map
+   (kbd "<M-wheel-down>")
+   'proof-assert-next-command-interactive)
 
-  (define-key coq-mode-map (kbd "C-c p 1") #'(lambda () (interactive) (coq-printing-depth-intset 10)))
-  (define-key coq-mode-map (kbd "C-c p 2") #'(lambda () (interactive) (coq-printing-depth-intset 20)))
-  (define-key coq-mode-map (kbd "C-c p 3") #'(lambda () (interactive) (coq-printing-depth-intset 30)))
-  (define-key coq-mode-map (kbd "C-c p 4") #'(lambda () (interactive) (coq-printing-depth-intset 40)))
-  (define-key coq-mode-map (kbd "C-c p 5") #'(lambda () (interactive) (coq-printing-depth-intset 50)))
-
-
+  (define-key
+   coq-mode-map (kbd "C-c p 1")
+   #'(lambda ()
+       (interactive)
+       (coq-printing-depth-intset 10)))
+  (define-key
+   coq-mode-map (kbd "C-c p 2")
+   #'(lambda ()
+       (interactive)
+       (coq-printing-depth-intset 20)))
+  (define-key
+   coq-mode-map (kbd "C-c p 3")
+   #'(lambda ()
+       (interactive)
+       (coq-printing-depth-intset 30)))
+  (define-key
+   coq-mode-map (kbd "C-c p 4")
+   #'(lambda ()
+       (interactive)
+       (coq-printing-depth-intset 40)))
+  (define-key
+   coq-mode-map (kbd "C-c p 5")
+   #'(lambda ()
+       (interactive)
+       (coq-printing-depth-intset 50)))
 
 
   (setq company-coq-disabled-features '(prettify-symbols))
@@ -39,7 +64,7 @@
   (merlin-mode -1)
   (add-to-list 'coq-shell-init-cmd "Set Nested Proofs Allowed.")
   ;; (define-key company-active-map (kbd "TAB") 'company-complete-selection)
-)
+  )
 
 ;; (defun arvid-proof-goto-point (&optional arg)
 ;;   "Assert or retract to the command at current position.

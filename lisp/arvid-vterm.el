@@ -1,4 +1,3 @@
-(use-package vterm
-  :ensure t)
+(use-package vterm :ensure t)
 
 (provide 'arvid-vterm)

@@ -7,16 +7,20 @@
 (add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
 
 (defun my-haskell-mode-hook ()
-    ""
+  ""
   (interactive)
   (interactive-haskell-mode)
   (define-key haskell-mode-map (kbd "C-c C-h") 'haskell-hoogle)
   (define-key interactive-haskell-mode-map (kbd "M-n") nil)
   (define-key interactive-haskell-mode-map (kbd "M-p") nil)
-  (define-key interactive-haskell-mode-map (kbd "C-x `") 'haskell-goto-next-error)
-  (define-key interactive-haskell-mode-map (kbd "s-j") 'haskell-goto-next-error)
-  (define-key interactive-haskell-mode-map (kbd "s-k") 'haskell-goto-prev-error)
-  )
+  (define-key
+   interactive-haskell-mode-map
+   (kbd "C-x `")
+   'haskell-goto-next-error)
+  (define-key
+   interactive-haskell-mode-map (kbd "s-j") 'haskell-goto-next-error)
+  (define-key
+   interactive-haskell-mode-map (kbd "s-k") 'haskell-goto-prev-error))
 
 
 ;;;; hs-lint
@@ -35,10 +39,10 @@
 ;; 		      ('up-arrow 8593)
 ;; 		      ('right-arrow 8594)
 ;; 		      ('down-arrow 8595)
-;;   
+;;
 ;; 		      ;; boxes
 ;; 		      ('double-vertical-bar #X2551)
-;;                         
+;;
 ;; 		      ;; relational operators
 ;; 		      ('equal #X003d)
 ;; 		      ('not-equal #X2260)
@@ -48,12 +52,12 @@
 ;; 		      ('greater-than #X003e)
 ;; 		      ('less-than-or-equal-to #X2264)
 ;; 		      ('greater-than-or-equal-to #X2265)
-;;   
+;;
 ;; 		      ;; logical operators
 ;; 		      ('logical-and #X2227)
 ;; 		      ('logical-or #X2228)
 ;; 		      ('logical-neg #X00AC)
-;;   
+;;
 ;; 		      ;; misc
 ;; 		      ('nil #X2205)
 ;; 		      ('horizontal-ellipsis #X2026)
@@ -63,35 +67,35 @@
 ;; 		      ('for-all #X2200)
 ;; 		      ('there-exists #X2203)
 ;; 		      ('element-of #X2208)
-;;   
+;;
 ;; 		      ;; mathematical operators
 ;; 		      ('square-root #X221A)
 ;; 		      ('squared #X00B2)
 ;; 		      ('cubed #X00B3)
-;;   
+;;
 ;; 		      ;; letters
 ;; 		      ('lambda #X03BB)
 ;; 		      ('alpha #X03B1)
 ;; 		      ('beta #X03B2)
 ;; 		      ('gamma #X03B3)
 ;; 		      ('delta #X03B4))))
-;;                         
+;;
 ;; (defun substitute-pattern-with-unicode (pattern symbol)
-;;   "Add a font lock hook to replace the matched part of PATTERN with the 
+;;   "Add a font lock hook to replace the matched part of PATTERN with the
 ;;   Unicode symbol SYMBOL looked up with UNICODE-SYMBOL."
 ;;   (interactive)
 ;;   (font-lock-add-keywords
 ;;    nil `((,pattern (0 (progn (compose-region (match-beginning 1) (match-end 1)
 ;; 					     ,(unicode-symbol symbol))
 ;; 			     nil))))))
-;;   
+;;
 ;; (defun substitute-patterns-with-unicode (patterns)
 ;;   "Call SUBSTITUTE-PATTERN-WITH-UNICODE repeatedly."
 ;;   (mapcar #'(lambda (x)
 ;; 	      (substitute-pattern-with-unicode (car x)
 ;; 					       (cdr x)))
 ;; 	  patterns))
-;; 
+;;
 ;; (defun haskell-unicode ()
 ;;   (interactive)
 ;;   (substitute-patterns-with-unicode
@@ -116,19 +120,19 @@
 ;; 	 (cons "\\('\\)" 'prime)
 ;; 	 (cons "\\(!!\\)" 'double-exclamation)
 ;; 	 (cons "\\(\\.\\.\\)" 'horizontal-ellipsis))))
-;;   
+;;
 ;; (add-hook 'haskell-mode 'haskell-unicode)
-;; 
+;;
 ;; (defun flymake-Haskell-init ()
 ;;   (flymake-simple-make-init-impl
 ;;    'flymake-create-temp-with-folder-structure nil nil
 ;;    (file-name-nondirectory buffer-file-name)
 ;;    'flymake-get-Haskell-cmdline))
-;; 
+;;
 ;; (defun flymake-get-Haskell-cmdline (source base-dir)
 ;;   (list "flycheck_haskell.pl"
 ;; 	(list source base-dir)))
-;;     
+;;
 ;; (push '(".+\\.hs$" flymake-Haskell-init flymake-simple-java-cleanup)
 ;;       flymake-allowed-file-name-masks)
 ;; (push '(".+\\.lhs$" flymake-Haskell-init flymake-simple-java-cleanup)
@@ -136,11 +140,11 @@
 ;; (push
 ;;  '("^\\(\.+\.hs\\|\.lhs\\):\\([0-9]+\\):\\([0-9]+\\):\\(.+\\)"
 ;;    1 2 3 4) flymake-err-line-patterns)
-;; 
+;;
 ;; The following code is introduced at
 ;; http://www.credmp.org/index.php/2007/07/20/on-the-fly-syntax-checking-java-in-emacs/
-;; 
-;; (defun credmp/flymake-display-err-minibuf () 
+;;
+;; (defun credmp/flymake-display-err-minibuf ()
 ;;   "Displays the error/warning for the current line in the minibuffer"
 ;;   (interactive)
 ;;   (let* ((line-no             (flymake-current-line-no))
@@ -157,7 +161,7 @@
 ;; 	  )
 ;; 	)
 ;;       (setq count (1- count)))))
-;; 
+;;
 ;; ;; Bind the above function to the key ’\C-c d’.
 
 ;; (add-hook

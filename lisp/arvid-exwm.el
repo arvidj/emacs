@@ -1,6 +1,4 @@
-(use-package
-  exwm
-  :ensure t)
+(use-package exwm :ensure t)
 
 (require 'exwm)
 (require 'exwm-config)

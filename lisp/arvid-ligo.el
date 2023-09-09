@@ -1,5 +1,4 @@
-(use-package ligo-mode
-  :ensure t)
+(use-package ligo-mode :ensure t)
 
 
 (provide 'arvid-ligo)

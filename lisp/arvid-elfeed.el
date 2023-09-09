@@ -3,7 +3,5 @@
 (add-to-hook 'elfeed-show 'arvid-elfeed-show-mode-hook)
 
 (defun arvid-elfeed-show-mode-hook ()
-	""
-  (interactive)
-  
-  )
+  ""
+  (interactive))

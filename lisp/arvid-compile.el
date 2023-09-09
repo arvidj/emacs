@@ -1,5 +1,6 @@
 
-(setq pre-compilation-window-conf-reg (registerv-make "pre-compilation-window-conf"))
+(setq pre-compilation-window-conf-reg
+      (registerv-make "pre-compilation-window-conf"))
 
 (defun my-compile ()
   "Run compile and resize the compile window"
@@ -12,9 +13,7 @@
     (select-window w)
     (setq h (window-height w))
     (shrink-window (- h 4))
-    (select-window cur)
-    )
-  )
+    (select-window cur)))
 
 ;;  The idea seems to be to combine the window from which a
 ;;  compilation is launched with the compilation window in an atomic
@@ -29,15 +28,15 @@
         ;;  "2 sec" nil 'delete-windows-on
         ;;  (get-buffer-create "*compilation*"))
         (run-at-time
-         "2 sec" nil (lambda ()
-                       (delete-windows-on (get-buffer-create "*compilation*"))
-                       (jump-to-register pre-compilation-window-conf-reg)))
-
+         "2 sec" nil
+         (lambda ()
+           (delete-windows-on (get-buffer-create "*compilation*"))
+           (jump-to-register pre-compilation-window-conf-reg)))
 
 
         (message "No Compilation Errors!"))))
 
-                                        ; from enberg on #emacs
+; from enberg on #emacs
 (add-hook 'compilation-finish-functions 'compilatation-finish)
 
 ;; Colorize in compilation buffers

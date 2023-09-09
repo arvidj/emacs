@@ -10,8 +10,7 @@
   "Writegood face for hyphen words"
   :group 'writegood)
 
-(defcustom writegood-hyphen-words
-  '("data-flow")
+(defcustom writegood-hyphen-words '("data-flow")
   "The hyphen words to use"
   :group 'writegood
   :type '(repeat string))
@@ -22,10 +21,15 @@
   (concat "\\b" "\\sw+" "-" "\\sw+" "\\b"))
 
 (defun writegood-hyphen-font-lock-keywords ()
-  (list (list (writegood-hyphen-font-lock-keywords-regexp)
-        0 (quote 'writegood-hyphen-face) 'prepend)))
+  (list
+   (list
+    (writegood-hyphen-font-lock-keywords-regexp)
+    0
+    (quote 'writegood-hyphen-face)
+    'prepend)))
 
 (defun writegood-hyphen-turn-on ()
   (interactive)
   "Turn on syntax highlighting for hyphen"
-  (font-lock-add-keywords nil (writegood-hyphen-font-lock-keywords) t))
+  (font-lock-add-keywords nil (writegood-hyphen-font-lock-keywords)
+                          t))

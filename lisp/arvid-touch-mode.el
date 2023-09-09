@@ -20,7 +20,8 @@ seconds"
       (setq-local arvid-touch-timer
                   (run-with-timer
                    arvid-touch-timer-timeout
-                   arvid-touch-timer-timeout 'touch))
+                   arvid-touch-timer-timeout
+                   'touch))
     (cancel-timer arvid-touch-timer)))
 
 (defcustom arvid-touch-timer-timeout 0.1
@@ -29,5 +30,6 @@ seconds"
 (defun touch ()
   "updates mtime on the file for the current buffer"
   (interactive)
-  (shell-command (concat "touch " (shell-quote-argument (buffer-file-name))))
+  (shell-command
+   (concat "touch " (shell-quote-argument (buffer-file-name))))
   (clear-visited-file-modtime))
