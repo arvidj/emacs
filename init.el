@@ -104,7 +104,7 @@
 (require 'arvid-diff) (profile-package "'arvid-diff")
 (require 'arvid-drag-stuff) (profile-package "'arvid-drag-stuff")
 (require 'arvid-conf) (profile-package "'arvid-conf")
-(require 'arvid-wspace) (profile-package "'arvid-wspace")
+(require 'arvid-ws-butler) (profile-package "'arvid-ws-butler")
 (require 'arvid-flyspell) (profile-package "'arvid-flyspell")
 
 (require 'arvid-calendar) (profile-package "'arvid-calendar")
