@@ -1,5 +1,5 @@
 (require 'arvid-mr)
-(require 'arvid-worklog)
+;; (require 'arvid-worklog)
 
 (defun nl-select-gitlab-ident ()
   ""
