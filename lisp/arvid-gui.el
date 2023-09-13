@@ -3,17 +3,7 @@
 
 ;;; color-themes
 
-(use-package
- nord-theme
- :ensure t
- :config
- (if (daemonp)
-     (add-hook
-      'after-make-frame-functions
-      (lambda (frame)
-        (with-selected-frame frame
-          (load-theme 'nord t))))
-   (load-theme 'nord t)))
+(load-theme 'modus-vivendi)
 
 ;; Highlight surrounding parentheses.
 (use-package
@@ -53,3 +43,28 @@
 ;; http://stud4.tuwien.ac.at/~e0225855/linum/linum.html
 
 (provide 'arvid-gui)
+
+
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(ansi-color-blue
+;;    ((t (:background "deep sky blue" :foreground "deep sky blue"))))
+;;  '(caml-types-expr-face ((t (:background "gray28"))))
+;;  '(compilation-error ((t (:inherit font-lock-warning-face))))
+;;  '(font-lock-comment-face ((t (:foreground "light gray"))))
+;;  '(highlight-thing ((t (:inherit 'underline))))
+;;  '(merlin-compilation-error-face
+;;    ((t (:inherit default :underline (:color "#E44" :style wave)))))
+;;  '(merlin-type-face
+;;    ((t (:inherit caml-types-expr-face :background "SkyBlue4!100"))))
+;;  '(proof-eager-annotation-face ((t (:background "peach puff"))))
+;;  '(smerge-refined-added
+;;    ((t (:inherit smerge-refined-change :background "olive drab"))))
+;;  '(tuareg-font-lock-extension-node-face
+;;    ((t
+;;      (:inherit
+;;       tuareg-font-lock-infix-extension-node-face
+;;       :background "DodgerBlue4")))))
