@@ -1,5 +1,12 @@
 (use-package f :ensure t)
 
+(defun aj/markdown-insert-backtick-gfm ()
+	""
+  (interactive)
+  (insert "```\n\n")
+  (insert "```\n")
+  (forward-line -2))
+
 (defun aj/markdown-mode-hook ()
   ""
   (interactive)
@@ -16,6 +23,7 @@
   (define-key
    markdown-mode-map (kbd "C-c C-;") 'nl-select-gitlab-ident)
 
+  (define-key markdown-mode-map (kbd "C-c `") 'aj/markdown-insert-backtick-gfm)
 
   (let
       ((css-base64-url
