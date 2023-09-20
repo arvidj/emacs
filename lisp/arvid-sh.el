@@ -11,4 +11,13 @@
 
   (flycheck-mode))
 
+;; Requires the shftm binary (https://github.com/mvdan/sh) which can
+;; be installed through apt: sudo apt-get install shfmt
+(use-package shfmt
+  :ensure t
+  :init
+  ;; Put space before redirect operators (<, >, etc)
+  (setq shfmt-arguments '("-sr"))
+  (add-hook 'sh-mode-hook #'shfmt-on-save-mode))
+
 (provide 'arvid-sh)
