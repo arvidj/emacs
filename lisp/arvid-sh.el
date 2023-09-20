@@ -9,13 +9,6 @@
    sh-indent-comment t
    open-paren-in-column-0-is-defun-start nil)
 
-  (flycheck-mode)
-
-  (aj/define-keys
-   sh-mode-map
-   `(("RET" newline-and-indent)
-     ("ö" ,(make-inserter ";"))
-     ("<" self-insert-command)
-     ("ä" ,(make-inserter "$")))))
+  (flycheck-mode))
 
 (provide 'arvid-sh)
