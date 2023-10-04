@@ -25,15 +25,16 @@
                      nil nil 'string=)))
     (insert data)))
 
-(defun aj/besten-gl-jobs-sqlite ()
+(defun aj/besten-gl-jobs-sqlite (read-write)
   ""
-  (interactive)
+  (interactive "P")
+  (print read-write)
   (let
       ((default-directory
         "/ssh:besten.arvidj.eu:/home/arvid/dev/nomadic-labs/gitlab-job-scraper/db")
        (sql-database
         "/home/arvid/dev/nomadic-labs/gitlab-job-scraper/db/gl-2023-05-01--2023-06-26.db")
-       (sql-sqlite-options '("--readonly")))
+       (sql-sqlite-options (if read-write sql-sqlite-options (cons "--readonly" sql-sqlite-options))))
     (sql-sqlite)))
 
 (provide 'arvid-nomadic-labs)
