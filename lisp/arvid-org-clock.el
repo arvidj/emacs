@@ -37,10 +37,6 @@
   ""
   (format-time-string aj/time-format time))
 
-(aj/format-time)
-(aj/format-time (current-time))
-
-
 (defun aj/parse-time (at-time-string)
   (if (string-match
        "^\\([[:digit:]]+\\):\\([[:digit:]]+\\)$" at-time-string)
@@ -51,8 +47,6 @@
         my-at-time)
     (error
      "Expected string on format HH:MM, not: %s" at-time-string)))
-
-(aj/format-time (aj/parse-time "11:30"))
 
 (defun aj/read-time (prompt)
   ""
@@ -93,35 +87,37 @@
 ;; current active clock in the status bar.
 
 ;; Code from https://github.com/freddez/gnome-shell-simple-message
-(defun current-task-to-status ()
-  (interactive)
-  (if (fboundp 'org-clocking-p)
-      (if (org-clocking-p)
-          (progn
-            (call-process
-             "dconf"
-             nil
-             nil
-             nil
-             "write"
-             "/org/gnome/shell/extensions/simple-message/message"
-             (concat "'👷🏽 " (org-clock-get-clock-string) "'"))
-            (set-face-background 'mode-line "#444488"))
-        (call-process
-         "dconf"
-         nil
-         nil
-         nil
-         "write"
-         "/org/gnome/shell/extensions/simple-message/message"
-         "'⚠️ No active clock'")
-        (set-face-background 'mode-line "#555753"))))
 
-(run-with-timer 0 60 'current-task-to-status)
-(add-hook 'org-clock-in-hook 'current-task-to-status)
-(add-hook 'org-clock-out-hook 'current-task-to-status)
-(add-hook 'org-clock-cancel-hook 'current-task-to-status)
-(add-hook 'org-clock-goto-hook 'current-task-to-status)
+;; Deactivated since I no longer log time.
+;; (defun current-task-to-status ()
+;;   (interactive)
+;;   (if (fboundp 'org-clocking-p)
+;;       (if (org-clocking-p)
+;;           (progn
+;;             (call-process
+;;              "dconf"
+;;              nil
+;;              nil
+;;              nil
+;;              "write"
+;;              "/org/gnome/shell/extensions/simple-message/message"
+;;              (concat "'👷🏽 " (org-clock-get-clock-string) "'"))
+;;             (set-face-background 'mode-line "#444488"))
+;;         (call-process
+;;          "dconf"
+;;          nil
+;;          nil
+;;          nil
+;;          "write"
+;;          "/org/gnome/shell/extensions/simple-message/message"
+;;          "'⚠️ No active clock'")
+;;         (set-face-background 'mode-line "#555753"))))
+
+;; (run-with-timer 0 60 'current-task-to-status)
+;; (add-hook 'org-clock-in-hook 'current-task-to-status)
+;; (add-hook 'org-clock-out-hook 'current-task-to-status)
+;; (add-hook 'org-clock-cancel-hook 'current-task-to-status)
+;; (add-hook 'org-clock-goto-hook 'current-task-to-status)
 
 
 ;; todo: aj/org-clock-change-end-time ()
