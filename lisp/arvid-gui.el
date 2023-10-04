@@ -3,7 +3,8 @@
 
 ;;; color-themes
 
-(load-theme 'modus-vivendi)
+;; (load-theme 'modus-vivendi)
+(load-theme 'modus-operandi)
 
 ;; Highlight surrounding parentheses.
 (use-package
