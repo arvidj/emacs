@@ -20,24 +20,23 @@
 ;;  unit. However, it does not work.
 ;; (add-to-list display-buffer-alist '((".*compilation.*" (display-buffer-in-atom-window))))
 
-(defun compilatation-finish (buf str)
-  (if (null (string-match ".*exited abnormally.*" str))
-      ;;no errors, make the compilation window go away in a few seconds
-      (progn
-        ;; (run-at-time
-        ;;  "2 sec" nil 'delete-windows-on
-        ;;  (get-buffer-create "*compilation*"))
-        (run-at-time
-         "2 sec" nil
-         (lambda ()
-           (delete-windows-on (get-buffer-create "*compilation*"))
-           (jump-to-register pre-compilation-window-conf-reg)))
-
-
-        (message "No Compilation Errors!"))))
+;; (defun compilatation-finish (buf str)
+;;   (if (null (string-match ".*exited abnormally.*" str))
+;;       ;;no errors, make the compilation window go away in a few seconds
+;;       (progn
+;;         ;; (run-at-time
+;;         ;;  "2 sec" nil 'delete-windows-on
+;;         ;;  (get-buffer-create "*compilation*"))
+;;         (run-at-time
+;;          "2 sec" nil
+;;          (lambda ()
+;;            (delete-windows-on (get-buffer-create "*compilation*"))
+;;            (jump-to-register pre-compilation-window-conf-reg)))
+;;         (message "No Compilation Errors!"))))
 
 ; from enberg on #emacs
-(add-hook 'compilation-finish-functions 'compilatation-finish)
+;; (add-hook 'compilation-finish-functions 'compilatation-finish)
+;; (remove-hook 'compilation-finish-functions 'compilatation-finish)
 
 ;; Colorize in compilation buffers
 (use-package ansi-color)

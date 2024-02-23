@@ -195,11 +195,6 @@
         (insert (concat "\\input{" filename "}"))
         (message (concat "Wrote " filename)))))
 
-(use-package
- ffap
- :config
- (add-to-list 'ffap-alist '(latex-mode . arvid-ffap-latex-mode) t))
-
 (defun arvid-ffap-latex-mode (name)
   ""
   (interactive)

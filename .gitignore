@@ -34,3 +34,4 @@
 /backup-emacs/
 /elisp-autofmt-cache/
 org-clock-save.el
+./org-clock-save.el

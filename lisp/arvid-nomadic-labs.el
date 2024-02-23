@@ -31,9 +31,9 @@
   (print read-write)
   (let
       ((default-directory
-        "/ssh:besten.arvidj.eu:/home/arvid/dev/nomadic-labs/gitlab-job-scraper/db")
+        "/ssh:besten_local:/home/arvid/dev/nomadic-labs/gitlab-job-scraper/master/db")
        (sql-database
-        "/home/arvid/dev/nomadic-labs/gitlab-job-scraper/db/gl-2023-05-01--2023-06-26.db")
+        "/home/arvid/dev/nomadic-labs/gitlab-job-scraper/master/db/gl-2023-05-01--2023-06-26.db")
        (sql-sqlite-options (if read-write sql-sqlite-options (cons "--readonly" sql-sqlite-options))))
     (sql-sqlite)))
 

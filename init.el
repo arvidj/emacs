@@ -49,6 +49,7 @@
 (require 'arvid-sh) (profile-package "'arvid-sh")
 (require 'arvid-yaml) (profile-package "'arvid-yaml")
 (require 'arvid-ocaml) (profile-package "'arvid-ocaml")
+(require 'arvid-cram) (profile-package "'cram-mode")
 ;; (require 'arvid-michelson) (profile-package "'arvid-michelson")
 (require 'arvid-ligo) (profile-package "'arvid-ligo")
 (require 'arvid-docker) (profile-package "'arvid-docker")
@@ -79,6 +80,7 @@
 (unless (server-running-p) (server-start))
 (require 'arvid-org-mode) (profile-package "'arvid-org-mode")
 (require 'arvid-org-clock) (profile-package "'arvid-org-clock")
+(require 'arvid-org-present) (profile-package "'arvid-org-present")
 (require 'arvid-yasnippet) (profile-package "'arvid-yasnippet")
 (require 'arvid-gitlab) (profile-package "'arvid-gitlab")
 (require 'arvid-gitlab-ci) (profile-package "'arvid-gitlab-ci")
@@ -118,6 +120,9 @@
 (require 'arvid-latex) (profile-package "'arvid-latex")
 (require 'arvid-rst) (profile-package "'arvid-rst")
 (require 'arvid-bashmarks) (profile-package "'arvid-bashmarks")
+(require 'arvid-auto-insert) (profile-package "'arvid-auto-insert")
+(require 'arvid-ffap) (profile-package "'arvid-ffap")
+
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Encodings
@@ -162,3 +167,4 @@
   (keychain-refresh-environment))
 
 ;; 2. after GC change: Emacs ready in 4.50 seconds with 18 garbage collections
+(put 'magit-clean 'disabled nil)

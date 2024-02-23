@@ -22,6 +22,10 @@
   "Trigger the tezos/tezos CI."
   (interactive)
   (magit-git-command-topdir "git resolve-all --ours --all"))
+(defun aj/magit-rebase-merge-interactive ()
+  "Interactive rebase on the last merge commit."
+  (interactive)
+  (magit-git-command-topdir "git rebase-merge-interactive"))
 
 (defun aj/git-commit-mode-hook ()
   "Add spell-checking when writing commit messages."
@@ -56,6 +60,7 @@
  (define-key
   magit-process-mode-map (kbd "C-c C-o") 'browse-url-at-point)
 
+ ;; Run transient
  (transient-append-suffix
   'magit-run "!" '("t" "trigger CI" aj/magit-trigger-ci))
 
@@ -81,6 +86,17 @@
 
  (transient-append-suffix
   'magit-push "-u"
-  '(1 "=c" "Set push option" "--push-option=merge_request.create")))
+  '(1 "=c" "Create merge request" "--push-option=merge_request.create"))
+
+ (transient-append-suffix
+   'magit-push "-u"
+   '(1 "=s" "Set [ci.skip]" "--push-option=ci.skip"))
+
+ ;; Rebase transient
+ (transient-append-suffix
+  'magit-rebase "u"
+  '("M" "latest merge-commit" aj/magit-rebase-merge-interactive))
+
+ )
 
 (provide 'arvid-magit)

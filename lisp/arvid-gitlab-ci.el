@@ -32,7 +32,7 @@
 
 (setq
  glcisk-path
- "/home/arvid/dev/nomadic-labs/glci-swiss-army-knife/_build/default/bin/main.exe")
+ "/home/arvid/dev/nomadic-labs/gitlab-ci-inspector/_build/default/bin/main.exe")
 
 (defvar gitlab-ci-focused-job-mode-map (make-sparse-keymap)
   "Keymap for `gitlab-ci-focused-job-mode-map'.")
@@ -157,5 +157,13 @@
  (add-to-list
   'auto-mode-alist '("\\.gitlab/.*.yml\\'" . gitlab-ci-mode))
  (add-to-list 'gitlab-ci-mode-hook 'arvid-gitlab-ci-mode-hook))
+
+(defun arvid-ffap-gitlab-ci-mode (name)
+  ""
+  (interactive)
+  (let ((guess (concat (f-join (vc-git-root ".") name))))
+    (if (file-exists-p guess)
+        guess
+      (ffap name))))
 
 (provide 'arvid-gitlab-ci)

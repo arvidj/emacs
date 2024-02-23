@@ -16,8 +16,11 @@
 (use-package shfmt
   :ensure t
   :init
-  ;; Put space before redirect operators (<, >, etc)
-  (setq shfmt-arguments '("-sr"))
+  ;; -sr: Put space before redirect operators (<, >, etc)
+  ;; -i 4: Indent using 4 spaces
+  (setq shfmt-arguments '("-sr" "-i" "4"))
+  ;; TODO: only activate if (eq file (format file))
+  ;; TODO: this can be checked with [shfmt -d]
   (add-hook 'sh-mode-hook #'shfmt-on-save-mode))
 
 (provide 'arvid-sh)

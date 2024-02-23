@@ -6,6 +6,8 @@
 ;; for more information.
 (use-package
  tramp
- :config (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+ :config
+ (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+ (setq enable-remote-dir-locals t))
 
 (provide 'arvid-tramp)

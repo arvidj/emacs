@@ -122,6 +122,11 @@
           entry
           (file+datetree "journal.org")
           "* %?\nEntered on %U\n  %i\n  %a")
+         ("c"
+          "The Perfect Machine"
+          entry
+          (file+datetree "perfect-machine.org")
+          "* %?\nEntered on %U\n  %i\n  %a")
          ("N"
           "Nomadic labs journal"
           entry

@@ -1,4 +1,4 @@
-(defun aj/ocaml-compile-here (parent)
+(defun aj/dune-build-here (parent)
   ""
   (interactive "p")
   (compile
@@ -8,12 +8,34 @@
         "."
       ".."))))
 
+(defvar aj/ocaml-current-buffer nil)
+
+(defun aj/dune-runtest-promote-revert (buf str)
+  ""
+  (message "[aj/dune-runtest-promote-revert] %s / %s: '%s'" (buffer-name) aj/ocaml-current-buffer (string-trim str))
+  (remove-hook 'compilation-finish-functions 'aj/dune-runtest-promote-revert)
+  (setq aj/ocaml-current-buffer nil)
+  (when (and aj/ocaml-current-buffer (string= (string-trim str) "exited abnormally with code 1"))
+    (message "[aj/dune-runtest-promote-revert]: reverting %s" aj/ocaml-current-buffer)
+    (with-current-buffer aj/ocaml-current-buffer (revert-buffer t t))))
+
+(defun aj/dune-runtest-here (auto-promote)
+  ""
+  (interactive "p")
+  (if (= auto-promote 1)
+      (compile "dune runtest . ")
+    ;; Run-test with --auto-promote
+    (setq aj/ocaml-current-buffer (current-buffer))
+    (add-hook 'compilation-finish-functions 'aj/dune-runtest-promote-revert 0)
+    (compile "dune runtest . --auto-promote")))
+
 (defun aj/tuareg-mode-hook ()
   (aj/define-keys
    tuareg-mode-map
    `(("C-M-p" nil)
      ("C-c i" nil)
-     ("C-c C-c" aj/ocaml-compile-here)
+     ("C-c C-c" aj/dune-build-here)
+     ("C-c C-j" aj/dune-runtest-here)
      ("C-M-n" nil)
      ("C-q" tuareg-indent-phrase)
      ("C-h o" merlin-document)

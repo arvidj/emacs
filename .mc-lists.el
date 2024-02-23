@@ -6,31 +6,30 @@
         aj/duplicate-current-line-or-region
         aj/smart-beginning-of-line
         aj/yank-or-pop
+        aj/yank-pop-forwards
         backward-sexp
         comment-indent-new-line
         comment-or-uncomment-current-line-or-region
-        dabbrev-expand
+        cycle-spacing
         delete-pair
-        downcase-region
         drag-stuff-down
-        end-of-buffer
+        fill-paragraph
         forward-sexp
         helm-M-x
         kill-region
-        markdown-outdent-or-delete
         org-beginning-of-line
         org-ctrl-c-ctrl-c
         org-delete-char
         org-end-of-line
-        org-fill-paragraph
         org-force-self-insert
         org-kill-line
         org-open-at-point
         org-self-insert-command
         org-table-copy-down
-        org-transpose-words
-        python-nav-backward-up-list
+        org-todo
+        replace-string
         split-line
+        upcase-region
         wdired--self-insert
         yaml-electric-backspace
         yaml-electric-dash-and-dot
@@ -38,7 +37,6 @@
 
 (setq mc/cmds-to-run-once
       '(
-        dired-flag-file-deletion
-        replace-string
-        scroll-other-window
+        iedit-switch-to-mc-mode
+        markdown-outdent-or-delete
         ))
