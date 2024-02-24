@@ -14,7 +14,7 @@
  :config)
 
 ;; optionally
-;; (use-package lsp-ui :commands lsp-ui-mode)
+(use-package lsp-ui :ensure t :commands lsp-ui-mode)
 ;; if you are helm user
 ;; (use-package helm-lsp :commands helm-lsp-workspace-symbol)
 ;; if you are ivy user

@@ -49,7 +49,8 @@
      ("C-M-n" nil)
      ("C-q" tuareg-indent-phrase)
      ("C-h o" merlin-document)
-     ("C-c y f" aj/tezt-this-file)))
+     ("C-c y f" aj/tezt-this-file)
+     ("C-c C-x" flycheck-next-error)))
 
   ;; (display-fill-column-indicator-mode)
   ;; (setq-local display-fill-column-indicator-column 80)
@@ -111,27 +112,30 @@
 ;; ;; the *Quick help* buffer (that is displayed by 'company-box')
 ;; (use-package merlin-company :ensure t :demand :after merlin)
 
+;; Provided by LSP mode
 ;; (use-package
 ;;  merlin-eldoc
 ;;  :hook (merlin-mode . merlin-eldoc-setup)
 ;;  :custom (eldoc-echo-area-use-multiline-p t))
 
+;; (defun aj/init-flycheck-ocaml ()
+;;   ""
+;;   (message "[aj/init-flycheck-ocaml]")
+
+;;   ;; (setq-local merlin-error-after-save nil)
+;;   (flycheck-ocaml-setup)
+;;   (flycheck-mode))
 ;; (use-package
 ;;  flycheck-ocaml
 ;;  :ensure t
-;;  :after merlin
-;;  :hook (merlin-mode . init-flycheck-ocaml)
-;;  :config
-;;  (defun init-flycheck-ocaml ()
-;;    (setq-local merlin-error-after-save nil)
-;;    (flycheck-ocaml-setup)
-;;    (flycheck-mode)))
+;;  :after tuareg-mode
+;;  :hook (tuareg-mode . aj/init-flycheck-ocaml))
 
-;; (use-package dune :ensure t)
+(use-package dune :ensure t)
 
-;; (use-package
-;;  dune-format
-;;  :ensure t
-;;  :hook (dune-mode . dune-format-on-save-mode))
+(use-package
+ dune-format
+ :ensure t
+ :hook (dune-mode . dune-format-on-save-mode))
 
 (provide 'arvid-ocaml)
