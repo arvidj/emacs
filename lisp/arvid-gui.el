@@ -43,6 +43,20 @@
 ;; För line-numbers vid sidan
 ;; http://stud4.tuwien.ac.at/~e0225855/linum/linum.html
 
+
+;; http://stackoverflow.com/questions/2081577/setting-emacs-split-to-horizontal
+(setq split-height-threshold 80)
+(setq split-width-threshold 160)
+
+
+;; Makes last error visited in the compilation log more visible
+(defface right-triangle-face
+  '((t (:background "red" :foreground "yellow")))
+  "Face for `right-triangle-face`.")
+(set-fringe-bitmap-face 'right-triangle 'right-triangle-face)
+
+(setq visible-bell t)
+
 (provide 'arvid-gui)
 
 

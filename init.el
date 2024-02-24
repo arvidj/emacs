@@ -10,12 +10,14 @@
 
 ;; sets up package, use-package and repositories
 (require 'arvid-package)
-(require 'arvid-lib)
-(require 'arvid-misc)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Misc. defuns
-(require 'arvid-func)
+(require 'arvid-lib)
+
+;;;;;;;;;;;;;;;;;;;;;;
+;; Misc. configuration
+(require 'arvid-misc)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Move backup and autosave files.
@@ -84,6 +86,7 @@
 ;; (require 'arvid-vterm)
 (require 'arvid-shell)
 (require 'arvid-tramp)
+(require 'arvid-occur)
 
 (require 'rejeep-comment)
 (require 'arvid-diff)

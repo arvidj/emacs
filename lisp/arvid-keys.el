@@ -41,6 +41,8 @@
    ("C-x nf" ,(aj/make-find-file-in-dir "~/.emacs.d/lisp"))
    ("C-x nj" ,(aj/make-find-file-in-dir "~/"))
 
+   ("C-x C-r" recentf-open)
+
    ("M-#" replace-string)
    ("M-\"" align-regexp)
 
@@ -229,7 +231,11 @@
    ("<C-M-S-mouse-4>" default-text-scale-increase)
    ("<C-M-S-mouse-5>" default-text-scale-decrease)
 
-   ("C-c C-w" elfeed)))
+   ("C-c C-w" elfeed)
+
+   ("M-y" aj/yank-pop-forwards)
+   ("C-y" aj/yank-or-pop)
+   ("C-x r C-y" aj/insert-rectangle-push-lines)))
 
 (defun aj/dup-and-comment ()
   ""

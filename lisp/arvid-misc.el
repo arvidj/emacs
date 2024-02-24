@@ -19,21 +19,6 @@
        (revert-buffer)))
    "revert this buffer"))
 
-(defun aj/kill-occurrence-at-point ()
-  "Kills the occurence at point"
-  (interactive)
-  ;; Store the point here. It seems like save-excursion does not work
-  ;; across a revert.
-  (let ((current-point (point)))
-    (save-window-excursion
-      (occur-mode-goto-occurrence)
-      (kill-whole-line))
-    (revert-buffer)
-    ;; current-point could now be larger than the buffer, but
-    ;; goto-char doesnt care. It
-    (goto-char current-point)))
-(define-key occur-mode-map (kbd "C-k") 'aj/kill-occurrence-at-point)
-
 (use-package saveplace :ensure t :config (save-place-mode))
 
 ;; Indent after yank
@@ -76,37 +61,8 @@
 (read-abbrev-file "~/.emacs.d/misc/abbrev_defs")
 (setq save-abbrevs t)
 
-(defun aj/yank-or-pop ()
-  "Yanks the first time called, pops otherwise."
-  (interactive)
-  (if (eq last-command 'yank)
-      (yank-pop)
-    (yank)))
-
-(defun aj/yank-pop-forwards (arg)
-  "Pop forward in kill-ring."
-  (interactive "p")
-  (yank-pop (- arg)))
-
-(global-set-key (kbd "M-y") 'aj/yank-pop-forwards)
-(global-set-key (kbd "C-y") 'aj/yank-or-pop)
-
 ;; aj/yank-or-pop deletes selection if there is one.
 (put 'aj/yank-or-pop 'delete-selection 'yank)
-
-(setq visible-bell t)
-
-;; From https://emacs.stackexchange.com/questions/19461/insert-lines-when-yanking-rectangle-rather-than-inserting-among-following-lines
-(defun aj/insert-rectangle-push-lines ()
-  "Yank a rectangle as if it was an ordinary kill."
-  (interactive "*")
-  (when (and (use-region-p) (delete-selection-mode))
-    (delete-region (region-beginning) (region-end)))
-  (save-restriction
-    (narrow-to-region (point) (mark))
-    (yank-rectangle)))
-
-(global-set-key (kbd "C-x r C-y") #'aj/insert-rectangle-push-lines)
 
 (defvar visual-wrap-column nil)
 (defun set-visual-wrap-column (new-wrap-column &optional buffer)
@@ -146,16 +102,6 @@
                                visual-wrap-column))))))
 
 
-;; http://stackoverflow.com/questions/2081577/setting-emacs-split-to-horizontal
-(setq split-height-threshold 80)
-(setq split-width-threshold 160)
-
-;; Makes last error visited in the compilation log more visible
-(defface right-triangle-face
-  '((t (:background "red" :foreground "yellow")))
-  "Face for `right-triangle-face`.")
-(set-fringe-bitmap-face 'right-triangle 'right-triangle-face)
-
 (setq set-mark-command-repeat-pop t)
 
 ;; indentation
@@ -163,18 +109,10 @@
 
 (use-package visual-regexp :ensure t)
 
-(defun aj/chords-mode ()
-  ""
-  (interactive)
-  (follow-mode)
-  (split-window-right)
-  (balance-windows))
-
 (add-to-list 'auto-mode-alist '("\\.gnu\\'" . gnuplot-mode))
 
 (setenv "PATH" (concat (getenv "PATH") ":/home/arvid/bin"))
 (setenv "PATH" (concat (getenv "PATH") ":/home/arvid/.cabal/bin"))
 (setq exec-path (append exec-path '("/home/arvid/bin")))
-
 
 (provide 'arvid-misc)
