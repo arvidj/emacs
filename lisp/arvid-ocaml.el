@@ -12,12 +12,20 @@
 
 (defun aj/dune-runtest-promote-revert (buf str)
   ""
-  (message "[aj/dune-runtest-promote-revert] %s / %s: '%s'" (buffer-name) aj/ocaml-current-buffer (string-trim str))
-  (remove-hook 'compilation-finish-functions 'aj/dune-runtest-promote-revert)
+  (message "[aj/dune-runtest-promote-revert] %s / %s: '%s'"
+           (buffer-name)
+           aj/ocaml-current-buffer
+           (string-trim str))
+  (remove-hook
+   'compilation-finish-functions 'aj/dune-runtest-promote-revert)
   (setq aj/ocaml-current-buffer nil)
-  (when (and aj/ocaml-current-buffer (string= (string-trim str) "exited abnormally with code 1"))
-    (message "[aj/dune-runtest-promote-revert]: reverting %s" aj/ocaml-current-buffer)
-    (with-current-buffer aj/ocaml-current-buffer (revert-buffer t t))))
+  (when (and aj/ocaml-current-buffer
+             (string=
+              (string-trim str) "exited abnormally with code 1"))
+    (message "[aj/dune-runtest-promote-revert]: reverting %s"
+             aj/ocaml-current-buffer)
+    (with-current-buffer aj/ocaml-current-buffer
+      (revert-buffer t t))))
 
 (defun aj/dune-runtest-here (auto-promote)
   ""
@@ -26,7 +34,9 @@
       (compile "dune runtest . ")
     ;; Run-test with --auto-promote
     (setq aj/ocaml-current-buffer (current-buffer))
-    (add-hook 'compilation-finish-functions 'aj/dune-runtest-promote-revert 0)
+    (add-hook
+     'compilation-finish-functions 'aj/dune-runtest-promote-revert
+     0)
     (compile "dune runtest . --auto-promote")))
 
 (defun aj/tuareg-mode-hook ()
@@ -89,9 +99,10 @@
  (merlin-locate-preference 'ml)
  (merlin-command 'opam)
  (merlin-completion-with-doc t)
- :hook ((tuareg-mode . merlin-mode) (merlin-mode . init-merlin))
+ :hook ((tuareg-mode . merlin-mode) (merlin-mode . aj/init-merlin))
  :init
- (defun init-merlin ()
+ (defun aj/init-merlin ()
+   (merlin-toggle-view-errors)
    (company-mode)))
 
 ;; These two lines are necessary for Merlin to display docstrings in
