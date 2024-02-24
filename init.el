@@ -44,6 +44,7 @@
 (profile-package "'arvid-flycheck")
 (require 'arvid-company)
 (profile-package "'arvid-company")
+(require 'arvid-lsp)
 
 ;; Programming, etc
 (require 'arvid-haskell)
@@ -62,11 +63,10 @@
 (profile-package "'arvid-sh")
 (require 'arvid-yaml)
 (profile-package "'arvid-yaml")
-(require 'arvid-ocaml)
-(profile-package "'arvid-ocaml")
+;; (require 'arvid-ocaml)
+;; (profile-package "'arvid-ocaml")
 (require 'arvid-cram)
 (profile-package "'cram-mode")
-;; (require 'arvid-michelson) (profile-package "'arvid-michelson")
 (require 'arvid-ligo)
 (profile-package "'arvid-ligo")
 (require 'arvid-docker)
@@ -229,6 +229,8 @@
  keychain-environment
  :ensure t
  :config (keychain-refresh-environment))
+
+(require 'arvid-direnv)
 
 ;; 2. after GC change: Emacs ready in 4.50 seconds with 18 garbage collections
 (put 'magit-clean 'disabled nil)

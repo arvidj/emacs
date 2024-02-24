@@ -35,3 +35,5 @@
 /elisp-autofmt-cache/
 org-clock-save.el
 ./org-clock-save.el
+org-clock-save.el
+/.lsp-session-v1
