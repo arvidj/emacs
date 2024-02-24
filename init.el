@@ -7,7 +7,6 @@
 (setq aj/time (current-time))
 
 (add-to-list 'load-path "~/.emacs.d/lisp")
-(add-to-list 'load-path "~/.emacs.d/lisp/vendor")
 
 ;; sets up package, use-package and repositories
 (require 'arvid-package)
@@ -85,9 +84,6 @@
 ;; (require 'arvid-vterm)
 (require 'arvid-shell)
 (require 'arvid-tramp)
-
-;; Must load after org-mode
-(require 'arvid-ott)
 
 (require 'rejeep-comment)
 (require 'arvid-diff)
