@@ -25,7 +25,13 @@
   ;; for speed
   (when (< (buffer-size) 10000)
     (flyspell-buffer))
-  (auto-fill-mode))
+  (auto-fill-mode)
+
+  ;; Turn off company mode in org-mode buffer.
+  ;;
+  ;; company-mode does not seem to work well with the overlays that
+  ;; org-mode uses.
+  (company-mode 0))
 
 (defun aj/org-latex-ignore-heading-filter-headline
     (headline backend info)
