@@ -14,6 +14,16 @@
      :commands (elisp-autofmt-mode elisp-autofmt-buffer)
      :hook (emacs-lisp-mode . elisp-autofmt-mode)
      :config
+     (defun aj/elisp-autofmt-allow ()
+       "Returns true if an .elisp-autofmt file exists and not custom file"
+       (and (elisp-autofmt-check-elisp-autofmt-exists)
+            (not
+             (string=
+              buffer-file-name
+              "/home/arvid/.emacs.d/lisp/arvid-emacs-custom.el"))))
+
+     (setq elisp-autofmt-on-save-p 'aj/elisp-autofmt-allow)
+
      (setq
       elisp-autofmt-python-bin
       (if (executable-find "python3")
