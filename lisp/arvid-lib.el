@@ -493,4 +493,12 @@ use. If the input is non-empty, it is inserted at point."
     (concat
      (capitalize (substring string 0 1)) (substring string 1))))
 
+(defun aj/dup-and-comment ()
+  ""
+  (interactive)
+  (aj/duplicate-current-line-or-region 1)
+  (previous-line)
+  (comment-or-uncomment-current-line-or-region)
+  (next-line))
+
 (provide 'arvid-lib)

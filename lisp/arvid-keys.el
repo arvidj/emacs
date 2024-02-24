@@ -235,15 +235,10 @@
 
    ("M-y" aj/yank-pop-forwards)
    ("C-y" aj/yank-or-pop)
-   ("C-x r C-y" aj/insert-rectangle-push-lines)))
+   ("C-x r C-y" aj/insert-rectangle-push-lines)
 
-(defun aj/dup-and-comment ()
-  ""
-  (interactive)
-  (aj/duplicate-current-line-or-region 1)
-  (previous-line)
-  (comment-or-uncomment-current-line-or-region)
-  (next-line))
+   ("C-M-j" next-window-any-frame)
+   ("C-M-k" previous-window-any-frame)))
 
 (aj/define-keys
  minibuffer-local-map `(("M-g" minibuffer-keyboard-quit)))

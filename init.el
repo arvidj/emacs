@@ -23,6 +23,8 @@
 ;; Move backup and autosave files.
 (require 'arvid-backup-autosave)
 (require 'arvid-recentf)
+;; TODO: install package from elpa instead
+;; see https://github.com/stsquad/emacs_chrome
 (require 'arvid-editserver)
 
 ;; Generalities for programming
@@ -31,16 +33,11 @@
 (require 'arvid-lsp)
 
 ;; Programming, etc
-(require 'arvid-haskell)
-(require 'arvid-coq)
 (require 'arvid-lisp)
-(require 'arvid-css)
-(electric-pair-mode)
 (require 'arvid-sh)
 (require 'arvid-yaml)
 (require 'arvid-ocaml)
 (require 'arvid-cram)
-(require 'arvid-ligo)
 (require 'arvid-docker)
 (require 'arvid-typescript)
 (require 'arvid-sql)
@@ -54,11 +51,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Keybindings
 (require 'arvid-keys)
+(require 'arvid-editing)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Interface
+
 (require 'arvid-gui)
-(require 'arvid-windows)
 ;; (require 'fill-column-indicator)
 ;; (setq fci-style 'rule)
 

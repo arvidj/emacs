@@ -1,7 +1,6 @@
 (require 'arvid-mr)
-;; (require 'arvid-worklog)
 
-(defun nl-select-gitlab-ident ()
+(defun aj/nl-select-gitlab-ident ()
   ""
   (interactive)
 
