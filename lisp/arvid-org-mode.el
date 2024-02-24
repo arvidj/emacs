@@ -244,7 +244,6 @@
  ;; https://orgmode.org/worg/exporters/beamer/ox-beamer.html
  ;; add only-environment
 
- (setq org-completion-use-ido t)
  (setq org-outline-path-complete-in-steps nil)
  (setq org-refile-targets '((nil :maxlevel . 3)))
  (setq org-html-head "

@@ -12,8 +12,7 @@
             (insert-file-contents
              "~/Dropbox/Jobb/Nomadic_Labs/people2.org")
             (cddr (org-table-to-lisp))))
-         (user
-          (ido-completing-read "User: " (mapcar name person-table)))
+         (user (completing-read "User: " (mapcar name person-table)))
          (data
           (alist-get user
                      (mapcar
@@ -34,7 +33,10 @@
         "/ssh:besten_local:/home/arvid/dev/nomadic-labs/gitlab-job-scraper/master/db")
        (sql-database
         "/home/arvid/dev/nomadic-labs/gitlab-job-scraper/master/db/gl-2023-05-01--2023-06-26.db")
-       (sql-sqlite-options (if read-write sql-sqlite-options (cons "--readonly" sql-sqlite-options))))
+       (sql-sqlite-options
+        (if read-write
+            sql-sqlite-options
+          (cons "--readonly" sql-sqlite-options))))
     (sql-sqlite)))
 
 (provide 'arvid-nomadic-labs)

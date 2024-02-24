@@ -19,13 +19,11 @@
      (interactive)
      (find-file-read-only ,file)))
 
-;; use ido-file-internal instead, since we now cant open dired from
-;; ido-find-file-in-dir.
 (defun aj/make-find-file-in-dir (dir)
   `(lambda ()
      (interactive)
      (let ((default-directory ,dir))
-       (ido-find-file))))
+       (call-interactively 'find-file))))
 
 (aj/global-set-keys
  `(("C-c d" aj/duplicate-current-line-or-region)
@@ -40,10 +38,9 @@
    ("<f10>"
     ,(aj/make-find-file "~/Dropbox/Jobb/Nomadic_Labs/notes.org"))
 
-   ("C-x nf" ,(aj/make-find-file-in-dir "~/.emacs.d/"))
+   ("C-x nf" ,(aj/make-find-file-in-dir "~/.emacs.d/lisp"))
    ("C-x nj" ,(aj/make-find-file-in-dir "~/"))
 
-   ;; ("M-g" goto-line)
    ("M-#" replace-string)
    ("M-\"" align-regexp)
 
@@ -246,25 +243,5 @@
  minibuffer-local-map `(("M-g" minibuffer-keyboard-quit)))
 
 (aj/define-keys isearch-mode-map `(("M-g" isearch-abort)))
-
-
-;; TODO function and key for reset-selective display
-;; TODO use only one function for dec/set/reset
-;; TODO some way of finding highest indentation level and using that as max.
-(defun inc-selective-display ()
-  ""
-  (interactive)
-  (setq selective-display
-        (if selective-display
-            (1+ selective-display)
-          1)))
-
-(defun dec-selective-display ()
-  ""
-  (interactive)
-  (setq selective-display
-        (if selective-display
-            (1- selective-display)
-          10)))
 
 (provide 'arvid-keys)
