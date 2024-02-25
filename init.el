@@ -107,6 +107,7 @@
 (require 'arvid-bashmarks)
 (require 'arvid-auto-insert)
 (require 'arvid-ffap)
+(require 'arvid-chatgpt-shell)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;
