@@ -1,6 +1,6 @@
-(add-to-list 'rst-mode-hook 'arvid-rst/rst-mode-hook)
+(add-to-list 'rst-mode-hook 'aj/rst-mode-hook)
 
-(defun arvid-rst/rst-mode-hook ()
+(defun aj/rst-mode-hook ()
   ""
   (interactive)
   (define-key rst-mode-map (kbd "C-c C-t h") 'rst-make-header)
@@ -8,7 +8,7 @@
   (define-key rst-mode-map (kbd "C-c C-c C-c") 'compile)
 
   (define-key
-   rst-mode-map (kbd "C-c C-c C-p") 'arvid-rst/tezos-docs-open)
+   rst-mode-map (kbd "C-c C-c C-p") 'aj/rst-tezos-docs-open)
 
   (let* ((file (buffer-file-name))
          (root (locate-dominating-file file "conf.py")))
@@ -22,7 +22,7 @@
       file
       " DUMMY"))))
 
-(defun arvid-rst/tezos-docs-open ()
+(defun aj/rst-tezos-docs-open ()
   ""
   (interactive)
   (browse-url
@@ -31,7 +31,7 @@
     (f-swap-ext
      (s-replace "/docs/" "/docs/_build/" buffer-file-name) "html"))))
 
-(defun arvid-rst/make-header (char)
+(defun aj/rst-make-header (char)
   ""
   (interactive (progn
                  (let* ((default
@@ -61,7 +61,7 @@
         (insert (s-repeat len (char-to-string char)))))))
 
 
-(defun arvid-rst/check-links ()
+(defun aj/rst-check-links ()
   ""
   (interactive)
   (compile

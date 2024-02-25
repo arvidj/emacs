@@ -1,3 +1,4 @@
+;; Print week-numbers in [M-x calendar].
 (copy-face font-lock-constant-face 'calendar-iso-week-face)
 (set-face-attribute 'calendar-iso-week-face nil :height 0.7)
 (setq calendar-intermonth-text

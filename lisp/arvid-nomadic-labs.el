@@ -1,5 +1,3 @@
-(require 'arvid-mr)
-
 (defun aj/nl-select-gitlab-ident ()
   ""
   (interactive)

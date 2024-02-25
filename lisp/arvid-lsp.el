@@ -8,6 +8,7 @@
  ( ;; replace XXX-mode with concrete major-mode(e. g. python-mode)
   (tuareg-mode . lsp-deferred)
   (gitlab-ci-mode . lsp)
+  (sh-mode . lsp)
   ;; if you want which-key integration
   (lsp-mode . lsp-enable-which-key-integration)
   (before-save . lsp-format-buffer))

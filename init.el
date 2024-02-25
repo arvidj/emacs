@@ -69,7 +69,6 @@
 (require 'arvid-org-clock)
 (require 'arvid-org-present)
 (require 'arvid-yasnippet)
-(require 'arvid-gitlab)
 (require 'arvid-gitlab-ci)
 (require 'arvid-projectile)
 (require 'arvid-vertico)
@@ -81,7 +80,6 @@
 (require 'arvid-uniquify)
 (use-package browse-kill-ring :ensure t)
 (require 'arvid-dired)
-;; (require 'arvid-vterm)
 (require 'arvid-shell)
 (require 'arvid-tramp)
 (require 'arvid-occur)
@@ -89,6 +87,7 @@
 (require 'rejeep-comment)
 (require 'arvid-diff)
 (require 'arvid-drag-stuff)
+;; Setup for conf-mode for editing configuration files such as [.gitconfig].
 (require 'arvid-conf)
 (require 'arvid-ws-butler)
 (require 'arvid-flyspell)
@@ -109,10 +108,6 @@
 (require 'arvid-ffap)
 (require 'arvid-chatgpt-shell)
 (use-package visual-regexp :ensure t)
-
-;;;;;;;;;;;;;;;;;;;;;;
-;; Encodings
-;; (require 'arvid-encodings)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Customization
@@ -158,3 +153,5 @@
 
 ;; 2. after GC change: Emacs ready in 4.50 seconds with 18 garbage collections
 (put 'magit-clean 'disabled nil)
+
+(setq comint-output-filter-functions '(comint-osc-process-output))
