@@ -1,4 +1,4 @@
-(use-package f :ensure t)
+;; (use-package f :ensure t)
 
 (defun aj/markdown-insert-backtick-gfm ()
   ""
@@ -51,11 +51,7 @@
 (use-package
  markdown-mode
  :ensure t
- :config
-
- (add-to-list 'markdown-mode-hook 'aj/markdown-mode-hook)
- (add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
- (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
- (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode)))
+ :mode "\\.md\\'"
+ :hook (markdown-mode . aj/markdown-mode-hook))
 
 (provide 'arvid-markdown)

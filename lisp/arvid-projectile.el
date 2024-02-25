@@ -1,13 +1,9 @@
-(use-package ag :ensure t :config)
-
 (use-package
  projectile
  :ensure t
- :config
- ;; (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
- (define-key
-  projectile-mode-map (kbd "C-c p") 'projectile-command-map)
- (projectile-mode +1))
-
+ :pin melpa-stable
+ :init (projectile-mode +1)
+ :bind
+ (:map projectile-mode-map ("C-c p" . projectile-command-map)))
 
 (provide 'arvid-projectile)

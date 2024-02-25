@@ -73,7 +73,7 @@
 (require 'arvid-projectile)
 (require 'arvid-vertico)
 (require 'arvid-magit)
-(use-package browse-at-remote :ensure t)
+(use-package browse-at-remote :commands (browse-at-remote) :ensure t)
 (require 'arvid-smerge)
 (require 'arvid-ibuffer)
 (require 'arvid-iedit)
@@ -97,6 +97,7 @@
  expand-region
  :ensure t
  :bind ("M-9" . 'er/expand-region))
+(use-package ag :ensure t)
 
 (require 'arvid-multiple-cursors)
 (require 'arvid-dir-vars)
@@ -123,6 +124,16 @@
 (put 'LaTeX-narrow-to-environment 'disabled nil)
 (put 'narrow-to-page 'disabled nil)
 (put 'scroll-left 'disabled nil)
+(put 'magit-clean 'disabled nil)
+
+;; Used in i3 to make sure that Emacs communicates with the keychain
+;; program to automatically unlock ssh keys.
+;; (use-package
+;;  keychain-environment
+;;  :ensure t
+;; :config (keychain-refresh-environment))
+
+(require 'arvid-direnv)
 
 ;; Start up time
 
@@ -142,16 +153,4 @@
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
 
-;; Used in i3 to make sure that Emacs communicates with the keychain
-;; program to automatically unlock ssh keys.
-(use-package
- keychain-environment
- :ensure t
- :config (keychain-refresh-environment))
-
-(require 'arvid-direnv)
-
 ;; 2. after GC change: Emacs ready in 4.50 seconds with 18 garbage collections
-(put 'magit-clean 'disabled nil)
-
-(setq comint-output-filter-functions '(comint-osc-process-output))
