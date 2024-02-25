@@ -113,6 +113,16 @@
 
 (setenv "PATH" (concat (getenv "PATH") ":/home/arvid/bin"))
 (setenv "PATH" (concat (getenv "PATH") ":/home/arvid/.cabal/bin"))
-(setq exec-path (append exec-path '("/home/arvid/bin")))
+(setenv "PATH"
+        (concat
+         (getenv "PATH")
+         ":/home/arvid/.nvm/versions/node/v18.18.2/bin"))
+(setq exec-path
+      (append
+       exec-path
+       '("/home/arvid/bin"
+         ;; This is required to make yaml-language-server,
+         ;; installed through 'npm -g' visible to lsp-mode.
+         "/home/arvid/.nvm/versions/node/v18.18.2/bin")))
 
 (provide 'arvid-misc)
