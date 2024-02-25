@@ -175,29 +175,21 @@ Goes backward if ARG is negative; error if CHAR not found."
 
 ;; Never understood why Emacs doesn't have this function.
 ;; http://steve.yegge.googlepages.com/my-dot-emacs-file
-(defmacro aj/ido-nowhere (&rest body)
-  `(progn
-     (ido-everywhere -1)
-     ,@body
-     (ido-everywhere 1)))
-
 (defun aj/rename-file-and-buffer ()
   "Renames current buffer and file it is visiting."
   (interactive)
   (let ((name (buffer-name))
         (filename (buffer-file-name)))
-    (if (not (and filename (file-exists-p filename)))
-        (message "Buffer '%s' is not visiting a file!" name)
-      (aj/ido-nowhere
-       (let ((new-name (read-file-name "New name: " filename)))
-         (cond
-          ((get-buffer new-name)
-           (message "A buffer named '%s' already exists!" new-name))
-          (t
-           (rename-file filename new-name 1)
-           (rename-buffer new-name)
-           (set-visited-file-name new-name)
-           (set-buffer-modified-p nil))))))))
+    (let ((new-name (read-file-name "New name: " filename)))
+      (cond
+       ((get-buffer new-name)
+        (message "A buffer named '%s' already exists!" new-name))
+       (t
+        (when (and filename (file-exists-p filename))
+          (rename-file filename new-name 1))
+        (rename-buffer new-name)
+        (set-visited-file-name new-name)
+        (set-buffer-modified-p nil))))))
 
 ;; Movement
 
