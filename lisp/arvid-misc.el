@@ -107,7 +107,8 @@
 ;; indentation
 (setq indent-tabs-mode nil)
 
-(use-package visual-regexp :ensure t)
+;; Hide elisp compilation warnings on start-up
+(setq native-comp-async-report-warnings-errors nil)
 
 (add-to-list 'auto-mode-alist '("\\.gnu\\'" . gnuplot-mode))
 

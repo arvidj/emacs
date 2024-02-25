@@ -108,7 +108,7 @@
 (require 'arvid-auto-insert)
 (require 'arvid-ffap)
 (require 'arvid-chatgpt-shell)
-
+(use-package visual-regexp :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Encodings
