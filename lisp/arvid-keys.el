@@ -38,7 +38,7 @@
    ("<f10>"
     ,(aj/make-find-file "~/Dropbox/Jobb/Nomadic_Labs/notes.org"))
 
-   ("C-x nf" ,(aj/make-find-file-in-dir "~/.emacs.d/lisp"))
+   ("C-x nf" ,(aj/make-find-file-in-dir "~/.emacs.d/lisp/"))
    ("C-x nj" ,(aj/make-find-file-in-dir "~/"))
 
    ("C-x C-r" recentf-open)
