@@ -43,16 +43,20 @@
 
 ;; (magit-glab/url-mr "tezos/tezos" 12345)
 
-(defun magit-glab/get-mr (project-id mr-iid)
+(cl-defun magit-glab/get-mr
+    (project-id mr-iid &key callback errorback)
   ""
   (ghub-request
    "GET"
    (magit-glab/url-mr project-id mr-iid)
    nil
    :auth 'magit-mr
-   :forge 'gitlab))
+   :forge 'gitlab
+   :callback callback
+   :errorback errorback))
 
-(defun magit-glab/get-mr-of-source-branch (project-id source-branch)
+(cl-defun magit-glab/get-mr-of-source-branch
+    (project-id source-branch &key callback errorback)
   ""
   (car
    (ghub-request
@@ -63,28 +67,36 @@
      "/merge_requests")
     `((source_branch . ,source-branch))
     :auth 'magit-mr
-    :forge 'gitlab)))
+    :forge 'gitlab
+    :callback callback
+    :errorback errorback)))
 
 ;; (magit-glab/get-mr-of-source-branch
 ;;  "tezos/tezos" "arvid@ci-add-cargo-cache")
 
-(defun magit-glab/mr-set-description (project-id mr-iid description)
+(cl-defun magit-glab/mr-set-description
+    (project-id mr-iid description &key callback errorback)
   ""
   (ghub-request
    "PUT"
    (magit-glab/url-mr project-id mr-iid)
    `((description . ,description))
    :auth 'magit-mr
-   :forge 'gitlab))
+   :forge 'gitlab
+   :callback callback
+   :errorback errorback))
 
-(defun magit-glab/mr-set-title (project-id mr-iid title)
+(cl-defun magit-glab/mr-set-title
+    (project-id mr-iid title &key callback errorback)
   ""
   (ghub-request
    "PUT"
    (magit-glab/url-mr project-id mr-iid)
    `((title . ,title))
    :auth 'magit-mr
-   :forge 'gitlab))
+   :forge 'gitlab
+   :callback callback
+   :errorback errorback))
 
 (cl-defun magit-glab/mr-set-assignees
     (project-id mr-iid assignee-ids &key callback errorback)
@@ -115,7 +127,7 @@
 ;;  (lambda (err header status req) (message "Error: %s" err)))
 
 
-(defun magit-glab/get-user (username)
+(cl-defun magit-glab/get-user (username &key callback errorback)
   ""
   (car
    (ghub-request
@@ -123,7 +135,9 @@
     "/users"
     `((username . ,username))
     :auth 'magit-mr
-    :forge 'gitlab)))
+    :forge 'gitlab
+    :callback callback
+    :errorback errorback)))
 
 ;; (magit-glab/get-user "arvidnl")
 
@@ -131,8 +145,8 @@
   "Extract NAMESPACE/PROJECT from git URLs.
 
 URL is a git repository URL in either of these forms:
-- 'git@gitlab.com:NAMESPACE/PROJECT.git'
-- 'https://gitlab.com/NAMESPACE/PROJECT.git'
+- git@gitlab.com:NAMESPACE/PROJECT.git
+- https://gitlab.com/NAMESPACE/PROJECT.git
 
 Returns the 'NAMESPACE/PROJECT' part of the URL."
   (interactive)
@@ -183,19 +197,22 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 (defvar-local magit-glab/project-id nil
   "Project of the merge request under edit in MR description buffers")
 
+;; TODO: should also take a callback
 (defun magit-glab/mr-save-description-buffer ()
   ""
   (interactive)
   (let ((project-id magit-glab/project-id)
         (mr magit-glab/mr))
-    (message "Saving %s!%d: '%s'..."
-             project-id
-             (alist-get 'iid mr)
-             (alist-get 'title mr))
     (magit-glab/mr-set-description
-     project-id (alist-get 'iid mr) (buffer-string))
-    (set-buffer-modified-p nil)
-    (message "Saving %s!%d: '%s'... Done!"
+     project-id (alist-get 'iid mr) (buffer-string)
+     :callback
+     (lambda (_resp _header _status _req)
+       (set-buffer-modified-p nil)
+       (message "Saving %s!%d: '%s'... Done!"
+                project-id
+                (alist-get 'iid mr)
+                (alist-get 'title mr))))
+    (message "Saving %s!%d: '%s'..."
              project-id
              (alist-get 'iid mr)
              (alist-get 'title mr))))
