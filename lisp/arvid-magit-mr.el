@@ -1,3 +1,5 @@
+;;; arvid-magit-mr.el --- Magit plugin for manipulating GitLab merge requests  -*- lexical-binding: t -*-
+
 ;; TODO
 ;; - updating merge requests
 ;;   - updating descriptions
@@ -7,6 +9,8 @@
 ;;     - saving this buffer updates the merge request definition.
 ;;     - closing it C-c C-c updates the merge request definition and closes the buffer
 ;;     - closing it C-c C-k the closes the buffer without updating merge request
+;; - add some kind of cache
+;; - make some operations asynchronous
 
 
 ;; Get current branch (magit-get-current-branch)
@@ -17,6 +21,7 @@
 (require 'magit)
 (require 'glab)
 (require 'names)
+(require 's)
 
 ;; Setting up a token
 ;; 1. set 'git config --global gitlab.user USERNAME'
@@ -40,7 +45,6 @@
 
 (defun magit-glab/get-mr (project-id mr-iid)
   ""
-  (setq url-debug t)
   (ghub-request
    "GET"
    (magit-glab/url-mr project-id mr-iid)
@@ -50,7 +54,6 @@
 
 (defun magit-glab/get-mr-of-source-branch (project-id source-branch)
   ""
-  (setq url-debug t)
   (car
    (ghub-request
     "GET"
@@ -82,6 +85,47 @@
    `((title . ,title))
    :auth 'magit-mr
    :forge 'gitlab))
+
+(cl-defun magit-glab/mr-set-assignees
+    (project-id mr-iid assignee-ids &key callback errorback)
+  ""
+  (ghub-request
+   "PUT"
+   (magit-glab/url-mr project-id mr-iid)
+   `((assignee_ids . ,assignee-ids))
+   :auth 'magit-mr
+   :forge 'gitlab
+   :callback callback
+   :errorback errorback))
+
+;; (magit-glab/mr-set-assignees
+;;  "nomadic-labs/arvid-tezos"
+;;  541
+;;  '(4414596)
+;;  :callback
+;;  (lambda (resp header status req) (message "Success")))
+
+;; (magit-glab/mr-set-assignees
+;;  "nomadic-labs/arvid-tezos"
+;;  9999
+;;  '(4414596)
+;;  :callback
+;;  (lambda (resp header status req) (message "Success"))
+;;  :errorback
+;;  (lambda (err header status req) (message "Error: %s" err)))
+
+
+(defun magit-glab/get-user (username)
+  ""
+  (car
+   (ghub-request
+    "GET"
+    "/users"
+    `((username . ,username))
+    :auth 'magit-mr
+    :forge 'gitlab)))
+
+;; (magit-glab/get-user "arvidnl")
 
 (defun magit-glab/project-of-remote (remote)
   "Extract NAMESPACE/PROJECT from git URLs.
@@ -122,6 +166,11 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                       (magit-get (format "branch.%s.remote" branch))))
                  (unless (string= branch_remote ".")
                    branch_remote))
+               (let ((branch-push-remote
+                      (magit-get
+                       (format "branch.%s.pushRemote" branch))))
+                 (unless (string= branch-push-remote ".")
+                   branch-push-remote))
                (magit-get-current-remote)
                (magit-get "remote.pushDefault")))
     (magit-glab/project-of-remote remote)
@@ -249,6 +298,59 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                project-id
                (alist-get 'iid mr)))))
 
+(defun magit-glab/decode-assignees (assignee-objs)
+  "From assignee objects to list of usernames (strings)"
+  (mapcar
+   (lambda (assignee-obj) (alist-get 'username assignee-obj))
+   assignee-objs))
+
+(defun magit-glab/encode-assignees (assignee-usernames)
+  "From usernames to list of numerical ids"
+  (mapcar
+   (lambda (assignee-username)
+     (if-let* ((assignee-username
+                (string-remove-prefix "@" assignee-username))
+               (user (magit-glab/get-user assignee-username)))
+       (alist-get 'id (magit-glab/get-user assignee-username))
+       (error
+        "Could not find id associated to username '%s' -- do they exist?"
+        assignee-username)))
+   assignee-usernames))
+
+(defun magit-glab/mr-edit-assignees (branch)
+  ""
+  (interactive (list (magit-glab/read-mr)))
+  (let* ((project-id (magit-glab/infer-project-id branch))
+         (mr (magit-glab/get-mr-of-source-branch project-id branch)))
+    (if (not mr)
+        (error
+         "Couldn't find MR for branch '%s' in project '%s'"
+         branch
+         project-id)
+      (let ((assignees
+             (magit-glab/decode-assignees (alist-get 'assignees mr))))
+        (when-let
+            ((new-assignees
+              (read-string
+               (format
+                "Set assignees of %s!%d (space-separated GitLab usernames): "
+                project-id (alist-get 'iid mr))
+               (s-join " " assignees))))
+          (magit-glab/mr-set-assignees
+           project-id
+           (alist-get 'iid mr)
+           (magit-glab/encode-assignees (s-split " " new-assignees))
+           :callback
+           (lambda (_resp _header _status _req)
+             (message "Updated assignees of %s!%d."
+                      project-id (alist-get 'iid mr)))
+           :errorback
+           (lambda (err _header _status _req)
+             (message
+              "An error occurred when updating the assignees of %s!%d: %s"
+              project-id (alist-get 'iid mr) err)))
+          (message "Settings assignees..."))))))
+
 (defun magit-glab/mr-browse (branch)
   ""
   (interactive (list (magit-glab/read-mr)))
@@ -271,7 +373,8 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
        (propertize branch 'face 'magit-branch-local))))
   ("d" "description" magit-glab/mr-edit-description)
   ("t" "title" magit-glab/mr-edit-title)
-  ("v" "view on forge" magit-glab/mr-browse)])
+  ("v" "view on forge" magit-glab/mr-browse)
+  ("a" "edit assignee(s)" magit-glab/mr-edit-assignees)])
 
 
 ;; Update magit-mode-map such that pressing @ opens the magit-glab/mr transient
