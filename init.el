@@ -62,7 +62,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Misc. modes
-(load "server") ; https://stackoverflow.com/questions/5570451/how-to-start-emacs-server-only-if-it-is-not-started
+(require 'server) ; jjhttps://stackoverflow.com/questions/5570451/how-to-start-emacs-server-only-if-it-is-not-started
 (unless (server-running-p)
   (server-start))
 (require 'arvid-org-mode)
@@ -72,6 +72,7 @@
 (require 'arvid-gitlab-ci)
 (require 'arvid-projectile)
 (require 'arvid-vertico)
+(require 'arvid-magit-glab)
 (require 'arvid-magit)
 (use-package browse-at-remote :commands (browse-at-remote) :ensure t)
 (require 'arvid-smerge)

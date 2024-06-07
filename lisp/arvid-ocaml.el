@@ -39,6 +39,62 @@
      0)
     (compile "dune runtest . --auto-promote")))
 
+;; AJ: Override `tuareg--fill-comment' such that increases the
+;; indentation through `fill-prefix' inside abbreviated list items by
+;; two.
+(defun tuareg--fill-comment ()
+  "Assumes the point is inside a comment and justify it.
+This function moves the point."
+  (let* ((com-start (nth 8 (syntax-ppss)))
+         content-start
+         com-end
+         in-doc-comment
+         par-start
+         par-end)
+    (save-excursion
+      (goto-char com-start)
+      (setq content-start
+            (and (looking-at comment-start-skip) (match-end 0)))
+      (setq in-doc-comment (looking-at-p (rx "(**" (not (in "*")))))
+      (forward-comment 1)
+      (setq com-end (point)))
+
+    ;; In doc comments, let @tags start a paragraph.
+    (let ((paragraph-start
+           (if in-doc-comment
+               (concat
+                paragraph-start "\\|"
+                (rx (* (in " \t")) "@" (+ (in "a-z")) symbol-end))
+             paragraph-start)))
+      (save-restriction
+        (narrow-to-region content-start com-end)
+        (save-excursion
+          (skip-chars-forward " \t")
+          (backward-paragraph)
+          (skip-chars-forward " \t\n")
+          (setq par-start (point))
+          (forward-paragraph)
+          (setq par-end (point))))
+
+      ;; Set `fill-prefix' to preserve the indentation of the start of the
+      ;; paragraph, assuming that is what the user wants.
+      (let ((fill-prefix
+             (save-excursion
+               (goto-char par-start)
+               (let ((col
+                      (if (or (and in-doc-comment
+                                   (looking-at-p
+                                    (rx
+                                     "@" (+ (in "a-z")) symbol-end)))
+                              ;; AJ: Here, also indent two spaces in
+                              ;; abbreviated lists.
+                              (looking-at-p "- "))
+                          ;; Indent two spaces under @tag.
+                          (+ 2 (current-column))
+                        (current-column))))
+                 (make-string col ?\s)))))
+        (fill-region-as-paragraph par-start par-end)))))
+
 (defun aj/tuareg-mode-hook ()
   (aj/define-keys
    tuareg-mode-map
@@ -56,6 +112,11 @@
   ;; (setq-local display-fill-column-indicator-column 80)
   (setq-local comment-style "indent")
   (setq-local comment-multi-line t)
+
+  ;; Makes tuareg-mode's fill-function recognize list items as the
+  ;; start of paragraph, such that fill-paragraph behaves more gently.
+  ;; (setq-local paragraph-start (concat paragraph-start "^[ \t]*-\\|"))
+  ;; (setq-local paragraph-separate paragraph-start)
 
   ;; Highlight lines that depass 80 columns
   (setq-local whitespace-line-column 80)

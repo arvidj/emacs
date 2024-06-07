@@ -493,4 +493,10 @@ use. If the input is non-empty, it is inserted at point."
   (comment-or-uncomment-current-line-or-region)
   (next-line))
 
+(defun aj/toggle-window-dedication ()
+  "Toggles window dedication in the selected window."
+  (interactive)
+  (set-window-dedicated-p
+   (selected-window) (not (window-dedicated-p (selected-window)))))
+
 (provide 'arvid-lib)

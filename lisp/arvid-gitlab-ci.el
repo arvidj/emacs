@@ -153,7 +153,7 @@
 (use-package
  gitlab-ci-mode
  :ensure t
- :config
+ :config (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
  (add-to-list
   'auto-mode-alist '("\\.gitlab/.*.yml\\'" . gitlab-ci-mode))
  (add-to-list 'gitlab-ci-mode-hook 'arvid-gitlab-ci-mode-hook))

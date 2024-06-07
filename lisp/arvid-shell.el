@@ -10,19 +10,17 @@ Used to emulate terminals C-l with a two-line prompt."
   (shell-dirtrack-mode -1)
   (dirtrack-mode -1)
   ;; (company-mode 0)
-  (add-hook 'comint-output-filter-functions #'comint-osc-process-output)
+  (add-hook
+   'comint-output-filter-functions #'comint-osc-process-output)
   ;; (setq comint-output-filter-functions '(comint-osc-process-output))
 
   ;; (aj/define-keys
-;;    shell-mode-map
-;;   `(("C-l" aj/recenter-top1) ("C-c C-o" browse-url-at-point)))
-
+  ;;    shell-mode-map
+  ;;   `(("C-l" aj/recenter-top1) ("C-c C-o" browse-url-at-point)))
   )
 
 (add-hook 'shell-mode-hook #'aj/zsh-shell-mode-setup)
 
-(setq explicit-shell-file-name "/bin/bash")
+(setq explicit-shell-file-name "/bin/zsh")
 
 (provide 'arvid-shell)
-												
-			

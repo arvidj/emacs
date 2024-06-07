@@ -25,6 +25,16 @@
      (let ((default-directory ,dir))
        (call-interactively 'find-file))))
 
+(defun aj/next-window ()
+  ""
+  (interactive)
+  (other-window 1))
+
+(defun aj/previous-window ()
+  ""
+  (interactive)
+  (other-window -1))
+
 (aj/global-set-keys
  `(("C-c d" aj/duplicate-current-line-or-region)
 
@@ -208,6 +218,7 @@
 
    ("C-c C-/" aj/file-browser-here)
    ("C-c C-t" aj/terminal-here)
+   ("C-c C-f" ffap)
 
    ;; ("C-f" fr-wordreference-word-at-point)
 
@@ -237,8 +248,8 @@
    ("C-y" aj/yank-or-pop)
    ("C-x r C-y" aj/insert-rectangle-push-lines)
 
-   ("C-M-j" next-window-any-frame)
-   ("C-M-k" previous-window-any-frame)))
+   ("C-M-j" aj/next-window)
+   ("C-M-k" aj/previous-window)))
 
 (aj/define-keys
  minibuffer-local-map `(("M-g" minibuffer-keyboard-quit)))

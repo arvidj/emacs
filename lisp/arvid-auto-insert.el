@@ -1,20 +1,21 @@
-(defun aj/mit-spdx-header ()
-  ""
-(format
-"(*****************************************************************************)
+(defun mit-spdx-hdr ()
+  "docstring"
+  (interactive)
+  (let ((year (calendar-extract-year (calendar-current-date))))
+    (format
+     "(*****************************************************************************)
 (*                                                                           *)
 (* SPDX-License-Identifier: MIT                                              *)
-(* Copyright (c) %s Nomadic Labs. <contact@nomadic-labs.com>               *)
+(* Copyright (c) %d Nomadic Labs. <contact@nomadic-labs.com>               *)
 (*                                                                           *)
 (*****************************************************************************)
+"
+     year)))
 
-" (format-time-string "%Y")))
-
-
-
-(use-package autoinsert
-  :init
-  (auto-insert-mode t)
-  (setq auto-insert-alist '((tuareg-mode . (lambda () (insert (aj/mit-spdx-header)))))))
+(use-package
+ autoinsert
+ :init (auto-insert-mode t)
+ (setq auto-insert-alist
+       '((tuareg-mode . (lambda () (insert (mit-spdx-hdr)))))))
 
 (provide 'arvid-auto-insert)

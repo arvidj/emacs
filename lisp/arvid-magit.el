@@ -47,6 +47,18 @@
   (display-fill-column-indicator-mode))
 
 
+;; It's convenient to define some shell alias that are available in the '!' (`magit-run`) transient in `magit-status`. Here we define to functions that are pertinent in `tezos/tezos` repos:
+
+(defun aj/run-ciao ()
+  ""
+  (interactive)
+  (magit-shell-command-topdir "make -C ci"))
+
+(defun aj/run-manifest ()
+  ""
+  (interactive)
+  (magit-shell-command-topdir "make -C manifest"))
+
 (use-package
  magit
  :ensure t
@@ -85,18 +97,51 @@
   '("u" "assign to marge" aj/magit-assign-marge))
 
  (transient-append-suffix
-  'magit-push "-u"
-  '(1 "=c" "Create merge request" "--push-option=merge_request.create"))
+  'magit-run "k" '("v" "view MR" aj/magit-glab-view-mr))
 
  (transient-append-suffix
-   'magit-push "-u"
-   '(1 "=s" "Set [ci.skip]" "--push-option=ci.skip"))
+  'magit-run "k"
+  '("e" "edit MR description" aj/magit-glab--edit-description))
+
+
+ (transient-append-suffix
+  'magit-run "S" '("c" "run CIAO" aj/run-ciao))
+
+ (transient-append-suffix
+  'magit-run "c" '("m" "run manifest" aj/run-manifest))
+
+ ;; For more details on GitLab push options, see
+ ;; https://docs.gitlab.com/ee/user/project/push_options.html
+ (transient-append-suffix
+  'magit-push "-u"
+  '(1
+    "=c"
+    "Create merge request"
+    "--push-option=merge_request.create"))
+
+ (transient-append-suffix
+  'magit-push "-u"
+  '(1 "=s" "Set [ci.skip]" "--push-option=ci.skip"))
+
+ ;; This doesn't make any sense because the label 'ci--docker' doesn't
+ ;; have any meaning right now.
+ ;;
+ ;; (transient-append-suffix
+ ;;  'magit-push "-u"
+ ;;  '(1
+ ;;    "=d"
+ ;;    "Add label [ci--docker]"
+ ;;    "--push-option=merge_request.label=ci--docker"))
 
  ;; Rebase transient
  (transient-append-suffix
   'magit-rebase "u"
   '("M" "latest merge-commit" aj/magit-rebase-merge-interactive))
 
- )
+ ;; Show color in magit-process (convenient for pre-commit hook)
+ ;; https://www.reddit.com/r/emacs/comments/15gjjs4/magit_process_buffer_shows_ansi_codes_instead_of/
+ (setq magit-process-finish-apply-ansi-colors t))
+
+(use-package forge :ensure t :after magit)
 
 (provide 'arvid-magit)

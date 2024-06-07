@@ -21,10 +21,10 @@
 
 ;; Doesn't work.
 (defun aj/org-mode-hook ()
-  (flyspell-mode)
-  ;; for speed
-  (when (< (buffer-size) 10000)
-    (flyspell-buffer))
+  ;; (flyspell-mode)
+  ;; ;; for speed
+  ;; (when (< (buffer-size) 10000)
+  ;;   (flyspell-buffer))
   (auto-fill-mode)
 
   ;; Turn off company mode in org-mode buffer.

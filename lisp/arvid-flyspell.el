@@ -13,8 +13,9 @@
   (interactive)
   (flyspell-mode)
   ;; for speed
-  (when (< (buffer-size) 10000)
-    (flyspell-buffer)))
+  (let ((flyspell-issue-message-flag nil))
+    (when (< (buffer-size) 10000)
+      (flyspell-buffer))))
 
 (use-package
  flyspell
@@ -23,7 +24,7 @@
  (add-hook 'flyspell-mode-hook 'aj/flyspell-mode-hook)
 
  ;; for different modes:
- (add-hook 'org-mode-hook 'aj/run-flyspell)
+ (add-hook 'org-mode-hook 'flyspell-mode)
  (add-hook 'rst-mode-hook 'aj/run-flyspell)
  (add-hook 'markdown-mode-hook 'aj/run-flyspell))
 

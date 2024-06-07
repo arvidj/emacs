@@ -12,6 +12,7 @@
         comment-or-uncomment-current-line-or-region
         cycle-spacing
         delete-pair
+        downcase-region
         drag-stuff-down
         fill-paragraph
         forward-sexp
@@ -29,6 +30,7 @@
         org-todo
         replace-string
         split-line
+        transpose-words
         upcase-region
         wdired--self-insert
         yaml-electric-backspace
@@ -38,5 +40,8 @@
 (setq mc/cmds-to-run-once
       '(
         iedit-switch-to-mc-mode
+        lsp-signature-toggle-full-docs
+        markdown-cycle
         markdown-outdent-or-delete
+        mc--insert-number-and-increase
         ))
