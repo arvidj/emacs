@@ -72,7 +72,7 @@
 (require 'arvid-gitlab-ci)
 (require 'arvid-projectile)
 (require 'arvid-vertico)
-(require 'arvid-magit-glab)
+(require 'arvid-magit-mr)
 (require 'arvid-magit)
 (use-package browse-at-remote :commands (browse-at-remote) :ensure t)
 (require 'arvid-smerge)
