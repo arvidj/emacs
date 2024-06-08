@@ -39,3 +39,4 @@ org-clock-save.el
 /.lsp-session-v1
 /chatgpt/
 /.cache/
+/projects
