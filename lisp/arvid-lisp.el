@@ -7,31 +7,31 @@
 
 ;; TODO: hack since this package only works on emacs 29.1 and my
 ;; laptop runs an older version.
-(if (version<= "29.1" emacs-version)
-    (use-package
-     elisp-autofmt
-     :ensure t
-     :commands (elisp-autofmt-mode elisp-autofmt-buffer)
-     :hook (emacs-lisp-mode . elisp-autofmt-mode)
-     :config
-     (defun aj/elisp-autofmt-allow ()
-       "Returns true if an .elisp-autofmt file exists and not custom file"
-       (and (elisp-autofmt-check-elisp-autofmt-exists)
-            (not
-             (string=
-              buffer-file-name
-              "/home/arvid/.emacs.d/lisp/arvid-emacs-custom.el"))))
+;; (if (version<= "29.1" emacs-version)
+;;     (use-package
+;;      elisp-autofmt
+;;      :ensure t
+;;      :commands (elisp-autofmt-mode elisp-autofmt-buffer)
+;;      :hook (emacs-lisp-mode . elisp-autofmt-mode)
+;;      :config
+;;      (defun aj/elisp-autofmt-allow ()
+;;        "Returns true if an .elisp-autofmt file exists and not custom file"
+;;        (and (elisp-autofmt-check-elisp-autofmt-exists)
+;;             (not
+;;              (string=
+;;               buffer-file-name
+;;               "/home/arvid/.emacs.d/lisp/arvid-emacs-custom.el"))))
 
-     (setq elisp-autofmt-on-save-p 'aj/elisp-autofmt-allow)
+;;      (setq elisp-autofmt-on-save-p 'aj/elisp-autofmt-allow)
 
-     (setq
-      elisp-autofmt-python-bin
-      (if (executable-find "python3")
-          "python3"
-        (if (executable-find "python")
-            "python"
-          (message
-           "[arvid-list.el] found no python or python3 binary in path, cannot enable [elisp-autofmt]")
-          nil)))))
+;;      (setq
+;;       elisp-autofmt-python-bin
+;;       (if (executable-find "python3")
+;;           "python3"
+;;         (if (executable-find "python")
+;;             "python"
+;;           (message
+;;            "[arvid-list.el] found no python or python3 binary in path, cannot enable [elisp-autofmt]")
+;;           nil)))))
 
 (provide 'arvid-lisp)
