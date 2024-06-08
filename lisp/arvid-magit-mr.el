@@ -17,7 +17,6 @@
 ;; Get current MR
 
 
-;; (require 'ghub)
 (require 'magit)
 (require 'glab)
 (require 'names)
@@ -43,33 +42,141 @@
 
 ;; (magit-glab/url-mr "tezos/tezos" 12345)
 
-(cl-defun magit-glab/get-mr
-    (project-id mr-iid &key callback errorback)
+(defvar magit-glab/GET-cache-file "/tmp/.magit-glab-cache.el"
+  "Path to magit-glab's cache")
+
+(defvar magit-glab/GET-cache (make-hash-table :test 'equal)
+  "Hash table for storing memoized results.")
+
+(defun magit-glab/hash-table-to-alist (hash-table)
+  "Convert HASH-TABLE to a alist."
+  (let ((alist nil))
+    (maphash
+     (lambda (k v) (setq alist (cons (cons k v) alist))) hash-table)
+    alist))
+
+(defun magit-glab/save-cache ()
+  "Save the memoized computations hash table to disk."
+  (with-temp-file magit-glab/GET-cache-file
+    (prin1 (magit-glab/hash-table-to-alist magit-glab/GET-cache)
+           (current-buffer))))
+
+(defun magit-glab/load-cache ()
+  "Load the memoized computations hash table from disk."
+  (let ((file-content
+         (when (file-exists-p magit-glab/GET-cache-file)
+           (with-temp-buffer
+             (insert-file-contents magit-glab/GET-cache-file)
+             (read (current-buffer))))))
+    (when file-content
+      (clrhash magit-glab/GET-cache) ; Clear current hash table
+      (cl-loop
+       for
+       (key . value)
+       in
+       file-content
+       do
+       (puthash key value magit-glab/GET-cache)))))
+
+(cl-defun magit-glab/get (url params &key no-cache callback errorback)
   ""
-  (ghub-request
-   "GET"
-   (magit-glab/url-mr project-id mr-iid)
-   nil
-   :auth 'magit-mr
-   :forge 'gitlab
+  (if no-cache
+      (ghub-request
+       "GET"
+       url
+       params
+       :auth 'magit-mr
+       :forge 'gitlab
+       :callback callback
+       :errorback errorback)
+    (if-let (cached-value
+             (gethash (list url params) magit-glab/GET-cache))
+      ;; Value found in cache
+      (if callback
+          (funcall callback cached-value)
+        cached-value)
+      ;; No value in cache
+      (if (or callback errorback)
+          ;; If asynchronous
+          (ghub-request
+           "GET" url params
+           :auth 'magit-mr
+           :forge 'gitlab
+           :callback
+           (lambda (resp _header _status _req)
+             (puthash (list url params) resp magit-glab/GET-cache)
+             (funcall callback resp))
+           :errorback errorback)
+        ;; If synchronous
+        (if-let (value
+                 (ghub-request
+                  "GET"
+                  url
+                  params
+                  :auth 'magit-mr
+                  :forge 'gitlab))
+          (puthash (list url params) value magit-glab/GET-cache))))))
+
+(cl-defun magit-glab/get1
+    (url params &key no-cache callback errorback)
+  (let ((resp
+         (magit-glab/get
+          url params
+          :callback
+          (when callback
+            (lambda (resp) (funcall callback (car resp))))
+          :errorback errorback
+          :no-cache no-cache)))
+    (when (not (or callback errorback))
+      (car resp))))
+
+(cl-defun magit-glab/get-user (username &key callback errorback)
+  ""
+  (magit-glab/get1
+   "/users"
+   `((username . ,username))
    :callback callback
    :errorback errorback))
+
+;; (magit-glab/get-user
+;;  "onurb"
+;;  :callback
+;;  (lambda (resp)
+;;    (print resp)
+;;    (message "User id of %s is %d"
+;;             (alist-get 'username resp)
+;;             (alist-get 'id resp))))
+
+;; (let ((user (magit-glab/get-user "onurb")))
+;;   (print user)
+;;   (message "User id of %s is %d"
+;;            (alist-get 'username user)
+;;            (alist-get 'id user)))
+
+
+(magit-glab/hash-table-to-alist magit-glab/GET-cache)
+
+(cl-defun magit-glab/get-mr
+    (project-id mr-iid &key no-cache callback errorback)
+  ""
+  (magit-glab/get
+   (magit-glab/url-mr project-id mr-iid)
+   nil
+   :callback callback
+   :errorback errorback
+   :no-cache no-cache))
 
 (cl-defun magit-glab/get-mr-of-source-branch
     (project-id source-branch &key callback errorback)
   ""
-  (car
-   (ghub-request
-    "GET"
-    (concat
-     "/projects/"
-     (magit-glab/url-encode-project-id project-id)
-     "/merge_requests")
-    `((source_branch . ,source-branch))
-    :auth 'magit-mr
-    :forge 'gitlab
-    :callback callback
-    :errorback errorback)))
+  (magit-glab/get1
+   (concat
+    "/projects/"
+    (magit-glab/url-encode-project-id project-id)
+    "/merge_requests")
+   `((source_branch . ,source-branch))
+   :callback callback
+   :errorback errorback))
 
 ;; (magit-glab/get-mr-of-source-branch
 ;;  "tezos/tezos" "arvid@ci-add-cargo-cache")
@@ -126,18 +233,6 @@
 ;;  :errorback
 ;;  (lambda (err header status req) (message "Error: %s" err)))
 
-
-(cl-defun magit-glab/get-user (username &key callback errorback)
-  ""
-  (car
-   (ghub-request
-    "GET"
-    "/users"
-    `((username . ,username))
-    :auth 'magit-mr
-    :forge 'gitlab
-    :callback callback
-    :errorback errorback)))
 
 ;; (magit-glab/get-user "arvidnl")
 
@@ -292,7 +387,11 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
   ""
   (interactive (list (magit-glab/read-mr)))
   (let* ((project-id (magit-glab/infer-project-id branch))
-         (mr (magit-glab/get-mr-of-source-branch project-id branch)))
+         (mr
+          (magit-glab/get-mr-of-source-branch
+           project-id
+           branch
+           :no-cache t)))
     (message "Edit description of %s!%d: '%s'"
              project-id
              (alist-get 'iid mr)
@@ -303,7 +402,11 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
   ""
   (interactive (list (magit-glab/read-mr)))
   (let* ((project-id (magit-glab/infer-project-id branch))
-         (mr (magit-glab/get-mr-of-source-branch project-id branch)))
+         (mr
+          (magit-glab/get-mr-of-source-branch
+           project-id
+           branch
+           :no-cache t)))
     (when-let (new-title
                (read-string (format "Edit title of %s!%d: "
                                     project-id
@@ -334,11 +437,28 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
         assignee-username)))
    assignee-usernames))
 
+;; (defvar my-valid-values
+;;   '(("Arvid Jakobsson (@arvidnl)" . "arvidnl")
+;;     ("Pietro (@abate)" . "abate"))
+;;   "List of valid fruit names with descriptions.")
+;; (mapcar
+;;  (lambda (selection) (or (cdr (assoc selection my-valid-values)) selection))
+;;  (completing-read-multiple
+;;   "Test: "
+;;   my-valid-values
+;;   (lambda (foo) nil)
+;;   ))
+
+
 (defun magit-glab/mr-edit-assignees (branch)
   ""
   (interactive (list (magit-glab/read-mr)))
   (let* ((project-id (magit-glab/infer-project-id branch))
-         (mr (magit-glab/get-mr-of-source-branch project-id branch)))
+         (mr
+          (magit-glab/get-mr-of-source-branch
+           project-id
+           branch
+           :no-cache t)))
     (if (not mr)
         (error
          "Couldn't find MR for branch '%s' in project '%s'"
