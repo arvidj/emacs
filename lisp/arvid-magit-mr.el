@@ -167,7 +167,7 @@
    :no-cache no-cache))
 
 (cl-defun magit-glab/get-mr-of-source-branch
-    (project-id source-branch &key callback errorback)
+    (project-id source-branch &key no-cache callback errorback)
   ""
   (magit-glab/get1
    (concat
@@ -176,7 +176,8 @@
     "/merge_requests")
    `((source_branch . ,source-branch))
    :callback callback
-   :errorback errorback))
+   :errorback errorback
+   :no-cache no-cache))
 
 ;; (magit-glab/get-mr-of-source-branch
 ;;  "tezos/tezos" "arvid@ci-add-cargo-cache")
@@ -424,31 +425,24 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
    (lambda (assignee-obj) (alist-get 'username assignee-obj))
    assignee-objs))
 
-(defun magit-glab/encode-assignees (assignee-usernames)
-  "From usernames to list of numerical ids"
-  (mapcar
-   (lambda (assignee-username)
-     (if-let* ((assignee-username
-                (string-remove-prefix "@" assignee-username))
-               (user (magit-glab/get-user assignee-username)))
-       (alist-get 'id (magit-glab/get-user assignee-username))
-       (error
-        "Could not find id associated to username '%s' -- do they exist?"
-        assignee-username)))
-   assignee-usernames))
+(defun magit-glab/encode-assignee (assignee-id-or-username)
+  "From username to list of numerical ids"
+  (if (numberp assignee-id-or-username)
+      assignee-id-or-username
+    (if-let* ((assignee-username
+               (string-remove-prefix "@" assignee-id-or-username))
+              (user (magit-glab/get-user assignee-username)))
+        (alist-get 'id (magit-glab/get-user assignee-username))
+      (error
+       "Could not find id associated to username '%s' -- do they exist?"
+       assignee-username))))
 
-;; (defvar my-valid-values
-;;   '(("Arvid Jakobsson (@arvidnl)" . "arvidnl")
-;;     ("Pietro (@abate)" . "abate"))
-;;   "List of valid fruit names with descriptions.")
-;; (mapcar
-;;  (lambda (selection) (or (cdr (assoc selection my-valid-values)) selection))
-;;  (completing-read-multiple
-;;   "Test: "
-;;   my-valid-values
-;;   (lambda (foo) nil)
-;;   ))
-
+(defun magit-glab/format-user-as-candidate (user)
+	""
+    (let ((username (alist-get 'username user))
+          (name (alist-get 'name user))
+          (id (alist-get 'id user)))
+      (cons (format "%s (@%s)" name username) id)))
 
 (defun magit-glab/mr-edit-assignees (branch)
   ""
@@ -464,29 +458,50 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
          "Couldn't find MR for branch '%s' in project '%s'"
          branch
          project-id)
-      (let ((assignees
-             (magit-glab/decode-assignees (alist-get 'assignees mr))))
-        (when-let
-            ((new-assignees
-              (read-string
-               (format
-                "Set assignees of %s!%d (space-separated GitLab usernames): "
-                project-id (alist-get 'iid mr))
-               (s-join " " assignees))))
-          (magit-glab/mr-set-assignees
-           project-id
-           (alist-get 'iid mr)
-           (magit-glab/encode-assignees (s-split " " new-assignees))
-           :callback
-           (lambda (_resp _header _status _req)
-             (message "Updated assignees of %s!%d."
-                      project-id (alist-get 'iid mr)))
-           :errorback
-           (lambda (err _header _status _req)
-             (message
-              "An error occurred when updating the assignees of %s!%d: %s"
-              project-id (alist-get 'iid mr) err)))
-          (message "Settings assignees..."))))))
+      (let* ((current-assignees (mapcar #'magit-glab/format-user-as-candidate (alist-get 'assignees mr)))
+             (candidate-assignees
+              (append current-assignees
+                      (mapcar #'magit-glab/format-user-as-candidate
+                              (cons (alist-get 'author mr)
+                                    (alist-get 'reviewers mr)))))
+             (new-assignees
+              (seq-uniq
+               (completing-read-multiple
+                ;; prompt
+                (format
+                 "Set assignees of %s!%d (space-separated GitLab usernames): "
+                 project-id (alist-get 'iid mr))
+                ;; table
+                candidate-assignees
+                nil ;; predicate
+                nil ;; require-match
+                ;; initial-input
+                (if current-assignees
+                    (concat (s-join ", " (mapcar #'car current-assignees)) ", ")
+                  nil))))
+             )
+        (magit-glab/mr-set-assignees
+         project-id
+         (alist-get 'iid mr)
+         (mapcar
+          #'magit-glab/encode-assignee
+          (mapcar
+           (lambda (selection) (or (cdr (assoc selection candidate-assignees)) selection))
+           new-assignees))
+         :callback
+         (lambda (_resp _header _status _req)
+           (if new-assignees
+               (message (format "Updated assignees of %s!%d to: %s"
+                                project-id (alist-get 'iid mr)
+                                (s-join ", " new-assignees)))
+             (message (format "Removed all assignees of %s!%d to."
+                              project-id (alist-get 'iid mr)))))
+         :errorback
+         (lambda (err _header _status _req)
+           (message
+            "An error occurred when updating the assignees of %s!%d: %s"
+            project-id (alist-get 'iid mr) err)))
+        (message "Settings assignees...")))))
 
 (defun magit-glab/mr-browse (branch)
   ""
