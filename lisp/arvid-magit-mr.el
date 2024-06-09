@@ -501,7 +501,84 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
            (message
             "An error occurred when updating the assignees of %s!%d: %s"
             project-id (alist-get 'iid mr) err)))
-        (message "Settings assignees...")))))
+        (message "Setting assignees...")))))
+
+(defun magit-glab/mr-assign-to-me (branch)
+  ""
+  (interactive (list (magit-glab/read-mr)))
+  (let* ((project-id (magit-glab/infer-project-id branch))
+         (mr
+          (magit-glab/get-mr-of-source-branch
+           project-id
+           branch
+           :no-cache t))
+         (my-username (concat "@" (ghub--username nil 'gitlab))))
+    (magit-glab/mr-set-assignees
+     project-id
+     (alist-get 'iid mr)
+     (magit-glab/encode-assignee my-username)
+     :callback
+     (lambda (_resp _header _status _req)
+       (message (format "Updated assignees of %s!%d to: %s"
+                        project-id (alist-get 'iid mr)
+                        my-username)))
+     :errorback
+     (lambda (err _header _status _req)
+       (message
+        "An error occurred when updating the assignees of %s!%d: %s"
+        project-id (alist-get 'iid mr) err)))
+    (message "Setting assignees to %s..." my-username)))
+
+
+(defun magit-glab/mr-assign-to-author (branch)
+  ""
+  (interactive (list (magit-glab/read-mr)))
+  (let* ((project-id (magit-glab/infer-project-id branch))
+         (mr
+          (magit-glab/get-mr-of-source-branch
+           project-id
+           branch
+           :no-cache t))
+         (author-username (concat "@" (alist-get 'username (alist-get 'author mr))))
+         (author-id (alist-get 'id (alist-get 'author mr))))
+    (magit-glab/mr-set-assignees
+     project-id
+     (alist-get 'iid mr)
+     (list author-id)
+     :callback
+     (lambda (_resp _header _status _req)
+       (message (format "Updated assignees of %s!%d to: %s"
+                        project-id (alist-get 'iid mr)
+                        author-username)))
+     :errorback
+     (lambda (err _header _status _req)
+       (message
+        "An error occurred when updating the assignees of %s!%d: %s"
+        project-id (alist-get 'iid mr) err)))
+    (message "Setting assignees to %s..." author-username)))
+
+(defun magit-glab/mr-assign-to-reviewers (branch)
+  ""
+  (interactive (list (magit-glab/read-mr)))
+  (let* ((project-id (magit-glab/infer-project-id branch))
+         (mr
+          (magit-glab/get-mr-of-source-branch
+           project-id
+           branch
+           :no-cache t)))
+    (error "TODO")
+    ))
+
+(defun magit-glab/mr-assign-to-favorite (branch)
+  ""
+  (interactive (list (magit-glab/read-mr)))
+  (let* ((project-id (magit-glab/infer-project-id branch))
+         (mr
+          (magit-glab/get-mr-of-source-branch
+           project-id
+           branch
+           :no-cache t)))
+    (error "TODO")))
 
 (defun magit-glab/mr-browse (branch)
   ""
@@ -510,6 +587,11 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
          (mr (magit-glab/get-mr-of-source-branch project-id branch)))
     (browse-url (alist-get 'web_url mr))))
 
+(defun magit-glab/todo () 
+	""
+  (interactive)
+  (error "TODO"))
+                 
 (transient-define-prefix
  magit-glab/mr () "Act on a GitLab merge request."
  [:if
@@ -519,15 +601,30 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
     (let ((branch
            (or (magit-branch-at-point) (magit-get-current-branch))))
       (concat
-       (propertize "Update GitLab merge request for "
+       (propertize "Act on GitLab merge request for "
                    'face
                    'transient-heading)
-       (propertize branch 'face 'magit-branch-local))))
-  ("d" "description" magit-glab/mr-edit-description)
-  ("t" "title" magit-glab/mr-edit-title)
-  ("v" "view on forge" magit-glab/mr-browse)
-  ("a" "edit assignee(s)" magit-glab/mr-edit-assignees)])
-
+       (propertize (alist-get 'iid branch) 'face 'magit-branch-local)
+       ":\n"
+       )))
+  ["Edit"
+   ("t" "title" magit-glab/mr-edit-title)
+   ("d" "description" magit-glab/mr-edit-description)
+   ("m" "milestone" magit-glab/todo)
+   ("l" "labels" magit-glab/todo)
+   ]
+  ["Assignees"
+   ("a a" "edit assignees" magit-glab/mr-edit-assignees)
+   ("a m" "assign to me" magit-glab/mr-assign-to-me)
+   ("a A" "assign to author" magit-glab/mr-assign-to-author)
+   ("a r" "assign to reviewers" magit-glab/mr-assign-to-me)
+   ("a f" "assign to favorite" magit-glab/mr-assign-to-favorite)]
+  ["Reviewers"
+   ("r r" "edit reviewers" magit-glab/todo)]
+  ["Actions"
+   ("v" "view on forge" magit-glab/mr-browse)
+   ]])
+ 
 
 ;; Update magit-mode-map such that pressing @ opens the magit-glab/mr transient
 
