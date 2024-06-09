@@ -97,14 +97,6 @@
   '("u" "assign to marge" aj/magit-assign-marge))
 
  (transient-append-suffix
-  'magit-run "k" '("v" "view MR" aj/magit-glab-view-mr))
-
- (transient-append-suffix
-  'magit-run "k"
-  '("e" "edit MR description" aj/magit-glab--edit-description))
-
-
- (transient-append-suffix
   'magit-run "S" '("c" "run CIAO" aj/run-ciao))
 
  (transient-append-suffix

@@ -604,7 +604,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
        (propertize "Act on GitLab merge request for "
                    'face
                    'transient-heading)
-       (propertize (alist-get 'iid branch) 'face 'magit-branch-local)
+       (propertize branch 'face 'magit-branch-local)
        ":\n"
        )))
   ["Edit"
