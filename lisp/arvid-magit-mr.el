@@ -494,7 +494,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                (message (format "Updated assignees of %s!%d to: %s"
                                 project-id (alist-get 'iid mr)
                                 (s-join ", " new-assignees)))
-             (message (format "Removed all assignees of %s!%d to."
+             (message (format "Removed all assignees of %s!%d."
                               project-id (alist-get 'iid mr)))))
          :errorback
          (lambda (err _header _status _req)
@@ -587,17 +587,6 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
           project-id (alist-get 'iid mr) err))))
     (message "Setting assignees...")))
 
-(defun magit-glab/mr-assign-to-favorite (branch)
-  ""
-  (interactive (list (magit-glab/read-mr)))
-  (let* ((project-id (magit-glab/infer-project-id branch))
-         (mr
-          (magit-glab/get-mr-of-source-branch
-           project-id
-           branch
-           :no-cache t)))
-    (error "TODO")))
-
 (defun magit-glab/mr-browse (branch)
   ""
   (interactive (list (magit-glab/read-mr)))
@@ -610,6 +599,110 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
   (interactive)
   (error "TODO"))
                  
+(defun test-function (&optional args)
+  (interactive
+   (list (transient-args 'magit-glab/mr-assign-to-favorite)))
+  (message "args: %s" args))
+
+(defcustom
+  magit-glab/favorite-users
+  nil
+  "A list of GitLab users favorite users.
+
+Should be a list of values, where each value is on the list
+PREFIX DESCRIPTION GITLAB_USERNAME.
+
+For the prefix, use lower-case letters. Each prefix should be unique. Example:
+
+'((\"i\" \"Myself\" \"@arvidnl\")
+  (\"j d\" \"John Doe\" \"@...\"))
+")
+
+(defun magit-glab/mr-assign-to-favorite--set ()
+  ""
+  (interactive)
+  (if-let (assignees (transient-args 'magit-glab/mr-assign-to-favorite))
+      (let* ((branch (magit-glab/read-mr))
+             (project-id (magit-glab/infer-project-id branch))
+             (mr
+              (magit-glab/get-mr-of-source-branch
+               project-id
+               branch
+               :no-cache t)))
+        (magit-glab/mr-set-assignees
+         project-id
+         (alist-get 'iid mr)
+         (mapcar #'magit-glab/encode-assignee assignees)
+         :callback
+         (lambda (_resp _header _status _req)
+           (message (format "Updated assignees of %s!%d to: %s"
+                            project-id (alist-get 'iid mr)
+                            (s-join ", " assignees))))
+         :errorback
+         (lambda (err _header _status _req)
+           (message
+            "An error occurred when updating the assignees of %s!%d: %s"
+            project-id (alist-get 'iid mr) err))))
+    (error "Select a non-empty set of favorites first.")))
+
+;; (defun magit-glab/mr-assign-to-favorite--add ()
+;;   ""
+;;   (interactive)
+;;   (if-let (new-assignees (transient-args 'magit-glab/mr-assign-to-favorite))
+;;       (let* ((branch (magit-glab/read-mr))
+;;              (project-id (magit-glab/infer-project-id branch))
+;;              (mr
+;;               (magit-glab/get-mr-of-source-branch
+;;                project-id
+;;                branch
+;;                :no-cache t))
+;;              (current-assignees
+;;               (mapcar #'magit-glab/encode-assignee
+;;                       (alist-get 'assignees mr)))
+;;              (new-assignees
+;;               (mapcar #'magit-glab/decode-assignee
+;;                       new-assignees))
+;;              (all-assignees (seq-uniq (append current-assignees new-assignees))))
+;;         (magit-glab/mr-set-assignees
+;;          project-id
+;;          (alist-get 'iid mr)
+;;          all-assignees
+;;          :callback
+;;          (lambda (_resp _header _status _req)
+;;            (message (format "Updated assignees of %s!%d to: %s"
+;;                             project-id (alist-get 'iid mr)
+;;                             (s-join ", " all-assignees))))
+;;          :errorback
+;;          (lambda (err _header _status _req)
+;;            (message
+;;             "An error occurred when updating the assignees of %s!%d: %s"
+;;             project-id (alist-get 'iid mr) err))))
+;;     (error "Select a non-empy set of favorites first.")))
+
+(defun magit-glab/mr-assign-to-favorite--setup-children (_)
+	""
+    (transient-parse-suffixes
+     'magit-glab/mr-assign-to-favorite
+     magit-glab/favorite-users))
+
+(defun magit-glab/customize-favorites ()
+	""
+  (interactive)
+  (customize-variable 'magit-glab/favorite-users))
+
+(transient-define-prefix
+  magit-glab/mr-assign-to-favorite () "Assign MR to a favorite user."
+  [["Favorites"
+    :if (lambda () magit-glab/favorite-users)
+    :setup-children magit-glab/mr-assign-to-favorite--setup-children
+    ]
+   ["Handle favorites"
+    ("C" "customize favorites" magit-glab/customize-favorites)]]
+  ["Actions"
+   :if (lambda () magit-glab/favorite-users)
+   ("S" "set" magit-glab/mr-assign-to-favorite--set)
+   ("A" "add" magit-glab/todo)])
+
 (transient-define-prefix
  magit-glab/mr () "Act on a GitLab merge request."
  [:if

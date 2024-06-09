@@ -78,6 +78,10 @@
  '(magit-branch-arguments nil)
  '(magit-commit-all-when-nothing-staged 'ask)
  '(magit-diff-refine-hunk t)
+ '(magit-glab/favorite-users
+   '(("i" "Myself" "@arvidnl")
+     ("m" "Marge-bot" "@nomadic-margebot")
+     ("r" "Romain" "@romain.nl")))
  '(magit-process-popup-time 5)
  '(magit-push-always-verify nil)
  '(magit-repo-dirs
