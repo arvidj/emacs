@@ -565,9 +565,27 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
           (magit-glab/get-mr-of-source-branch
            project-id
            branch
-           :no-cache t)))
-    (error "TODO")
-    ))
+           :no-cache t))
+         (reviewers
+          (mapcar #'magit-glab/format-user-as-candidate
+                  (alist-get 'reviewers mr))))
+    (if (not reviewers)
+        (error "This MR has no reviewers!")
+      (magit-glab/mr-set-assignees
+       project-id
+       (alist-get 'iid mr)
+       (mapcar #'cdr reviewers)
+       :callback
+       (lambda (_resp _header _status _req)
+         (message (format "Updated assignees of %s!%d to: %s"
+                          project-id (alist-get 'iid mr)
+                          (s-join ", " (mapcar #'car reviewers)))))
+       :errorback
+       (lambda (err _header _status _req)
+         (message
+          "An error occurred when updating the assignees of %s!%d: %s"
+          project-id (alist-get 'iid mr) err))))
+    (message "Setting assignees...")))
 
 (defun magit-glab/mr-assign-to-favorite (branch)
   ""
@@ -617,7 +635,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
    ("a a" "edit assignees" magit-glab/mr-edit-assignees)
    ("a m" "assign to me" magit-glab/mr-assign-to-me)
    ("a A" "assign to author" magit-glab/mr-assign-to-author)
-   ("a r" "assign to reviewers" magit-glab/mr-assign-to-me)
+   ("a r" "assign to reviewers" magit-glab/mr-assign-to-reviewers)
    ("a f" "assign to favorite" magit-glab/mr-assign-to-favorite)]
   ["Reviewers"
    ("r r" "edit reviewers" magit-glab/todo)]
