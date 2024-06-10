@@ -419,6 +419,46 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                project-id
                (alist-get 'iid mr)))))
 
+(defun magit-glab/mr-toggle-draft (branch)
+  "Toggle the draft status of the MR associate to BRANCH"
+  (interactive (list (magit-glab/read-mr)))
+  (let* ((project-id (magit-glab/infer-project-id branch))
+         (mr
+          (magit-glab/get-mr-of-source-branch
+           project-id
+           branch
+           :no-cache t)))
+    (let* ((title (alist-get 'title mr))
+           (is-draft (string-match "^\\(Draft: \\)+\\(.*\\)$" title))
+           (new-title
+            (if is-draft
+                (let ((title-no-draft (match-string 2 title)))
+	              title-no-draft)
+              (concat "Draft: " title))))
+      (magit-glab/mr-set-title
+       project-id (alist-get 'iid mr) new-title
+       :callback (lambda (_resp _header _status _req)
+                   (if is-draft
+                       (message "Unmarked %s!%d as draft."
+                                project-id
+                                (alist-get 'iid mr))
+                     (message "Marked %s!%d as draft."
+                              project-id
+                              (alist-get 'iid mr))))
+       :errorback (lambda (err _header _status _req)
+                    (message
+                     "An error occurred when updating the title of %s!%d: %s"
+                     project-id (alist-get 'iid mr) err))
+       )
+      (if is-draft
+          (message "Unmarking %s!%d as draft..."
+                   project-id
+                   (alist-get 'iid mr))
+        (message "Marking %s!%d as draft..."
+                 project-id
+                 (alist-get 'iid mr))))))
+
+
 (defun magit-glab/decode-assignees (assignee-objs)
   "From assignee objects to list of usernames (strings)"
   (mapcar
@@ -722,6 +762,7 @@ For the prefix, use lower-case letters. Each prefix should be unique. Example:
    ("t" "title" magit-glab/mr-edit-title)
    ("d" "description" magit-glab/mr-edit-description)
    ("m" "milestone" magit-glab/todo)
+   ("D" "toggle draft status" magit-glab/mr-toggle-draft)
    ("l" "labels" magit-glab/todo)
    ]
   ["Assignees"
