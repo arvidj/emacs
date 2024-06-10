@@ -11,36 +11,60 @@
 ;;     - closing it C-c C-k the closes the buffer without updating merge request
 ;; - add some kind of cache
 ;; - make some operations asynchronous
+;; - write a lot of tests
+;; - write a lot of documentation
+;; - make interactive arguments make more sense
+;; - do a lot of refactoring
+;; - consider the possibility of only using sync functions
 
 
 ;; Get current branch (magit-get-current-branch)
 ;; Get current MR
 
-
 (require 'magit)
 (require 'glab)
 (require 'names)
 (require 's)
+(require 'el-mock)
 
 ;; Setting up a token
 ;; 1. set 'git config --global gitlab.user USERNAME'
 ;; 2. add 'machine gitlab.com/api/v4 login USERNAME^magit-mr password glpat-TOKEN' to .authinfo
 
-(defun magit-glab/url-encode-project-id (project_id)
-  "Encode a "
-  (if (numberp project_id)
-      (number-to-string project_id)
-    (url-hexify-string project_id)))
+(defun magit-glab/url-encode-project-id (project-id)
+  "Encode a GitLab PROJECT-ID as a string.
+
+A GitLab PROJECT-ID can either be a string on the form
+NAMESPACE/PROJECT. In this case, the return value is the
+URL-encoding of this string. The PROJECT-ID can be an integer, in
+which case the return value is the decimal representation of the
+integer as a string."
+  (if (numberp project-id)
+      (number-to-string project-id)
+    (url-hexify-string project-id)))
+
+(ert-deftest magit-glab/test-url-encode-project-id ()
+  (should (equal "tezos%2Ftezos" (magit-glab/url-encode-project-id "tezos/tezos")))
+  (should (equal "1234" (magit-glab/url-encode-project-id 1234))))
 
 (defun magit-glab/url-mr (project-id mr-iid)
-  ""
+  "Path to GitLab API's `Get single MR' endpoint for PROJECT-ID and MR-IID.
+
+Return path to the GitLab API's `Get single MR' endpoint for a
+given PROJECT-ID (which can be a string on the form
+NAMESPACE/PROJECT or integral) and an integer MR-IID.
+
+For more information, see URL
+`https://docs.gitlab.com/ee/api/merge_requests.html#get-single-mr'."
   (concat
    "/projects/"
    (magit-glab/url-encode-project-id project-id)
    "/merge_requests/"
    (number-to-string mr-iid)))
 
-;; (magit-glab/url-mr "tezos/tezos" 12345)
+(ert-deftest magit-glab/test-url-mr ()
+  (should (equal "/projects/tezos%2Ftezos/merge_requests/1234" (magit-glab/url-mr "tezos/tezos" 1234)))
+  (should (equal "/projects/123/merge_requests/456" (magit-glab/url-mr 123 456))))
 
 (defvar magit-glab/GET-cache-file "/tmp/.magit-glab-cache.el"
   "Path to magit-glab's cache")
@@ -55,6 +79,7 @@
      (lambda (k v) (setq alist (cons (cons k v) alist))) hash-table)
     alist))
 
+;; TODO: save and load the cache on start / shut down
 (defun magit-glab/save-cache ()
   "Save the memoized computations hash table to disk."
   (with-temp-file magit-glab/GET-cache-file
@@ -78,44 +103,100 @@
        do
        (puthash key value magit-glab/GET-cache)))))
 
-(cl-defun magit-glab/get (url params &key no-cache callback errorback)
-  ""
+(cl-defun magit-glab/get (resource params &key no-cache callback errorback)
+  "Make a request for RESOURCE with caching and return the response body.
+
+This function is as `ghub-request' with METHOD set to GET, and
+the arguments RESOURCE, PARAMS, CALLBACK and ERRORBACK has the
+same meaning.  However, if the request is successful, the
+response is cached in `magit-glab/GET-cache'.  Subsequent calls
+to `magit-glab/get', with exactly matching REQUEST and PARAMS,
+return the same value unless NO-CACHE is non-nil.  When a cached
+value is returned, all argument except the first passed to
+CALLBACK are nil."
   (if no-cache
       (ghub-request
        "GET"
-       url
+       resource
        params
        :auth 'magit-mr
        :forge 'gitlab
        :callback callback
        :errorback errorback)
     (if-let (cached-value
-             (gethash (list url params) magit-glab/GET-cache))
+             (gethash (list resource params) magit-glab/GET-cache))
       ;; Value found in cache
       (if callback
-          (funcall callback cached-value)
+          (funcall callback cached-value nil nil nil)
         cached-value)
       ;; No value in cache
       (if (or callback errorback)
           ;; If asynchronous
           (ghub-request
-           "GET" url params
+           "GET" resource params
            :auth 'magit-mr
            :forge 'gitlab
            :callback
-           (lambda (resp _header _status _req)
-             (puthash (list url params) resp magit-glab/GET-cache)
-             (funcall callback resp))
+           (lambda (resp header status req)
+             (puthash (list resource params) resp magit-glab/GET-cache)
+             (funcall callback resp header status req))
            :errorback errorback)
         ;; If synchronous
         (if-let (value
                  (ghub-request
                   "GET"
-                  url
+                  resource
                   params
                   :auth 'magit-mr
                   :forge 'gitlab))
-          (puthash (list url params) value magit-glab/GET-cache))))))
+          (puthash (list resource params) value magit-glab/GET-cache))))))
+
+
+(ert-deftest magit-glab/test-get-sync ()
+  "Test synchronous version of magit-glab/get"
+  (let ((magit-glab/GET-cache (make-hash-table :test 'equal) ))
+	(with-mock
+      (stub ghub-request => "18.0")
+      (should (equal "18.0" (magit-glab/get "/version" nil))))
+    ;; Stub each function at most once per with-mock form.
+    (with-mock
+      (stub ghub-request => "17.0")
+      (should (equal "18.0" (magit-glab/get "/version" nil)))
+      (should (equal "17.0" (magit-glab/get "/version" nil :no-cache t))))))
+
+(ert-deftest magit-glab/test-get-async ()
+  "Test asynchronous version of magit-glab/get"
+  (let* ((magit-glab/GET-cache (make-hash-table :test 'equal) )
+         (ghub-request-original (symbol-function 'ghub-request))
+         (ghub-request-mock-response nil)
+         (ghub-request-mock (cl-function
+                             (lambda (_method _resource _params &key auth forge callback errorback)
+                               (ignore auth forge errorback)
+                               (funcall callback ghub-request-mock-response nil nil nil)))))
+    (unwind-protect
+        (progn
+          ;; Setup mock
+          (fset 'ghub-request ghub-request-mock)
+          ;; Start test
+          (setq ghub-request-mock-response "18.0")
+          (magit-glab/get
+           "/version" nil
+           :callback (lambda (resp _header _status _req)
+                       (should (equal resp "18.0"))))
+          ;; The cached value is returned
+          (setq ghub-request-mock-response "17.0")
+          (magit-glab/get
+           "/version" nil
+           :callback (lambda (resp _header _status _req)
+                       (should (equal resp "18.0"))))
+          ;; Unless no-cache is t
+          (magit-glab/get
+           "/version" nil
+           :no-cache t
+           :callback (lambda (resp _header _status _req)
+                       (should (equal resp "17.0")))))
+      ;; Restore mock
+      (fset 'ghub-request ghub-request-original))))
 
 (cl-defun magit-glab/get1
     (url params &key no-cache callback errorback)
@@ -137,24 +218,6 @@
    `((username . ,username))
    :callback callback
    :errorback errorback))
-
-;; (magit-glab/get-user
-;;  "onurb"
-;;  :callback
-;;  (lambda (resp)
-;;    (print resp)
-;;    (message "User id of %s is %d"
-;;             (alist-get 'username resp)
-;;             (alist-get 'id resp))))
-
-;; (let ((user (magit-glab/get-user "onurb")))
-;;   (print user)
-;;   (message "User id of %s is %d"
-;;            (alist-get 'username user)
-;;            (alist-get 'id user)))
-
-
-(magit-glab/hash-table-to-alist magit-glab/GET-cache)
 
 (cl-defun magit-glab/get-mr
     (project-id mr-iid &key no-cache callback errorback)
@@ -237,7 +300,7 @@
 
 ;; (magit-glab/get-user "arvidnl")
 
-(defun magit-glab/project-of-remote (remote)
+(defun magit-glab/project-of-remote (remote-url)
   "Extract NAMESPACE/PROJECT from git URLs.
 
 URL is a git repository URL in either of these forms:
@@ -245,20 +308,14 @@ URL is a git repository URL in either of these forms:
 - https://gitlab.com/NAMESPACE/PROJECT.git
 
 Returns the 'NAMESPACE/PROJECT' part of the URL."
-  (interactive)
   ;; git@gitlab.com:tezos/tezos.git
   ;; https://gitlab.com/tezos/tezos.git
-  (if-let ((remote-url (magit-get (format "remote.%s.url" remote))))
-    (if (string-match
-         "\\(git@gitlab\.com:\\|https://gitlab\.com/\\)\\([^/]+/[^/.]+\\)\\.git"
-         remote-url)
-        (match-string 2 remote-url)
-      (error
-       "Remote URL '%s' does not match expected format" remote-url))
+  (if (string-match
+       "\\(git@gitlab\.com:\\|https://gitlab\.com/\\)\\([^/]+/[^/.]+\\)\\.git"
+       remote-url)
+      (match-string 2 remote-url)
     (error
-     "The remote '%s' has no url (remote.%s.url is not set)"
-     remote
-     remote)))
+     "Remote URL '%s' does not match expected format" remote-url)))
 
 ;; Examples of usage:
 ;; (magit-glab/project-of-remote "git@gitlab.com:NAMESPACE/PROJECT.git")
@@ -283,7 +340,11 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                    branch-push-remote))
                (magit-get-current-remote)
                (magit-get "remote.pushDefault")))
-    (magit-glab/project-of-remote remote)
+      (if-let ((remote-url (magit-get (format "remote.%s.url" remote))))
+          (magit-glab/project-of-remote remote-url)
+        (error
+         "The remote '%s' has no url (remote.%s.url is not set)"
+         remote remote))
     (error
      "Cannot infer GitLab project: no remote set for this branch, nor is remote.pushDefault set")))
 
@@ -376,7 +437,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 
 ;; By default, get current branch or branch-at-point. If prefix is
 ;; given or if both those values are nil, then read a value instead.
-(defun magit-glab/read-mr ()
+(defun magit-glab/read-branch ()
   ""
   (let ((branch
          (or (magit-branch-at-point) (magit-get-current-branch))))
@@ -386,7 +447,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 
 (defun magit-glab/mr-edit-description (branch)
   ""
-  (interactive (list (magit-glab/read-mr)))
+  (interactive (list (magit-glab/read-branch)))
   (let* ((project-id (magit-glab/infer-project-id branch))
          (mr
           (magit-glab/get-mr-of-source-branch
@@ -401,7 +462,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 
 (defun magit-glab/mr-edit-title (branch)
   ""
-  (interactive (list (magit-glab/read-mr)))
+  (interactive (list (magit-glab/read-branch)))
   (let* ((project-id (magit-glab/infer-project-id branch))
          (mr
           (magit-glab/get-mr-of-source-branch
@@ -421,7 +482,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 
 (defun magit-glab/mr-toggle-draft (branch)
   "Toggle the draft status of the MR associate to BRANCH"
-  (interactive (list (magit-glab/read-mr)))
+  (interactive (list (magit-glab/read-branch)))
   (let* ((project-id (magit-glab/infer-project-id branch))
          (mr
           (magit-glab/get-mr-of-source-branch
@@ -458,24 +519,26 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                  project-id
                  (alist-get 'iid mr))))))
 
-
 (defun magit-glab/decode-assignees (assignee-objs)
   "From assignee objects to list of usernames (strings)"
   (mapcar
    (lambda (assignee-obj) (alist-get 'username assignee-obj))
    assignee-objs))
 
-(defun magit-glab/encode-assignee (assignee-id-or-username)
-  "From username to list of numerical ids"
-  (if (numberp assignee-id-or-username)
-      assignee-id-or-username
+(defun magit-glab/to-user-id (id-or-username)
+  "From ASSIGNEE-ID-OR-USERNAME to numerical user ids."
+  (if (numberp id-or-username)
+      id-or-username
     (if-let* ((assignee-username
-               (string-remove-prefix "@" assignee-id-or-username))
-              (user (magit-glab/get-user assignee-username)))
+               (string-remove-prefix "@" id-or-username)))
         (alist-get 'id (magit-glab/get-user assignee-username))
       (error
        "Could not find id associated to username '%s' -- do they exist?"
        assignee-username))))
+
+(ert-deftest magit-glab/test-to-user-id ()
+  (let ((magit-glab/GET-cache (make-hash-table :test 'equal)))
+	(should (equal 4414596 (magit-glab/to-user-id "@arvidnl")))))
 
 (defun magit-glab/format-user-as-candidate (user)
 	""
@@ -486,7 +549,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 
 (defun magit-glab/mr-edit-assignees (branch)
   ""
-  (interactive (list (magit-glab/read-mr)))
+  (interactive (list (magit-glab/read-branch)))
   (let* ((project-id (magit-glab/infer-project-id branch))
          (mr
           (magit-glab/get-mr-of-source-branch
@@ -524,7 +587,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
          project-id
          (alist-get 'iid mr)
          (mapcar
-          #'magit-glab/encode-assignee
+          #'magit-glab/to-user-id
           (mapcar
            (lambda (selection) (or (cdr (assoc selection candidate-assignees)) selection))
            new-assignees))
@@ -545,7 +608,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 
 (defun magit-glab/mr-assign-to-me (branch)
   ""
-  (interactive (list (magit-glab/read-mr)))
+  (interactive (list (magit-glab/read-branch)))
   (let* ((project-id (magit-glab/infer-project-id branch))
          (mr
           (magit-glab/get-mr-of-source-branch
@@ -556,7 +619,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
     (magit-glab/mr-set-assignees
      project-id
      (alist-get 'iid mr)
-     (magit-glab/encode-assignee my-username)
+     (magit-glab/to-user-id my-username)
      :callback
      (lambda (_resp _header _status _req)
        (message (format "Updated assignees of %s!%d to: %s"
@@ -572,7 +635,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 
 (defun magit-glab/mr-assign-to-author (branch)
   ""
-  (interactive (list (magit-glab/read-mr)))
+  (interactive (list (magit-glab/read-branch)))
   (let* ((project-id (magit-glab/infer-project-id branch))
          (mr
           (magit-glab/get-mr-of-source-branch
@@ -599,7 +662,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 
 (defun magit-glab/mr-assign-to-reviewers (branch)
   ""
-  (interactive (list (magit-glab/read-mr)))
+  (interactive (list (magit-glab/read-branch)))
   (let* ((project-id (magit-glab/infer-project-id branch))
          (mr
           (magit-glab/get-mr-of-source-branch
@@ -629,16 +692,16 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 
 (defun magit-glab/mr-browse (branch)
   ""
-  (interactive (list (magit-glab/read-mr)))
+  (interactive (list (magit-glab/read-branch)))
   (let* ((project-id (magit-glab/infer-project-id branch))
          (mr (magit-glab/get-mr-of-source-branch project-id branch)))
     (browse-url (alist-get 'web_url mr))))
 
-(defun magit-glab/todo () 
+(defun magit-glab/todo ()
 	""
   (interactive)
   (error "TODO"))
-                 
+
 (defun test-function (&optional args)
   (interactive
    (list (transient-args 'magit-glab/mr-assign-to-favorite)))
@@ -662,7 +725,7 @@ For the prefix, use lower-case letters. Each prefix should be unique. Example:
   ""
   (interactive)
   (if-let (assignees (transient-args 'magit-glab/mr-assign-to-favorite))
-      (let* ((branch (magit-glab/read-mr))
+      (let* ((branch (magit-glab/read-branch))
              (project-id (magit-glab/infer-project-id branch))
              (mr
               (magit-glab/get-mr-of-source-branch
@@ -672,7 +735,7 @@ For the prefix, use lower-case letters. Each prefix should be unique. Example:
         (magit-glab/mr-set-assignees
          project-id
          (alist-get 'iid mr)
-         (mapcar #'magit-glab/encode-assignee assignees)
+         (mapcar #'magit-glab/to-user-id assignees)
          :callback
          (lambda (_resp _header _status _req)
            (message (format "Updated assignees of %s!%d to: %s"
@@ -689,7 +752,7 @@ For the prefix, use lower-case letters. Each prefix should be unique. Example:
 ;;   ""
 ;;   (interactive)
 ;;   (if-let (new-assignees (transient-args 'magit-glab/mr-assign-to-favorite))
-;;       (let* ((branch (magit-glab/read-mr))
+;;       (let* ((branch (magit-glab/read-branch))
 ;;              (project-id (magit-glab/infer-project-id branch))
 ;;              (mr
 ;;               (magit-glab/get-mr-of-source-branch
@@ -697,7 +760,7 @@ For the prefix, use lower-case letters. Each prefix should be unique. Example:
 ;;                branch
 ;;                :no-cache t))
 ;;              (current-assignees
-;;               (mapcar #'magit-glab/encode-assignee
+;;               (mapcar #'magit-glab/to-user-id
 ;;                       (alist-get 'assignees mr)))
 ;;              (new-assignees
 ;;               (mapcar #'magit-glab/decode-assignee
@@ -756,8 +819,7 @@ For the prefix, use lower-case letters. Each prefix should be unique. Example:
                    'face
                    'transient-heading)
        (propertize branch 'face 'magit-branch-local)
-       ":\n"
-       )))
+       ":\n")))
   ["Edit"
    ("t" "title" magit-glab/mr-edit-title)
    ("d" "description" magit-glab/mr-edit-description)
@@ -776,7 +838,7 @@ For the prefix, use lower-case letters. Each prefix should be unique. Example:
   ["Actions"
    ("v" "view on forge" magit-glab/mr-browse)
    ]])
- 
+
 
 ;; Update magit-mode-map such that pressing @ opens the magit-glab/mr transient
 
