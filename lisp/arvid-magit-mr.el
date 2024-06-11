@@ -306,6 +306,18 @@ CALLBACK are nil."
    (alist-get 'path_with_namespace (mg--get-project (alist-get 'project_id mr)))
    (alist-get 'iid mr)))
 
+
+(defun mg--format (mr string &rest objects)
+  ""
+  (concat
+   "["
+   (propertize (mg--show-mr mr) 'face 'magit-branch-local)
+   "] " (apply 'format string objects)))
+
+(defun mg--message (mr string &rest objects)
+	""
+  (message (apply 'mg--format mr string objects)))
+
 (cl-defun mg--mr-set-prop-async
     (mr
      property
@@ -324,18 +336,16 @@ CALLBACK are nil."
   (let* ((value-pp (if show-value (funcall show-value value) value))
          (message-prog
           (or message-progress
-              (format "Setting %s of %s%s"
-                      (mg--show-mr-property property)
-                      (mg--show-mr mr)
-                      (if value-pp (format " to: '%s'" value-pp) ""))))
+              (mg--format mr "Setting %s%s"
+                          (mg--show-mr-property property)
+                          (if value-pp (format " to: '%s'" value-pp) ""))))
          (message-success
           (or message-success
               (format "%s... Done!" message-prog)))
          (message-error
           (or message-error
-              (format
-               "An error occurred when setting the %s of %s:"
-               (mg--show-mr-property property) (mg--show-mr mr)))))
+              (mg--format mr "An error occurred when setting %s:"
+                          (mg--show-mr-property property)))))
     (message "%s..." message-prog)
     (ghub-request
      "PUT"
@@ -417,8 +427,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
    :callback
    (lambda (_resp _header _status _req)
      (set-buffer-modified-p nil)
-     (message "Saving %s... Done!"
-              (mg--show-mr mg--mr)))))
+     (mg--message mg--mr "Saving... Done!"))))
 
 (defun mg-mr-save-and-close-description-buffer ()
   ""
@@ -430,8 +439,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
   ""
   (interactive)
   (magit-kill-this-buffer)
-  (message "Description edit of %s cancelled"
-           (mg--show-mr mg--mr)))
+  (mg--message mg--mr "Description edit cancelled"))
 
 (defun mg--mr-create-description-buffer (mr)
   ""
@@ -496,7 +504,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
            project-id
            branch
            :no-cache t)))
-    (or mr 
+    (or mr
         (error
          "Couldn't find MR for branch '%s' in project '%s'"
          branch
@@ -505,15 +513,16 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 (defun mg-mr-edit-description (mr)
   ""
   (interactive (list (mg--read-mr)))
-  (message "Edit description of %s" (mg--show-mr mr))
+  (mg--message mr "Edit description")
   (mg--mr-create-description-buffer mr))
 
 (defun mg-mr-edit-title (mr new-title)
   ""
   (interactive (let* ((mr (mg--read-mr))
                       (new-title
-                       (read-string (format "New title of %s: " (mg--show-mr mr))
-                                    (alist-get 'title mr))))
+                       (read-string
+                        (mg--format mr "New title: ")
+                        (alist-get 'title mr))))
                  (list mr new-title)))
   (mg--mr-set-prop-async mr 'title new-title))
 
@@ -536,9 +545,8 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
             (concat "Draft: " title))))
     (mg--mr-set-prop-async mr 'title new-title
                            :message-progress
-                           (format "%s %s as draft"
-                                   (if is-draft "Unmarking" "Marking")
-                                   (mg--show-mr mr)))))
+                           (mg--format mr "%s as draft"
+                                       (if is-draft "Unmarking" "Marking")))))
 
 (defun mg--decode-assignees (assignee-objs)
   "From assignee objects to list of usernames (strings)"
@@ -581,9 +589,9 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
           (seq-uniq
            (completing-read-multiple
             ;; prompt
-            (format
-             "Set assignees of %s (space-separated GitLab usernames): "
-             (mg--show-mr mr))
+            (mg--format
+             mr
+             "Set assignees (space-separated GitLab usernames): ")
             ;; table
             candidate-assignees
             nil ;; predicate
@@ -603,10 +611,9 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                            (if new-assignees "Setting assignees" "Removing assignees")
                            :message-success
                            (if new-assignees
-                               (format "Updated assignees of %s to: %s"
-                                       (mg--show-mr mr)
-                                       (s-join ", " new-assignees))
-                             (format "Removed all assignees of %s." (mg--show-mr mr))))))
+                               (mg--format mr "Updated assignees to: %s"
+                                           (s-join ", " new-assignees))
+                             (mg--format mr "Removed all assignees.")))))
 
 (defun mg--mr-assign-to-favorite--set (mr)
   ""
