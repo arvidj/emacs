@@ -85,6 +85,19 @@ For more information, see URL
    "/merge_requests/"
    (number-to-string mr-iid)))
 
+(defun mg--url-project (project-id)
+  "Path to GitLab API's `Get single project' endpoint for PROJECT-ID.
+
+Return path to the GitLab API's `Get single project' endpoint for a
+given PROJECT-ID (which can be a string on the form
+NAMESPACE/PROJECT or integral).
+
+For more information, see URL
+`https://docs.gitlab.com/ee/api/projects.html#get-single-project'."
+  (concat
+   "/projects/"
+   (mg-url-encode-project-id project-id)))
+
 (ert-deftest mg--test-url-mr ()
   (should (equal "/projects/tezos%2Ftezos/merge_requests/1234" (mg--url-mr "tezos/tezos" 1234)))
   (should (equal "/projects/123/merge_requests/456" (mg--url-mr 123 456))))
@@ -220,6 +233,16 @@ CALLBACK are nil."
    :errorback errorback
    :no-cache no-cache))
 
+(cl-defun mg--get-project
+    (project-id &key no-cache callback errorback)
+  ""
+  (mg--get
+   (mg--url-project project-id)
+   nil
+   :callback callback
+   :errorback errorback
+   :no-cache no-cache))
+
 (cl-defun mg--get-mr-of-source-branch
     (project-id source-branch &key no-cache callback errorback)
   ""
@@ -257,7 +280,6 @@ CALLBACK are nil."
 
 (defun mg--show-mr-property (property)
   ""
-  (interactive)
   (pcase property
     ('add_labels "add labels") ;; todo
     ('allow_collaboration "allow collaboration")
@@ -278,9 +300,15 @@ CALLBACK are nil."
     (_ (error "Property %s is not one of: %s" property
               (mapconcat #'symbol-name mg--mr-properties ", ")))))
 
+(defun mg--show-mr (mr)
+  ""
+  (format
+   "%s!%d"
+   (alist-get 'path_with_namespace (mg--get-project (alist-get 'project_id mr)))
+   (alist-get 'iid mr)))
+
 (cl-defun mg--mr-set-prop-async
-    (project-id
-     mr-iid
+    (mr
      property
      value
      &key
@@ -297,8 +325,9 @@ CALLBACK are nil."
   (let* ((value-pp (if show-value (funcall show-value value) value))
          (message-prog
           (or message-progress
-              (format "Setting %s of %s!%d%s"
-                      (mg--show-mr-property property) project-id mr-iid
+              (format "Setting %s of %s%s"
+                      (mg--show-mr-property property)
+                      (mg--show-mr mr)
                       (if value-pp (format " to: '%s'" value-pp) ""))))
          (message-success
           (or message-success
@@ -306,12 +335,12 @@ CALLBACK are nil."
          (message-error
           (or message-error
               (format
-               "An error occurred when setting the %s of %s!%d:"
-               (mg--show-mr-property property) project-id mr-iid))))
+               "An error occurred when setting the %s of %s:"
+               (mg--show-mr-property property) (mg--show-mr mr)))))
     (message "%s..." message-prog)
     (ghub-request
      "PUT"
-     (mg--url-mr project-id mr-iid)
+     (mg--url-mr (alist-get 'project-id mr) (alist-get 'iid mr))
      `((,property . ,value))
      :auth 'magit-mr
      :forge 'gitlab
@@ -377,26 +406,21 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 (defvar-local mg--mr nil
   "Merge request under edit in MR description buffers")
 
-(defvar-local mg--project-id nil
-  "Project of the merge request under edit in MR description buffers")
-
 ;; TODO: should also take a callback.
 ;; TODO: if saving fails, user should not lose their description.
 (defun mg-mr-save-description-buffer ()
   ""
   (interactive)
-  (let ((project-id mg--project-id)
-        (mr mg--mr))
+  (let ((mr mg--mr))
     (mg--mr-set-prop-async
-     project-id (alist-get 'iid mr) 'description (buffer-string)
+     mr
+     'description (buffer-string)
      :show-value (lambda () nil)
      :callback
      (lambda (_resp _header _status _req)
        (set-buffer-modified-p nil)
-       (message "Saving %s!%d: '%s'... Done!"
-                project-id
-                (alist-get 'iid mr)
-                (alist-get 'title mr))))))
+       (message "Saving %s... Done!"
+                (mg--show-mr mr))))))
 
 (defun mg-mr-save-and-close-description-buffer ()
   ""
@@ -407,22 +431,17 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 (defun mg-mr-cancel-description-buffer ()
   ""
   (interactive)
-  (let ((project-id mg--project-id)
-        (mr mg--mr))
+  (let ((mr mg--mr))
     (magit-kill-this-buffer)
-    (message "Description edit of %s!%d: '%s' cancelled"
-             project-id
-             (alist-get 'iid mr)
-             (alist-get 'title mr))))
+    (message "Description edit of %s cancelled"
+             (mg--show-mr mr))))
 
-(defun mg--mr-create-description-buffer (project-id mr)
+(defun mg--mr-create-description-buffer (mr)
   ""
   ;; Generate a unique buffer name
   (let* ((base-name
-          (format "Edit description of %s!%d: '%s'"
-                  project-id
-                  (alist-get 'iid mr)
-                  (alist-get 'title mr)))
+          (format "Edit description of %s"
+                  (mg--show-mr mr)))
          (buffer-name base-name)
          (index 1))
     (while (get-buffer buffer-name)
@@ -439,7 +458,6 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
     ;; Set up local keybindings for this buffer
     (use-local-map (copy-keymap (current-local-map)))
     (setq mg--mr mr)
-    (setq mg--project-id project-id)
     (keymap-local-set
      "C-c C-c" #'mg-mr-save-and-close-description-buffer)
     (keymap-local-set
@@ -469,20 +487,28 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
         (read-string "Branch name: ")
       (mg--strip-remote-prefix branch))))
 
-(defun mg-mr-edit-description (branch)
-  ""
-  (interactive (list (mg--read-branch)))
-  (let* ((project-id (mg--infer-project-id branch))
-         (mr
-          (mg--get-mr-of-source-branch
-           project-id
-           branch
-           :no-cache t)))
-    (message "Edit description of %s!%d: '%s'"
+(defun mg--read-mr ()
+	""
+    ;; TODO: if can't deduce branch -> ask for full mr ref
+    ;; TODO: if can't deduce project -> ask for full mr ref
+    ;; TODO: if can't deduce mr -> ask for full mr ref
+    (let* ((branch (mg--read-branch))
+           (project-id (mg--infer-project-id branch))
+           (mr
+            (mg--get-mr-of-source-branch
              project-id
-             (alist-get 'iid mr)
-             (alist-get 'title mr))
-    (mg--mr-create-description-buffer project-id mr)))
+             branch
+             :no-cache t)))
+      mr))
+
+;; (mg--show-mr (mg--get-mr "tezos/tezos" 13332))
+
+(defun mg-mr-edit-description (mr)
+  ""
+  (interactive (list (mg--read-mr)))
+  (message "Edit description of %s"
+           (mg--show-mr mr))
+  (mg--mr-create-description-buffer mr))
 
 (defun mg-mr-edit-title (branch)
   ""
@@ -494,12 +520,9 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
            branch
            :no-cache t)))
     (when-let (new-title
-               (read-string (format "New title of %s!%d: "
-                                    project-id
-                                    (alist-get 'iid mr))
+               (read-string (format "New title of %s: " (mg--show-mr mr))
                             (alist-get 'title mr)))
-      (mg--mr-set-prop-async
-       project-id (alist-get 'iid mr) 'title new-title))))
+      (mg--mr-set-prop-async mr 'title new-title))))
 
 (defun mg-mr-edit-target-branch (branch target-branch)
   "Set the target branch of the MR associated to BRANCH to TARGET-BRANCH"
@@ -508,8 +531,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                 (magit-read-other-branch "New target branch")))
   (let* ((project-id (mg--infer-project-id branch))
          (mr (mg--get-mr-of-source-branch project-id branch :no-cache t)))
-    (mg--mr-set-prop-async
-     project-id (alist-get 'iid mr) 'target_branch target-branch)))
+    (mg--mr-set-prop-async mr 'target_branch target-branch)))
 
 (defun mg-mr-toggle-draft (branch)
   "Toggle the draft status of the MR associate to BRANCH"
@@ -527,13 +549,11 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                 (let ((title-no-draft (match-string 2 title)))
 	              title-no-draft)
               (concat "Draft: " title))))
-      (mg--mr-set-prop-async
-       project-id (alist-get 'iid mr) 'title new-title
+      (mg--mr-set-prop-async mr 'title new-title
        :message-progress
-       (format "%s %s!%d as draft"
+       (format "%s %s as draft"
                (if is-draft "Unmarking" "Marking")
-               project-id
-               (alist-get 'iid mr))))))
+               (mg--show-mr mr))))))
 
 (defun mg--decode-assignees (assignee-objs)
   "From assignee objects to list of usernames (strings)"
@@ -588,8 +608,8 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                (completing-read-multiple
                 ;; prompt
                 (format
-                 "Set assignees of %s!%d (space-separated GitLab usernames): "
-                 project-id (alist-get 'iid mr))
+                 "Set assignees of %s (space-separated GitLab usernames): "
+                 (mg--show-mr mr))
                 ;; table
                 candidate-assignees
                 nil ;; predicate
@@ -602,18 +622,17 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
               (mapcar
                (lambda (selection) (or (cdr (assoc selection candidate-assignees)) selection))
                new-assignees)))
-        (mg--mr-set-prop-async project-id (alist-get 'iid mr)
+        (mg--mr-set-prop-async mr
          'assignee_ids
          (mapcar #'mg--to-user-id new-assignees)
          :message-progress
          (if new-assignees "Setting assignees" "Removing assignees")
          :message-success
          (if new-assignees
-             (message (format "Updated assignees of %s!%d to: %s"
-                              project-id (alist-get 'iid mr)
-                              (s-join ", " new-assignees)))
-           (message (format "Removed all assignees of %s!%d."
-                            project-id (alist-get 'iid mr)))))))))
+             (format "Updated assignees of %s to: %s"
+                     (mg--show-mr mr)
+                     (s-join ", " new-assignees))
+           (format "Removed all assignees of %s." (mg--show-mr mr))))))))
 
 (defun mg--mr-assign-to-favorite--set ()
   ""
@@ -627,7 +646,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                project-id
                branch
                :no-cache t)))
-        (mg--mr-set-prop-async project-id (alist-get 'iid mr)
+        (mg--mr-set-prop-async mr
          'assignee_ids
          (mapcar #'mg--to-user-id assignees)
          :show-value
@@ -648,7 +667,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
               (mapcar #'mg--format-user-as-candidate
                       (alist-get 'reviewers mr))
             (error "This MR has no reviewers!"))))
-    (mg--mr-set-prop-async project-id (alist-get 'iid mr)
+    (mg--mr-set-prop-async mr
      'assignee_ids
      (mapcar #'cdr reviewers)
      :show-value
@@ -667,7 +686,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
          (my-username (concat "@" (ghub--username nil 'gitlab)))
          (my-id (mg--to-user-id my-username)))
     (mg--mr-set-prop-async
-     project-id (alist-get 'iid mr)
+     mr
      'assignee_ids
      (list my-id)
      :show-value (lambda (_) my-username))))
@@ -684,7 +703,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
          (author-username (concat "@" (alist-get 'username (alist-get 'author mr))))
          (author-id (alist-get 'id (alist-get 'author mr))))
     (mg--mr-set-prop-async
-     project-id (alist-get 'iid mr)
+     mr
      'assignee_ids
      (list author-id)
      :show-value (lambda (_) author-username))))
