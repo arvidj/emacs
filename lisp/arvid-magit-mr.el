@@ -11,6 +11,12 @@
 ;; - consider the possibility of only using sync functions
 ;; - stuff with pipelines: go to head pipeline, trigger manual
 ;; - refactor pretty-printing of MR refs
+;; - write readme.ml
+;; - submit to melpa
+;; - setup repository (and figure out how to use it with "straight"?)
+;; - write a real header
+;; - cache "known labels / users / milestones"
+;; - make a real minor mode for writing descriptions
 
 ;; Setting up a token
 ;; 1. set 'git config --global gitlab.user USERNAME'
@@ -282,15 +288,18 @@ CALLBACK are nil."
      errorback
      message-progress
      message-success
-     message-error)
+     message-error
+     show-value)
   ""
   (unless (memq property mg--mr-properties)
     (error "Unsupported property: %s. Accepted properties are: %s"
            property (mapconcat #'symbol-name mg--mr-properties ", ")))
-  (let* ((message-prog
+  (let* ((value-pp (if show-value (funcall show-value value) value))
+         (message-prog
           (or message-progress
-              (format "Setting %s of %s!%d to: '%s'"
-                      (mg--show-mr-property property) project-id mr-iid value)))
+              (format "Setting %s of %s!%d%s"
+                      (mg--show-mr-property property) project-id mr-iid
+                      (if value-pp (format " to: '%s'" value-pp) ""))))
          (message-success
           (or message-success
               (format "%s... Done!" message-prog)))
@@ -314,18 +323,6 @@ CALLBACK are nil."
      (or errorback
          (lambda (err _header _status _req)
            (message "%s: %s" message-error err))))))
-
-(cl-defun mg--mr-set-assignees
-    (project-id mr-iid assignee-ids &key callback errorback)
-  ""
-  (ghub-request
-   "PUT"
-   (mg--url-mr project-id mr-iid)
-   `((assignee_ids . ,assignee-ids))
-   :auth 'magit-mr
-   :forge 'gitlab
-   :callback callback
-   :errorback errorback))
 
 ;; (mg--get-user "arvidnl")
 
@@ -383,7 +380,8 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 (defvar-local mg--project-id nil
   "Project of the merge request under edit in MR description buffers")
 
-;; TODO: should also take a callback
+;; TODO: should also take a callback.
+;; TODO: if saving fails, user should not lose their description.
 (defun mg-mr-save-description-buffer ()
   ""
   (interactive)
@@ -391,11 +389,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
         (mr mg--mr))
     (mg--mr-set-prop-async
      project-id (alist-get 'iid mr) 'description (buffer-string)
-     :message-progress
-     (format "Saving %s!%d: '%s'..."
-              project-id
-              (alist-get 'iid mr)
-              (alist-get 'title mr))
+     :show-value (lambda () nil)
      :callback
      (lambda (_resp _header _status _req)
        (set-buffer-modified-p nil)
@@ -604,15 +598,13 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                 (if current-assignees
                     (concat (s-join ", " (mapcar #'car current-assignees)) ", ")
                   nil))))
-             )
-        ;; "Setting assignees..."
+             (new-assignees
+              (mapcar
+               (lambda (selection) (or (cdr (assoc selection candidate-assignees)) selection))
+               new-assignees)))
         (mg--mr-set-prop-async project-id (alist-get 'iid mr)
          'assignee_ids
-         (mapcar
-          #'mg--to-user-id
-          (mapcar
-           (lambda (selection) (or (cdr (assoc selection candidate-assignees)) selection))
-           new-assignees))
+         (mapcar #'mg--to-user-id new-assignees)
          :message-progress
          (if new-assignees "Setting assignees" "Removing assignees")
          :message-success
@@ -623,6 +615,46 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
            (message (format "Removed all assignees of %s!%d."
                             project-id (alist-get 'iid mr)))))))))
 
+(defun mg--mr-assign-to-favorite--set ()
+  ""
+  (interactive)
+  (if-let (assignees (transient-args 'mg-mr-assign-to-favorite))
+      ;; (print assignees)
+      (let* ((branch (mg--read-branch))
+             (project-id (mg--infer-project-id branch))
+             (mr
+              (mg--get-mr-of-source-branch
+               project-id
+               branch
+               :no-cache t)))
+        (mg--mr-set-prop-async project-id (alist-get 'iid mr)
+         'assignee_ids
+         (mapcar #'mg--to-user-id assignees)
+         :show-value
+         (lambda (_) (s-join ", " assignees))))
+    (error "Select a non-empty set of favorites first.")))
+
+(defun mg-mr-assign-to-reviewers (branch)
+  ""
+  (interactive (list (mg--read-branch)))
+  (let* ((project-id (mg--infer-project-id branch))
+         (mr
+          (mg--get-mr-of-source-branch
+           project-id
+           branch
+           :no-cache t))
+         (reviewers
+          (if-let (reviewers (alist-get 'reviewers mr))
+              (mapcar #'mg--format-user-as-candidate
+                      (alist-get 'reviewers mr))
+            (error "This MR has no reviewers!"))))
+    (mg--mr-set-prop-async project-id (alist-get 'iid mr)
+     'assignee_ids
+     (mapcar #'cdr reviewers)
+     :show-value
+     (lambda (_)
+       (s-join ", " (mapcar #'car reviewers))))))
+
 (defun mg-mr-assign-to-me (branch)
   ""
   (interactive (list (mg--read-branch)))
@@ -632,23 +664,13 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
            project-id
            branch
            :no-cache t))
-         (my-username (concat "@" (ghub--username nil 'gitlab))))
-    (mg--mr-set-assignees
-     project-id
-     (alist-get 'iid mr)
-     (mg--to-user-id my-username)
-     :callback
-     (lambda (_resp _header _status _req)
-       (message (format "Updated assignees of %s!%d to: %s"
-                        project-id (alist-get 'iid mr)
-                        my-username)))
-     :errorback
-     (lambda (err _header _status _req)
-       (message
-        "An error occurred when updating the assignees of %s!%d: %s"
-        project-id (alist-get 'iid mr) err)))
-    (message "Setting assignees to %s..." my-username)))
-
+         (my-username (concat "@" (ghub--username nil 'gitlab)))
+         (my-id (mg--to-user-id my-username)))
+    (mg--mr-set-prop-async
+     project-id (alist-get 'iid mr)
+     'assignee_ids
+     (list my-id)
+     :show-value (lambda (_) my-username))))
 
 (defun mg-mr-assign-to-author (branch)
   ""
@@ -661,51 +683,11 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
            :no-cache t))
          (author-username (concat "@" (alist-get 'username (alist-get 'author mr))))
          (author-id (alist-get 'id (alist-get 'author mr))))
-    (mg--mr-set-assignees
-     project-id
-     (alist-get 'iid mr)
+    (mg--mr-set-prop-async
+     project-id (alist-get 'iid mr)
+     'assignee_ids
      (list author-id)
-     :callback
-     (lambda (_resp _header _status _req)
-       (message (format "Updated assignees of %s!%d to: %s"
-                        project-id (alist-get 'iid mr)
-                        author-username)))
-     :errorback
-     (lambda (err _header _status _req)
-       (message
-        "An error occurred when updating the assignees of %s!%d: %s"
-        project-id (alist-get 'iid mr) err)))
-    (message "Setting assignees to %s..." author-username)))
-
-(defun mg-mr-assign-to-reviewers (branch)
-  ""
-  (interactive (list (mg--read-branch)))
-  (let* ((project-id (mg--infer-project-id branch))
-         (mr
-          (mg--get-mr-of-source-branch
-           project-id
-           branch
-           :no-cache t))
-         (reviewers
-          (mapcar #'mg--format-user-as-candidate
-                  (alist-get 'reviewers mr))))
-    (if (not reviewers)
-        (error "This MR has no reviewers!")
-      (mg--mr-set-assignees
-       project-id
-       (alist-get 'iid mr)
-       (mapcar #'cdr reviewers)
-       :callback
-       (lambda (_resp _header _status _req)
-         (message (format "Updated assignees of %s!%d to: %s"
-                          project-id (alist-get 'iid mr)
-                          (s-join ", " (mapcar #'car reviewers)))))
-       :errorback
-       (lambda (err _header _status _req)
-         (message
-          "An error occurred when updating the assignees of %s!%d: %s"
-          project-id (alist-get 'iid mr) err))))
-    (message "Setting assignees...")))
+     :show-value (lambda (_) author-username))))
 
 (defun mg-mr-browse (branch)
   "Browse the MR of the current BRANCH on GitLab with ‘browse-url’."
@@ -730,33 +712,6 @@ kill ring instead of opening it with ‘browse-url’."
 	"Placeholder for functionality that is not yet implemented."
   (interactive)
   (error "TODO"))
-
-(defun mg--mr-assign-to-favorite--set ()
-  ""
-  (interactive)
-  (if-let (assignees (transient-args 'mg-mr-assign-to-favorite))
-      (let* ((branch (mg--read-branch))
-             (project-id (mg--infer-project-id branch))
-             (mr
-              (mg--get-mr-of-source-branch
-               project-id
-               branch
-               :no-cache t)))
-        (mg--mr-set-assignees
-         project-id
-         (alist-get 'iid mr)
-         (mapcar #'mg--to-user-id assignees)
-         :callback
-         (lambda (_resp _header _status _req)
-           (message (format "Updated assignees of %s!%d to: %s"
-                            project-id (alist-get 'iid mr)
-                            (s-join ", " assignees))))
-         :errorback
-         (lambda (err _header _status _req)
-           (message
-            "An error occurred when updating the assignees of %s!%d: %s"
-            project-id (alist-get 'iid mr) err))))
-    (error "Select a non-empty set of favorites first.")))
 
 (defun mg--mr-assign-to-favorite--setup-children (_)
 	""
