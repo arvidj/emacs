@@ -10,7 +10,6 @@
 ;; - do a lot of refactoring
 ;; - consider the possibility of only using sync functions
 ;; - stuff with pipelines: go to head pipeline, trigger manual
-;; - refactor pretty-printing of MR refs
 ;; - write readme.ml
 ;; - submit to melpa
 ;; - setup repository (and figure out how to use it with "straight"?)
@@ -411,16 +410,15 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 (defun mg-mr-save-description-buffer ()
   ""
   (interactive)
-  (let ((mr mg--mr))
-    (mg--mr-set-prop-async
-     mr
-     'description (buffer-string)
-     :show-value (lambda () nil)
-     :callback
-     (lambda (_resp _header _status _req)
-       (set-buffer-modified-p nil)
-       (message "Saving %s... Done!"
-                (mg--show-mr mr))))))
+  (mg--mr-set-prop-async
+   mg--mr
+   'description (buffer-string)
+   :show-value (lambda () nil)
+   :callback
+   (lambda (_resp _header _status _req)
+     (set-buffer-modified-p nil)
+     (message "Saving %s... Done!"
+              (mg--show-mr mg--mr)))))
 
 (defun mg-mr-save-and-close-description-buffer ()
   ""
@@ -431,10 +429,9 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 (defun mg-mr-cancel-description-buffer ()
   ""
   (interactive)
-  (let ((mr mg--mr))
-    (magit-kill-this-buffer)
-    (message "Description edit of %s cancelled"
-             (mg--show-mr mr))))
+  (magit-kill-this-buffer)
+  (message "Description edit of %s cancelled"
+           (mg--show-mr mg--mr)))
 
 (defun mg--mr-create-description-buffer (mr)
   ""
@@ -505,21 +502,20 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
          branch
          project-id))))
 
-;; (mg--show-mr (mg--get-mr "tezos/tezos" 13332))
-
 (defun mg-mr-edit-description (mr)
   ""
   (interactive (list (mg--read-mr)))
   (message "Edit description of %s" (mg--show-mr mr))
   (mg--mr-create-description-buffer mr))
 
-(defun mg-mr-edit-title (mr)
+(defun mg-mr-edit-title (mr new-title)
   ""
-  (interactive (list (mg--read-mr)))
-  (when-let (new-title
-             (read-string (format "New title of %s: " (mg--show-mr mr))
-                          (alist-get 'title mr)))
-    (mg--mr-set-prop-async mr 'title new-title)))
+  (interactive (let* ((mr (mg--read-mr))
+                      (new-title
+                       (read-string (format "New title of %s: " (mg--show-mr mr))
+                                    (alist-get 'title mr))))
+                 (list mr new-title)))
+  (mg--mr-set-prop-async mr 'title new-title))
 
 (defun mg-mr-edit-target-branch (mr target-branch)
   "Set the target branch of the MR associated to BRANCH to TARGET-BRANCH"
