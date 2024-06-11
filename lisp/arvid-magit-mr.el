@@ -27,6 +27,32 @@
 (require 's)
 (require 'el-mock)
 
+;; Customization
+
+(defgroup magit-glab/group nil
+  "Docs"
+  :prefix "magit-glab/"
+  :group 'convenience)
+
+(defcustom magit-glab/favorite-users nil
+  "A list of GitLab users favorite users.
+
+Should be a list of values, where each value is on the list
+PREFIX DESCRIPTION GITLAB_USERNAME.
+
+For the prefix, use lower-case letters. Each prefix should be unique.
+
+Example:
+  \\='((\"i\" \"Myself\" \"@arvidnl\")
+    (\"j d\" \"John Doe\" \"@...\"))"
+  :group 'magit-glab/group
+  :type '(repeat
+          (list
+           (string :tag "Prefix")
+           (string :tag "Full name for display")
+           (string :tag "GitLab username (include @)"))))
+
+
 ;; Setting up a token
 ;; 1. set 'git config --global gitlab.user USERNAME'
 ;; 2. add 'machine gitlab.com/api/v4 login USERNAME^magit-mr password glpat-TOKEN' to .authinfo
@@ -706,20 +732,6 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
   (interactive
    (list (transient-args 'magit-glab/mr-assign-to-favorite)))
   (message "args: %s" args))
-
-(defcustom
-  magit-glab/favorite-users
-  nil
-  "A list of GitLab users favorite users.
-
-Should be a list of values, where each value is on the list
-PREFIX DESCRIPTION GITLAB_USERNAME.
-
-For the prefix, use lower-case letters. Each prefix should be unique. Example:
-
-'((\"i\" \"Myself\" \"@arvidnl\")
-  (\"j d\" \"John Doe\" \"@...\"))
-")
 
 (defun magit-glab/mr-assign-to-favorite--set ()
   ""
