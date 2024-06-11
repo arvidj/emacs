@@ -307,6 +307,18 @@ CALLBACK are nil."
    :callback callback
    :errorback errorback))
 
+(cl-defun magit-glab/mr-set-target-branch
+    (project-id mr-iid target-branch &key callback errorback)
+  "Set the `target_branch` of MR-IID in PROJECT-ID to TARGET-BRANCH."
+  (ghub-request
+   "PUT"
+   (magit-glab/url-mr project-id mr-iid)
+   `((target_branch . ,target-branch))
+   :auth 'magit-mr
+   :forge 'gitlab
+   :callback callback
+   :errorback errorback))
+
 ;; (magit-glab/mr-set-assignees
 ;;  "nomadic-labs/arvid-tezos"
 ;;  541
@@ -505,6 +517,35 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
       (message "Updated title of %s!%d."
                project-id
                (alist-get 'iid mr)))))
+
+(defun magit-glab/mr-edit-target-branch (branch target-branch)
+  "Set the target branch of the MR associated to BRANCH to TARGET-BRANCH"
+  (interactive (list
+                (magit-glab/read-branch)
+                (magit-read-other-branch "New target branch")))
+  (let* ((project-id (magit-glab/infer-project-id branch))
+         (mr
+          (magit-glab/get-mr-of-source-branch
+           project-id
+           branch
+           :no-cache t)))
+    (message "Updating target branch of %s!%d to: '%s'"
+             project-id
+             (alist-get 'iid mr)
+             target-branch)
+    (magit-glab/mr-set-target-branch
+     project-id
+     (alist-get 'iid mr)
+     target-branch
+     :callback (lambda (_resp _header _status _req)
+                 (message "Updated target branch of %s!%d to: '%s'"
+                          project-id
+                          (alist-get 'iid mr)
+                          target-branch))
+     :errorback (lambda (err _header _status _req)
+                  (message
+                   "An error occurred when updating the target-branch of %s!%d: %s"
+                   project-id (alist-get 'iid mr) err)))))
 
 (defun magit-glab/mr-toggle-draft (branch)
   "Toggle the draft status of the MR associate to BRANCH"
@@ -850,6 +891,7 @@ kill ring instead of opening it with ‘browse-url’."
    ("m" "milestone" magit-glab/todo)
    ("D" "toggle draft status" magit-glab/mr-toggle-draft)
    ("l" "labels" magit-glab/todo)
+   ("T" "target branch" magit-glab/mr-edit-target-branch)
    ]
   ["Assignees"
    ("a a" "edit assignees" magit-glab/mr-edit-assignees)
