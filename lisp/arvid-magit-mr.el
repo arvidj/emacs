@@ -16,6 +16,7 @@
 ;; - make interactive arguments make more sense
 ;; - do a lot of refactoring
 ;; - consider the possibility of only using sync functions
+;; - stuff with pipelines: go to head pipeline, trigger manual
 
 
 ;; Get current branch (magit-get-current-branch)
@@ -271,29 +272,90 @@ CALLBACK are nil."
 ;; (magit-glab/get-mr-of-source-branch
 ;;  "tezos/tezos" "arvid@ci-add-cargo-cache")
 
-(cl-defun magit-glab/mr-set-description
-    (project-id mr-iid description &key callback errorback)
-  ""
-  (ghub-request
-   "PUT"
-   (magit-glab/url-mr project-id mr-iid)
-   `((description . ,description))
-   :auth 'magit-mr
-   :forge 'gitlab
-   :callback callback
-   :errorback errorback))
 
-(cl-defun magit-glab/mr-set-title
-    (project-id mr-iid title &key callback errorback)
+(defconst magit-glab/mr-properties
+  '(add_labels
+    allow_collaboration
+    allow_maintainer_to_push
+    assignee_id
+    assignee_ids
+    description
+    discussion_locked
+    labels
+    milestone_id
+    remove_labels
+    remove_source_branch
+    reviewer_ids
+    squash
+    state_event
+    target_branch
+    title))
+
+(defun magit-glab/show-mr-property (property)
   ""
-  (ghub-request
-   "PUT"
-   (magit-glab/url-mr project-id mr-iid)
-   `((title . ,title))
-   :auth 'magit-mr
-   :forge 'gitlab
-   :callback callback
-   :errorback errorback))
+  (interactive)
+  (pcase property
+    ('add_labels "add labels") ;; todo
+    ('allow_collaboration "allow collaboration")
+    ('allow_maintainer_to_push "allow maintainer to push")
+    ('assignee_id "assignee")
+    ('assignee_ids "assignees")
+    ('description "description")
+    ('discussion_locked "discussion locked")
+    ('labels "labels")
+    ('milestone_id "milestone id")
+    ('remove_labels "remove labels")
+    ('remove_source_branch "remove source branch")
+    ('reviewer_ids "reviewer ids")
+    ('squash "squash")
+    ('state_event "state")
+    ('target_branch "target branch")
+    ('title "title")
+    (_ (error "Property %s is not one of: %s" property
+              (mapconcat #'symbol-name magit-glab/mr-properties ", ")))))
+
+(cl-defun magit-glab/mr-set-prop-async
+    (project-id
+     mr-iid
+     property
+     value
+     &key
+     callback
+     errorback
+     message-progress
+     message-success
+     message-error)
+  ""
+  (unless (memq property magit-glab/mr-properties)
+    (error "Unsupported property: %s. Accepted properties are: %s"
+           property (mapconcat #'symbol-name magit-glab/mr-properties ", ")))
+  (let* ((message-prog
+          (or message-progress
+              (format "Setting %s of %s!%d to: '%s'"
+                      (magit-glab/show-mr-property property) project-id mr-iid value)))
+         (message-success
+          (or message-success
+              (format "%s... Done!" message-prog)))
+         (message-error
+          (or message-error
+              (format
+               "An error occurred when setting the %s of %s!%d:"
+               (magit-glab/show-mr-property property) project-id mr-iid))))
+    (message "%s..." message-prog)
+    (ghub-request
+     "PUT"
+     (magit-glab/url-mr project-id mr-iid)
+     `((,property . ,value))
+     :auth 'magit-mr
+     :forge 'gitlab
+     :callback
+     (or callback
+         (lambda (_resp _header _status _req)
+           (message "%s" message-success)))
+     :errorback
+     (or errorback
+         (lambda (err _header _status _req)
+           (message "%s: %s" message-error err))))))
 
 (cl-defun magit-glab/mr-set-assignees
     (project-id mr-iid assignee-ids &key callback errorback)
@@ -306,35 +368,6 @@ CALLBACK are nil."
    :forge 'gitlab
    :callback callback
    :errorback errorback))
-
-(cl-defun magit-glab/mr-set-target-branch
-    (project-id mr-iid target-branch &key callback errorback)
-  "Set the `target_branch` of MR-IID in PROJECT-ID to TARGET-BRANCH."
-  (ghub-request
-   "PUT"
-   (magit-glab/url-mr project-id mr-iid)
-   `((target_branch . ,target-branch))
-   :auth 'magit-mr
-   :forge 'gitlab
-   :callback callback
-   :errorback errorback))
-
-;; (magit-glab/mr-set-assignees
-;;  "nomadic-labs/arvid-tezos"
-;;  541
-;;  '(4414596)
-;;  :callback
-;;  (lambda (resp header status req) (message "Success")))
-
-;; (magit-glab/mr-set-assignees
-;;  "nomadic-labs/arvid-tezos"
-;;  9999
-;;  '(4414596)
-;;  :callback
-;;  (lambda (resp header status req) (message "Success"))
-;;  :errorback
-;;  (lambda (err header status req) (message "Error: %s" err)))
-
 
 ;; (magit-glab/get-user "arvidnl")
 
@@ -398,19 +431,20 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
   (interactive)
   (let ((project-id magit-glab/project-id)
         (mr magit-glab/mr))
-    (magit-glab/mr-set-description
-     project-id (alist-get 'iid mr) (buffer-string)
+    (magit-glab/mr-set-prop-async
+     project-id (alist-get 'iid mr) 'description (buffer-string)
+     :message-progress
+     (format "Saving %s!%d: '%s'..."
+              project-id
+              (alist-get 'iid mr)
+              (alist-get 'title mr))
      :callback
      (lambda (_resp _header _status _req)
        (set-buffer-modified-p nil)
        (message "Saving %s!%d: '%s'... Done!"
                 project-id
                 (alist-get 'iid mr)
-                (alist-get 'title mr))))
-    (message "Saving %s!%d: '%s'..."
-             project-id
-             (alist-get 'iid mr)
-             (alist-get 'title mr))))
+                (alist-get 'title mr))))))
 
 (defun magit-glab/mr-save-and-close-description-buffer ()
   ""
@@ -508,15 +542,12 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
            branch
            :no-cache t)))
     (when-let (new-title
-               (read-string (format "Edit title of %s!%d: "
+               (read-string (format "New title of %s!%d: "
                                     project-id
                                     (alist-get 'iid mr))
                             (alist-get 'title mr)))
-      (magit-glab/mr-set-title
-       project-id (alist-get 'iid mr) new-title)
-      (message "Updated title of %s!%d."
-               project-id
-               (alist-get 'iid mr)))))
+      (magit-glab/mr-set-prop-async
+       project-id (alist-get 'iid mr) 'title new-title))))
 
 (defun magit-glab/mr-edit-target-branch (branch target-branch)
   "Set the target branch of the MR associated to BRANCH to TARGET-BRANCH"
@@ -524,28 +555,9 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                 (magit-glab/read-branch)
                 (magit-read-other-branch "New target branch")))
   (let* ((project-id (magit-glab/infer-project-id branch))
-         (mr
-          (magit-glab/get-mr-of-source-branch
-           project-id
-           branch
-           :no-cache t)))
-    (message "Updating target branch of %s!%d to: '%s'"
-             project-id
-             (alist-get 'iid mr)
-             target-branch)
-    (magit-glab/mr-set-target-branch
-     project-id
-     (alist-get 'iid mr)
-     target-branch
-     :callback (lambda (_resp _header _status _req)
-                 (message "Updated target branch of %s!%d to: '%s'"
-                          project-id
-                          (alist-get 'iid mr)
-                          target-branch))
-     :errorback (lambda (err _header _status _req)
-                  (message
-                   "An error occurred when updating the target-branch of %s!%d: %s"
-                   project-id (alist-get 'iid mr) err)))))
+         (mr (magit-glab/get-mr-of-source-branch project-id branch :no-cache t)))
+    (magit-glab/mr-set-prop-async
+     project-id (alist-get 'iid mr) 'target_branch target-branch)))
 
 (defun magit-glab/mr-toggle-draft (branch)
   "Toggle the draft status of the MR associate to BRANCH"
@@ -563,28 +575,13 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                 (let ((title-no-draft (match-string 2 title)))
 	              title-no-draft)
               (concat "Draft: " title))))
-      (magit-glab/mr-set-title
-       project-id (alist-get 'iid mr) new-title
-       :callback (lambda (_resp _header _status _req)
-                   (if is-draft
-                       (message "Unmarked %s!%d as draft."
-                                project-id
-                                (alist-get 'iid mr))
-                     (message "Marked %s!%d as draft."
-                              project-id
-                              (alist-get 'iid mr))))
-       :errorback (lambda (err _header _status _req)
-                    (message
-                     "An error occurred when updating the title of %s!%d: %s"
-                     project-id (alist-get 'iid mr) err))
-       )
-      (if is-draft
-          (message "Unmarking %s!%d as draft..."
-                   project-id
-                   (alist-get 'iid mr))
-        (message "Marking %s!%d as draft..."
-                 project-id
-                 (alist-get 'iid mr))))))
+      (magit-glab/mr-set-prop-async
+       project-id (alist-get 'iid mr) 'title new-title
+       :message-progress
+       (format "%s %s!%d as draft"
+               (if is-draft "Unmarking" "Marking")
+               project-id
+               (alist-get 'iid mr))))))
 
 (defun magit-glab/decode-assignees (assignee-objs)
   "From assignee objects to list of usernames (strings)"
@@ -650,28 +647,23 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                     (concat (s-join ", " (mapcar #'car current-assignees)) ", ")
                   nil))))
              )
-        (magit-glab/mr-set-assignees
-         project-id
-         (alist-get 'iid mr)
+        ;; "Setting assignees..."
+        (magit-glab/mr-set-prop-async project-id (alist-get 'iid mr)
+         'assignee_ids
          (mapcar
           #'magit-glab/to-user-id
           (mapcar
            (lambda (selection) (or (cdr (assoc selection candidate-assignees)) selection))
            new-assignees))
-         :callback
-         (lambda (_resp _header _status _req)
-           (if new-assignees
-               (message (format "Updated assignees of %s!%d to: %s"
-                                project-id (alist-get 'iid mr)
-                                (s-join ", " new-assignees)))
-             (message (format "Removed all assignees of %s!%d."
-                              project-id (alist-get 'iid mr)))))
-         :errorback
-         (lambda (err _header _status _req)
-           (message
-            "An error occurred when updating the assignees of %s!%d: %s"
-            project-id (alist-get 'iid mr) err)))
-        (message "Setting assignees...")))))
+         :message-progress
+         (if new-assignees "Setting assignees" "Removing assignees")
+         :message-success
+         (if new-assignees
+             (message (format "Updated assignees of %s!%d to: %s"
+                              project-id (alist-get 'iid mr)
+                              (s-join ", " new-assignees)))
+           (message (format "Removed all assignees of %s!%d."
+                            project-id (alist-get 'iid mr)))))))))
 
 (defun magit-glab/mr-assign-to-me (branch)
   ""
@@ -777,7 +769,7 @@ kill ring instead of opening it with ‘browse-url’."
     (message "Added URL `%s' to kill ring" web-url)))
 
 (defun magit-glab/todo ()
-	""
+	"Placeholder for functionality that is not yet implemented."
   (interactive)
   (error "TODO"))
 
