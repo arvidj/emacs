@@ -717,11 +717,23 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
     (message "Setting assignees...")))
 
 (defun magit-glab/mr-browse (branch)
-  ""
+  "Browse the MR of the current BRANCH on GitLab with ‘browse-url’."
   (interactive (list (magit-glab/read-branch)))
   (let* ((project-id (magit-glab/infer-project-id branch))
          (mr (magit-glab/get-mr-of-source-branch project-id branch)))
     (browse-url (alist-get 'web_url mr))))
+
+(defun magit-glab/mr-browse-kill (branch)
+  "Add the URL of the current MR to the kill ring.
+
+Works like ‘magit-glab/mr-browse’, but puts the address in the
+kill ring instead of opening it with ‘browse-url’."
+  (interactive (list (magit-glab/read-branch)))
+  (let* ((project-id (magit-glab/infer-project-id branch))
+         (mr (magit-glab/get-mr-of-source-branch project-id branch))
+         (web-url (alist-get 'web_url mr)))
+    (kill-new web-url)
+    (message "Added URL `%s' to kill ring" web-url)))
 
 (defun magit-glab/todo ()
 	""
@@ -848,7 +860,8 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
   ["Reviewers"
    ("r r" "edit reviewers" magit-glab/todo)]
   ["Actions"
-   ("v" "view on forge" magit-glab/mr-browse)
+   ("v" "open MR on GitLab" magit-glab/mr-browse)
+   ("k" "add MR url on GitLab to kill ring" magit-glab/mr-browse-kill)
    ]])
 
 
