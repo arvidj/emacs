@@ -340,7 +340,7 @@ CALLBACK are nil."
     (message "%s..." message-prog)
     (ghub-request
      "PUT"
-     (mg--url-mr (alist-get 'project-id mr) (alist-get 'iid mr))
+     (mg--url-mr (alist-get 'project_id mr) (alist-get 'iid mr))
      `((,property . ,value))
      :auth 'magit-mr
      :forge 'gitlab
@@ -370,7 +370,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
        remote-url)
       (match-string 2 remote-url)
     (error
-     "Remote URL '%s' does not match expected format" remote-url)))
+     "Remote URL '%s' does not match expected format for a GitLab remote" remote-url)))
 
 ;; Examples of usage:
 ;; (mg--project-of-remote "git@gitlab.com:NAMESPACE/PROJECT.git")
@@ -488,72 +488,61 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
       (mg--strip-remote-prefix branch))))
 
 (defun mg--read-mr ()
-	""
-    ;; TODO: if can't deduce branch -> ask for full mr ref
-    ;; TODO: if can't deduce project -> ask for full mr ref
-    ;; TODO: if can't deduce mr -> ask for full mr ref
-    (let* ((branch (mg--read-branch))
-           (project-id (mg--infer-project-id branch))
-           (mr
-            (mg--get-mr-of-source-branch
-             project-id
-             branch
-             :no-cache t)))
-      mr))
+  ""
+  ;; TODO: if can't deduce branch -> ask for full mr ref
+  ;; TODO: if can't deduce project -> ask for full mr ref
+  ;; TODO: if can't deduce mr -> ask for full mr ref
+  (let* ((branch (mg--read-branch))
+         (project-id (mg--infer-project-id branch))
+         (mr
+          (mg--get-mr-of-source-branch
+           project-id
+           branch
+           :no-cache t)))
+    (or mr 
+        (error
+         "Couldn't find MR for branch '%s' in project '%s'"
+         branch
+         project-id))))
 
 ;; (mg--show-mr (mg--get-mr "tezos/tezos" 13332))
 
 (defun mg-mr-edit-description (mr)
   ""
   (interactive (list (mg--read-mr)))
-  (message "Edit description of %s"
-           (mg--show-mr mr))
+  (message "Edit description of %s" (mg--show-mr mr))
   (mg--mr-create-description-buffer mr))
 
-(defun mg-mr-edit-title (branch)
+(defun mg-mr-edit-title (mr)
   ""
-  (interactive (list (mg--read-branch)))
-  (let* ((project-id (mg--infer-project-id branch))
-         (mr
-          (mg--get-mr-of-source-branch
-           project-id
-           branch
-           :no-cache t)))
-    (when-let (new-title
-               (read-string (format "New title of %s: " (mg--show-mr mr))
-                            (alist-get 'title mr)))
-      (mg--mr-set-prop-async mr 'title new-title))))
+  (interactive (list (mg--read-mr)))
+  (when-let (new-title
+             (read-string (format "New title of %s: " (mg--show-mr mr))
+                          (alist-get 'title mr)))
+    (mg--mr-set-prop-async mr 'title new-title)))
 
-(defun mg-mr-edit-target-branch (branch target-branch)
+(defun mg-mr-edit-target-branch (mr target-branch)
   "Set the target branch of the MR associated to BRANCH to TARGET-BRANCH"
   (interactive (list
-                (mg--read-branch)
+                (mg--read-mr)
                 (magit-read-other-branch "New target branch")))
-  (let* ((project-id (mg--infer-project-id branch))
-         (mr (mg--get-mr-of-source-branch project-id branch :no-cache t)))
-    (mg--mr-set-prop-async mr 'target_branch target-branch)))
+  (mg--mr-set-prop-async mr 'target_branch target-branch))
 
-(defun mg-mr-toggle-draft (branch)
+(defun mg-mr-toggle-draft (mr)
   "Toggle the draft status of the MR associate to BRANCH"
-  (interactive (list (mg--read-branch)))
-  (let* ((project-id (mg--infer-project-id branch))
-         (mr
-          (mg--get-mr-of-source-branch
-           project-id
-           branch
-           :no-cache t)))
-    (let* ((title (alist-get 'title mr))
-           (is-draft (string-match "^\\(Draft: \\)+\\(.*\\)$" title))
-           (new-title
-            (if is-draft
-                (let ((title-no-draft (match-string 2 title)))
-	              title-no-draft)
-              (concat "Draft: " title))))
-      (mg--mr-set-prop-async mr 'title new-title
-       :message-progress
-       (format "%s %s as draft"
-               (if is-draft "Unmarking" "Marking")
-               (mg--show-mr mr))))))
+  (interactive (list (mg--read-mr)))
+  (let* ((title (alist-get 'title mr))
+         (is-draft (string-match "^\\(Draft: \\)+\\(.*\\)$" title))
+         (new-title
+          (if is-draft
+              (let ((title-no-draft (match-string 2 title)))
+	            title-no-draft)
+            (concat "Draft: " title))))
+    (mg--mr-set-prop-async mr 'title new-title
+                           :message-progress
+                           (format "%s %s as draft"
+                                   (if is-draft "Unmarking" "Marking")
+                                   (mg--show-mr mr)))))
 
 (defun mg--decode-assignees (assignee-objs)
   "From assignee objects to list of usernames (strings)"
@@ -583,107 +572,77 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
           (id (alist-get 'id user)))
       (cons (format "%s (@%s)" name username) id)))
 
-(defun mg-mr-edit-assignees (branch)
+(defun mg-mr-edit-assignees (mr)
   ""
-  (interactive (list (mg--read-branch)))
-  (let* ((project-id (mg--infer-project-id branch))
-         (mr
-          (mg--get-mr-of-source-branch
-           project-id
-           branch
-           :no-cache t)))
-    (if (not mr)
-        (error
-         "Couldn't find MR for branch '%s' in project '%s'"
-         branch
-         project-id)
-      (let* ((current-assignees (mapcar #'mg--format-user-as-candidate (alist-get 'assignees mr)))
-             (candidate-assignees
-              (append current-assignees
-                      (mapcar #'mg--format-user-as-candidate
-                              (cons (alist-get 'author mr)
-                                    (alist-get 'reviewers mr)))))
-             (new-assignees
-              (seq-uniq
-               (completing-read-multiple
-                ;; prompt
-                (format
-                 "Set assignees of %s (space-separated GitLab usernames): "
-                 (mg--show-mr mr))
-                ;; table
-                candidate-assignees
-                nil ;; predicate
-                nil ;; require-match
-                ;; initial-input
-                (if current-assignees
-                    (concat (s-join ", " (mapcar #'car current-assignees)) ", ")
-                  nil))))
-             (new-assignees
-              (mapcar
-               (lambda (selection) (or (cdr (assoc selection candidate-assignees)) selection))
-               new-assignees)))
-        (mg--mr-set-prop-async mr
-         'assignee_ids
-         (mapcar #'mg--to-user-id new-assignees)
-         :message-progress
-         (if new-assignees "Setting assignees" "Removing assignees")
-         :message-success
-         (if new-assignees
-             (format "Updated assignees of %s to: %s"
-                     (mg--show-mr mr)
-                     (s-join ", " new-assignees))
-           (format "Removed all assignees of %s." (mg--show-mr mr))))))))
+  (interactive (list (mg--read-mr)))
+  (let* ((current-assignees (mapcar #'mg--format-user-as-candidate (alist-get 'assignees mr)))
+         (candidate-assignees
+          (append current-assignees
+                  (mapcar #'mg--format-user-as-candidate
+                          (cons (alist-get 'author mr)
+                                (alist-get 'reviewers mr)))))
+         (new-assignees
+          (seq-uniq
+           (completing-read-multiple
+            ;; prompt
+            (format
+             "Set assignees of %s (space-separated GitLab usernames): "
+             (mg--show-mr mr))
+            ;; table
+            candidate-assignees
+            nil ;; predicate
+            nil ;; require-match
+            ;; initial-input
+            (if current-assignees
+                (concat (s-join ", " (mapcar #'car current-assignees)) ", ")
+              nil))))
+         (new-assignees
+          (mapcar
+           (lambda (selection) (or (cdr (assoc selection candidate-assignees)) selection))
+           new-assignees)))
+    (mg--mr-set-prop-async mr
+                           'assignee_ids
+                           (mapcar #'mg--to-user-id new-assignees)
+                           :message-progress
+                           (if new-assignees "Setting assignees" "Removing assignees")
+                           :message-success
+                           (if new-assignees
+                               (format "Updated assignees of %s to: %s"
+                                       (mg--show-mr mr)
+                                       (s-join ", " new-assignees))
+                             (format "Removed all assignees of %s." (mg--show-mr mr))))))
 
-(defun mg--mr-assign-to-favorite--set ()
+(defun mg--mr-assign-to-favorite--set (mr)
   ""
-  (interactive)
+  (interactive (list (mg--read-mr)))
   (if-let (assignees (transient-args 'mg-mr-assign-to-favorite))
       ;; (print assignees)
-      (let* ((branch (mg--read-branch))
-             (project-id (mg--infer-project-id branch))
-             (mr
-              (mg--get-mr-of-source-branch
-               project-id
-               branch
-               :no-cache t)))
-        (mg--mr-set-prop-async mr
-         'assignee_ids
-         (mapcar #'mg--to-user-id assignees)
-         :show-value
-         (lambda (_) (s-join ", " assignees))))
+      (mg--mr-set-prop-async mr
+                             'assignee_ids
+                             (mapcar #'mg--to-user-id assignees)
+                             :show-value
+                             (lambda (_) (s-join ", " assignees)))
     (error "Select a non-empty set of favorites first.")))
 
-(defun mg-mr-assign-to-reviewers (branch)
+(defun mg-mr-assign-to-reviewers (mr)
   ""
-  (interactive (list (mg--read-branch)))
-  (let* ((project-id (mg--infer-project-id branch))
-         (mr
-          (mg--get-mr-of-source-branch
-           project-id
-           branch
-           :no-cache t))
-         (reviewers
+  (interactive (list (mg--read-mr)))
+  (let* ((reviewers
           (if-let (reviewers (alist-get 'reviewers mr))
               (mapcar #'mg--format-user-as-candidate
                       (alist-get 'reviewers mr))
             (error "This MR has no reviewers!"))))
     (mg--mr-set-prop-async mr
-     'assignee_ids
-     (mapcar #'cdr reviewers)
-     :show-value
-     (lambda (_)
-       (s-join ", " (mapcar #'car reviewers))))))
+                           'assignee_ids
+                           (mapcar #'cdr reviewers)
+                           :show-value
+                           (lambda (_)
+                             (s-join ", " (mapcar #'car reviewers))))))
 
-(defun mg-mr-assign-to-me (branch)
+(defun mg-mr-assign-to-me (mr)
   ""
-  (interactive (list (mg--read-branch)))
-  (let* ((project-id (mg--infer-project-id branch))
-         (mr
-          (mg--get-mr-of-source-branch
-           project-id
-           branch
-           :no-cache t))
-         (my-username (concat "@" (ghub--username nil 'gitlab)))
+  (interactive (list (mg--read-mr)))
+  (let* ((my-username (concat "@" (ghub--username nil 'gitlab)))
          (my-id (mg--to-user-id my-username)))
     (mg--mr-set-prop-async
      mr
@@ -691,16 +650,10 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
      (list my-id)
      :show-value (lambda (_) my-username))))
 
-(defun mg-mr-assign-to-author (branch)
+(defun mg-mr-assign-to-author (mr)
   ""
-  (interactive (list (mg--read-branch)))
-  (let* ((project-id (mg--infer-project-id branch))
-         (mr
-          (mg--get-mr-of-source-branch
-           project-id
-           branch
-           :no-cache t))
-         (author-username (concat "@" (alist-get 'username (alist-get 'author mr))))
+  (interactive (list (mg--read-mr)))
+  (let* ((author-username (concat "@" (alist-get 'username (alist-get 'author mr))))
          (author-id (alist-get 'id (alist-get 'author mr))))
     (mg--mr-set-prop-async
      mr
@@ -708,22 +661,18 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
      (list author-id)
      :show-value (lambda (_) author-username))))
 
-(defun mg-mr-browse (branch)
+(defun mg-mr-browse (mr)
   "Browse the MR of the current BRANCH on GitLab with ‘browse-url’."
-  (interactive (list (mg--read-branch)))
-  (let* ((project-id (mg--infer-project-id branch))
-         (mr (mg--get-mr-of-source-branch project-id branch)))
-    (browse-url (alist-get 'web_url mr))))
+  (interactive (list (mg--read-mr)))
+  (browse-url (alist-get 'web_url mr)))
 
-(defun mg-mr-browse-kill (branch)
+(defun mg-mr-browse-kill (mr)
   "Add the URL of the current MR to the kill ring.
 
 Works like ‘mg-mr-browse’, but puts the address in the
 kill ring instead of opening it with ‘browse-url’."
-  (interactive (list (mg--read-branch)))
-  (let* ((project-id (mg--infer-project-id branch))
-         (mr (mg--get-mr-of-source-branch project-id branch))
-         (web-url (alist-get 'web_url mr)))
+  (interactive (list (mg--read-mr)))
+  (let* ((web-url (alist-get 'web_url mr)))
     (kill-new web-url)
     (message "Added URL `%s' to kill ring" web-url)))
 
