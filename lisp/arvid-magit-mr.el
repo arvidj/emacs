@@ -570,7 +570,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 	(should (equal 4414596 (mg--to-user-id "@arvidnl")))))
 
 (defun mg--format-user-as-candidate (user)
-	""
+	"Return user as a cons '(NAME (@USERNAME) . ID)'"
     (let ((username (alist-get 'username user))
           (name (alist-get 'name user))
           (id (alist-get 'id user)))
@@ -731,13 +731,27 @@ kill ring instead of opening it with ‘browse-url’."
    ("l" "labels" mg--todo)
    ("T" "target branch" mg--mr-edit-target-branch)
    ]
-  ["Assignees"
+  [:description
+   (lambda ()
+     (let ((mr (oref (transient-prefix-object) scope)))
+       (format "Assignees [%s]"
+               (s-join ", "
+                       (mapcar
+                        (lambda (user) (concat "@" (alist-get 'username user)))
+                        (alist-get 'assignees mr))))))
    ("a a" "edit assignees" mg--mr-edit-assignees)
    ("a m" "assign to me" mg--mr-assign-to-me)
    ("a A" "assign to author" mg-mr-assign-to-author)
    ("a r" "assign to reviewers" mg-mr-assign-to-reviewers)
    ("a f" "assign to favorite" mg-mr-assign-to-favorite)]
-  ["Reviewers"
+  [:description
+   (lambda ()
+     (let ((mr (oref (transient-prefix-object) scope)))
+       (format "Reviewers [%s]"
+               (s-join ", "
+                       (mapcar
+                        (lambda (user) (concat "@" (alist-get 'username user)))
+                        (alist-get 'reviewers mr))))))
    ("r r" "edit reviewers" mg--todo)]
   ["Actions"
    ("v" "open MR on GitLab" mg-mr-browse)
