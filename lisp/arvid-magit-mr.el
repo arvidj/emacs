@@ -511,15 +511,14 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
          branch
          project-id))))
 
-(defun mg-mr-edit-description (mr)
-  ""
-  (interactive (list (mg--read-mr)))
-  (mg--message mr "Edit description")
+(transient-define-suffix mg--mr-edit-description (mr)
+  "Set the title of MR to NEW-TITLE."
+  (interactive (list (oref transient-current-prefix scope)))
   (mg--mr-create-description-buffer mr))
 
-(defun mg-mr-edit-title (mr new-title)
-  ""
-  (interactive (let* ((mr (mg--read-mr))
+(transient-define-suffix mg--mr-edit-title (mr new-title)
+  "Set the title of MR to NEW-TITLE."
+  (interactive (let* ((mr (oref transient-current-prefix scope))
                       (new-title
                        (read-string
                         (mg--format mr "New title: ")
@@ -527,16 +526,16 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                  (list mr new-title)))
   (mg--mr-set-prop-async mr 'title new-title))
 
-(defun mg-mr-edit-target-branch (mr target-branch)
+(transient-define-suffix mg--mr-edit-target-branch (mr target-branch)
   "Set the target branch of the MR associated to BRANCH to TARGET-BRANCH"
   (interactive (list
-                (mg--read-mr)
+                (oref transient-current-prefix scope)
                 (magit-read-other-branch "New target branch")))
   (mg--mr-set-prop-async mr 'target_branch target-branch))
 
-(defun mg-mr-toggle-draft (mr)
+(transient-define-suffix mg--mr-toggle-draft (mr)
   "Toggle the draft status of the MR associate to BRANCH"
-  (interactive (list (mg--read-mr)))
+  (interactive (list (oref transient-current-prefix scope)))
   (let* ((title (alist-get 'title mr))
          (is-draft (string-match "^\\(Draft: \\)+\\(.*\\)$" title))
          (new-title
@@ -577,11 +576,12 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
           (id (alist-get 'id user)))
       (cons (format "%s (@%s)" name username) id)))
 
-(defun mg-mr-edit-assignees (mr)
+(transient-define-suffix mg--mr-edit-assignees (mr)
   ""
-  (interactive (list (mg--read-mr)))
+  (interactive (list (oref transient-current-prefix scope)))
   (let* ((current-assignees (mapcar #'mg--format-user-as-candidate (alist-get 'assignees mr)))
          (candidate-assignees
+          ;; TODO: add the favorites here
           (append current-assignees
                   (mapcar #'mg--format-user-as-candidate
                           (cons (alist-get 'author mr)
@@ -616,9 +616,9 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                                            (s-join ", " new-assignees))
                              (mg--format mr "Removed all assignees.")))))
 
-(defun mg--mr-assign-to-favorite--set (mr)
+(transient-define-suffix mg--mr-assign-to-favorite--set (mr)
   ""
-  (interactive (list (mg--read-mr)))
+  (interactive (list (oref transient-current-prefix scope)))
   (if-let (assignees (transient-args 'mg-mr-assign-to-favorite))
       ;; (print assignees)
       (mg--mr-set-prop-async mr
@@ -628,9 +628,9 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                              (lambda (_) (s-join ", " assignees)))
     (error "Select a non-empty set of favorites first.")))
 
-(defun mg-mr-assign-to-reviewers (mr)
+(transient-define-suffix mg--mr-assign-to-reviewers (mr)
   ""
-  (interactive (list (mg--read-mr)))
+  (interactive (list (oref transient-current-prefix scope)))
   (let* ((reviewers
           (if-let (reviewers (alist-get 'reviewers mr))
               (mapcar #'mg--format-user-as-candidate
@@ -643,9 +643,9 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                            (lambda (_)
                              (s-join ", " (mapcar #'car reviewers))))))
 
-(defun mg-mr-assign-to-me (mr)
+(transient-define-suffix mg--mr-assign-to-me (mr)
   ""
-  (interactive (list (mg--read-mr)))
+  (interactive (list (oref transient-current-prefix scope)))
   (let* ((my-username (concat "@" (ghub--username nil 'gitlab)))
          (my-id (mg--to-user-id my-username)))
     (mg--mr-set-prop-async
@@ -654,9 +654,9 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
      (list my-id)
      :show-value (lambda (_) my-username))))
 
-(defun mg-mr-assign-to-author (mr)
+(transient-define-suffix mg-mr-assign-to-author (mr)
   ""
-  (interactive (list (mg--read-mr)))
+  (interactive (list (oref transient-current-prefix scope)))
   (let* ((author-username (concat "@" (alist-get 'username (alist-get 'author mr))))
          (author-id (alist-get 'id (alist-get 'author mr))))
     (mg--mr-set-prop-async
@@ -665,17 +665,17 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
      (list author-id)
      :show-value (lambda (_) author-username))))
 
-(defun mg-mr-browse (mr)
+(transient-define-suffix mg-mr-browse (mr)
   "Browse the MR of the current BRANCH on GitLab with ‘browse-url’."
-  (interactive (list (mg--read-mr)))
+  (interactive (list (oref transient-current-prefix scope)))
   (browse-url (alist-get 'web_url mr)))
 
-(defun mg-mr-browse-kill (mr)
+(transient-define-suffix mg-mr-browse-kill (mr)
   "Add the URL of the current MR to the kill ring.
 
 Works like ‘mg-mr-browse’, but puts the address in the
 kill ring instead of opening it with ‘browse-url’."
-  (interactive (list (mg--read-mr)))
+  (interactive (list (oref transient-current-prefix scope)))
   (let* ((web-url (alist-get 'web_url mr)))
     (kill-new web-url)
     (message "Added URL `%s' to kill ring" web-url)))
@@ -724,16 +724,16 @@ kill ring instead of opening it with ‘browse-url’."
        (format "%s" (alist-get 'title mr))
        "\n")))
   ["Edit"
-   ("t" "title" mg-mr-edit-title)
-   ("d" "description" mg-mr-edit-description)
+   ("t" "title" mg--mr-edit-title)
+   ("d" "description" mg--mr-edit-description)
    ("m" "milestone" mg--todo)
-   ("D" "toggle draft status" mg-mr-toggle-draft)
+   ("D" "toggle draft status" mg--mr-toggle-draft)
    ("l" "labels" mg--todo)
-   ("T" "target branch" mg-mr-edit-target-branch)
+   ("T" "target branch" mg--mr-edit-target-branch)
    ]
   ["Assignees"
-   ("a a" "edit assignees" mg-mr-edit-assignees)
-   ("a m" "assign to me" mg-mr-assign-to-me)
+   ("a a" "edit assignees" mg--mr-edit-assignees)
+   ("a m" "assign to me" mg--mr-assign-to-me)
    ("a A" "assign to author" mg-mr-assign-to-author)
    ("a r" "assign to reviewers" mg-mr-assign-to-reviewers)
    ("a f" "assign to favorite" mg-mr-assign-to-favorite)]
@@ -741,7 +741,7 @@ kill ring instead of opening it with ‘browse-url’."
    ("r r" "edit reviewers" mg--todo)]
   ["Actions"
    ("v" "open MR on GitLab" mg-mr-browse)
-   ("k" "add MR url on GitLab to kill ring" mg-mr-browse-kill)
+   ("k" "add MR url to kill ring" mg-mr-browse-kill)
    ]]
  (interactive (list (mg--read-mr)))
  (transient-setup 'mg--mr nil nil :scope mr))
