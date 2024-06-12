@@ -416,25 +416,26 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 (defvar-local mg--mr nil
   "Merge request under edit in MR description buffers")
 
-;; TODO: should also take a callback.
 ;; TODO: if saving fails, user should not lose their description.
-(defun mg-mr-save-description-buffer ()
+(cl-defun mg-mr-save-description-buffer (&key callback errorback)
   ""
   (interactive)
   (mg--mr-set-prop-async
-   mg--mr
-   'description (buffer-string)
-   :show-value (lambda () nil)
+   mg--mr 'description (buffer-string)
+   :show-value (lambda (_) nil)
    :callback
-   (lambda (_resp _header _status _req)
+   (lambda (resp header status req)
      (set-buffer-modified-p nil)
-     (mg--message mg--mr "Saving... Done!"))))
+     (mg--message mg--mr "Setting description... Done!")
+     (funcall callback resp header status req))
+   :errorback errorback))
 
 (defun mg-mr-save-and-close-description-buffer ()
   ""
   (interactive)
-  (mg-mr-save-description-buffer)
-  (magit-kill-this-buffer))
+  (mg-mr-save-description-buffer
+   :callback (lambda (_ _ _ _)
+               (magit-kill-this-buffer))))
 
 (defun mg-mr-cancel-description-buffer ()
   ""
