@@ -602,20 +602,18 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
             (if current-assignees
                 (concat (s-join ", " (mapcar #'car current-assignees)) ", ")
               nil))))
-         (new-assignees
+         (new-assignees-aux
           (mapcar
            (lambda (selection) (or (cdr (assoc selection candidate-assignees)) selection))
            new-assignees)))
-    (mg--mr-set-prop-async mr
-                           'assignee_ids
-                           (mapcar #'mg--to-user-id new-assignees)
-                           :message-progress
-                           (if new-assignees "Setting assignees" "Removing assignees")
-                           :message-success
-                           (if new-assignees
-                               (mg--format mr "Updated assignees to: %s"
-                                           (s-join ", " new-assignees))
-                             (mg--format mr "Removed all assignees.")))))
+    (mg--mr-set-prop-async
+     mr
+     'assignee_ids
+     (mapcar #'mg--to-user-id new-assignees-aux)
+     :show-value (lambda (_)
+                   (if new-assignees
+                       (s-join ", " new-assignees)
+                     "None")))))
 
 (transient-define-suffix mg--mr-assign-to-favorite--set (mr)
   ""
