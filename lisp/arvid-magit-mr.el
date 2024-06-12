@@ -577,6 +577,16 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
           (id (alist-get 'id user)))
       (cons (format "%s (@%s)" name username) id)))
 
+(defun mg--format-favorites-as-candidates ()
+  ""
+  (mapcar
+   (lambda (user)
+     (let* ((name (car (cdr user)))
+            (username (car (cdr (cdr user))))
+            (id (mg--to-user-id username)))
+       (cons (format "%s (%s)" name username) id)))
+   mg-favorite-users))
+
 (transient-define-suffix mg--mr-edit-assignees (mr)
   ""
   (interactive (list (oref transient-current-prefix scope)))
@@ -586,7 +596,8 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
           (append current-assignees
                   (mapcar #'mg--format-user-as-candidate
                           (cons (alist-get 'author mr)
-                                (alist-get 'reviewers mr)))))
+                                (alist-get 'reviewers mr)))
+                  (mg--format-favorites-as-candidates)))
          (new-assignees
           (seq-uniq
            (completing-read-multiple
