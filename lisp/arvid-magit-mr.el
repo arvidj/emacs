@@ -721,12 +721,16 @@ kill ring instead of opening it with ‘browse-url’."
        (propertize (mg--show-mr mr)
                    'face 'magit-branch-local)
        ": "
-       (format "%s" (alist-get 'title mr))
+       (format "%s " (alist-get 'title mr))
+       (format "[target: %s]"
+               (propertize (alist-get 'target_branch mr)
+                           'face 'magit-branch-remote))
        "\n")))
   ["Edit"
    ("t" "title" mg--mr-edit-title)
    ("d" "description" mg--mr-edit-description)
    ("m" "milestone" mg--todo)
+   ;; TODO: since we know the MR we make this either "Draft" or "Undraft"
    ("D" "toggle draft status" mg--mr-toggle-draft)
    ("l" "labels" mg--todo)
    ("T" "target branch" mg--mr-edit-target-branch)
