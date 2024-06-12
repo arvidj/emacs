@@ -292,7 +292,7 @@ CALLBACK are nil."
     ('milestone_id "milestone id")
     ('remove_labels "remove labels")
     ('remove_source_branch "remove source branch")
-    ('reviewer_ids "reviewer ids")
+    ('reviewer_ids "reviewers")
     ('squash "squash")
     ('state_event "state")
     ('target_branch "target branch")
@@ -590,13 +590,12 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
 (transient-define-suffix mg--mr-edit-assignees (mr)
   ""
   (interactive (list (oref transient-current-prefix scope)))
-  (let* ((current-assignees (mapcar #'mg--format-user-as-candidate (alist-get 'assignees mr)))
+  (let* ((current-reviewers (mapcar #'mg--format-user-as-candidate (alist-get 'reviewers mr)))
+         (current-assignees (mapcar #'mg--format-user-as-candidate (alist-get 'assignees mr)))
          (candidate-assignees
-          ;; TODO: add the favorites here
-          (append current-assignees
-                  (mapcar #'mg--format-user-as-candidate
-                          (cons (alist-get 'author mr)
-                                (alist-get 'reviewers mr)))
+          (append current-reviewers
+                  current-assignees
+                  (list (mg--format-user-as-candidate (alist-get 'author mr)) )
                   (mg--format-favorites-as-candidates)))
          (new-assignees
           (seq-uniq
@@ -604,7 +603,10 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
             ;; prompt
             (mg--format
              mr
-             "Set assignees (space-separated GitLab usernames): ")
+             "Set assignees (space-separated GitLab usernames) [reviewers: %s]: "
+             (if current-reviewers
+                 (concat (s-join ", " (mapcar #'car current-reviewers)))
+               "none"))
             ;; table
             candidate-assignees
             nil ;; predicate
@@ -674,6 +676,49 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
      'assignee_ids
      (list author-id)
      :show-value (lambda (_) author-username))))
+
+
+(transient-define-suffix mg--mr-edit-reviewers (mr)
+  ""
+  (interactive (list (oref transient-current-prefix scope)))
+  (let* ((current-reviewers (mapcar #'mg--format-user-as-candidate (alist-get 'reviewers mr)))
+         (current-assignees (mapcar #'mg--format-user-as-candidate (alist-get 'assignees mr)))
+         (candidate-reviewers
+          (append current-reviewers
+                  current-assignees
+                  (list (mg--format-user-as-candidate (alist-get 'author mr)) )
+                  (mg--format-favorites-as-candidates)))
+         (new-reviewers
+          (seq-uniq
+           (completing-read-multiple
+            ;; prompt
+            (mg--format
+             mr
+             "Set reviewers (space-separated GitLab usernames) [assignees: %s]: "
+             (if current-assignees
+                 (concat (s-join ", " (mapcar #'car current-assignees)))
+               "none"))
+            ;; table
+            candidate-reviewers
+            nil ;; predicate
+            nil ;; require-match
+            ;; initial-input
+            (if current-reviewers
+                (concat (s-join ", " (mapcar #'car current-reviewers)) ", ")
+              nil))))
+         (new-reviewers-aux
+          (mapcar
+           (lambda (selection) (or (cdr (assoc selection candidate-reviewers)) selection))
+           new-reviewers)))
+    (mg--mr-set-prop-async
+     mr
+     'reviewer_ids
+     (mapcar #'mg--to-user-id new-reviewers-aux)
+     :show-value (lambda (_)
+                   (if new-reviewers
+                       (s-join ", " new-reviewers)
+                     "None")))))
+
 
 (transient-define-suffix mg-mr-browse (mr)
   "Browse the MR of the current BRANCH on GitLab with ‘browse-url’."
@@ -766,7 +811,7 @@ kill ring instead of opening it with ‘browse-url’."
                        (mapcar
                         (lambda (user) (concat "@" (alist-get 'username user)))
                         (alist-get 'reviewers mr))))))
-   ("r r" "edit reviewers" mg--todo)]
+   ("r r" "edit reviewers" mg--mr-edit-reviewers)]
   ["Actions"
    ("v" "open MR on GitLab" mg-mr-browse)
    ("k" "add MR url to kill ring" mg-mr-browse-kill)
