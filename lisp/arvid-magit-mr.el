@@ -203,6 +203,7 @@ CALLBACK are nil."
 
 (cl-defun mg--get1
     (url params &key no-cache callback errorback)
+  ""
   (let ((resp
          (mg--get
           url params
@@ -709,19 +710,19 @@ kill ring instead of opening it with ‘browse-url’."
    ("A" "add" mg--todo)])
 
 (transient-define-prefix
- mg--mr () "Act on a GitLab merge request."
- [:if
-  (lambda () (or (magit-branch-at-point) (magit-get-current-branch)))
-  :description
+ mg--mr (mr) "Act on a GitLab merge request."
+ [:description
   (lambda ()
-    (let ((branch
-           (or (magit-branch-at-point) (magit-get-current-branch))))
-      (concat
-       (propertize "Act on GitLab merge request for "
+    (let ((mr (oref (transient-prefix-object) scope)))
+	  (concat
+       (propertize "Act on GitLab merge request "
                    'face
                    'transient-heading)
-       (propertize branch 'face 'magit-branch-local)
-       ":\n")))
+       (propertize (mg--show-mr mr)
+                   'face 'magit-branch-local)
+       ": "
+       (format "%s" (alist-get 'title mr))
+       "\n")))
   ["Edit"
    ("t" "title" mg-mr-edit-title)
    ("d" "description" mg-mr-edit-description)
@@ -741,7 +742,9 @@ kill ring instead of opening it with ‘browse-url’."
   ["Actions"
    ("v" "open MR on GitLab" mg-mr-browse)
    ("k" "add MR url on GitLab to kill ring" mg-mr-browse-kill)
-   ]])
+   ]]
+ (interactive (list (mg--read-mr)))
+ (transient-setup 'mg--mr nil nil :scope mr))
 
 ;; Update magit-mode-map such that pressing @ opens the magit-glab-mr transient
 (define-key magit-mode-map (kbd "@") 'mg--mr)
