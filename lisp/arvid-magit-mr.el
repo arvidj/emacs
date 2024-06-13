@@ -16,6 +16,9 @@
 ;; - write a real header
 ;; - cache "known labels / users / milestones"
 ;; - make a real minor mode for writing descriptions
+;; - figure out how to deal with MRs from a fork (e.g. branches pushed to nl/tezos but whose mr lives on tezos/tezos)
+;; - add "un-assign me" (and "remove me from reviewers")
+;; - add approve
 
 ;; Setting up a token
 ;; 1. set 'git config --global gitlab.user USERNAME'
@@ -52,6 +55,17 @@ Example:
            (string :tag "Prefix")
            (string :tag "Full name for display")
            (string :tag "GitLab username (include @)"))))
+
+;; Internals
+
+;;; Caches
+
+(defvar mg--known-milestones (make-hash-table :test 'equal)
+  "Hash table for storing seen milestones.
+
+Used to provide candidates in completing-reads.")
+
+;;; Encoding
 
 (defun mg-url-encode-project-id (project-id)
   "Encode a GitLab PROJECT-ID as a string.
@@ -105,7 +119,7 @@ For more information, see URL
   "Path to magit-glab's cache")
 
 (defvar mg--GET-cache (make-hash-table :test 'equal)
-  "Hash table for storing memoized results.")
+  "Hash table for storing memoized GET results.")
 
 (cl-defun mg--get (resource params &key no-cache callback errorback)
   "Make a request for RESOURCE with caching and return the response body.
@@ -224,9 +238,26 @@ CALLBACK are nil."
    :callback callback
    :errorback errorback))
 
-(ert-deftest mg-test-url-encode-project-id ()
+
+(ert-deftest mg-test-get-user ()
   (should (equal 4414596 (alist-get 'id (mg--get-user "arvidnl" :no-cache t))))
   (should (equal 4414596 (alist-get 'id (mg--get-user "arvidnl")))))
+
+(cl-defun mg--get-milestone-of-iid (project-id milestone-iid &key no-cache callback errorback)
+  ""
+  (mg--get1
+   (format
+    "/projects/%s/milestones"
+    (mg-url-encode-project-id project-id))
+   `((iids . ,milestone-iid))
+   :no-cache no-cache
+   :callback callback
+   :errorback errorback))
+
+(ert-deftest mg--test-get-milestone-of-iid ()
+  ""
+  (should (equal 4450915 (alist-get 'id (mg--get-milestone-of-iid "tezos/tezos" 325 :no-cache t))))
+  (should (equal 4450915 (alist-get 'id (mg--get-milestone-of-iid "tezos/tezos" 325)))))
 
 (cl-defun mg--get-mr
     (project-id mr-iid &key no-cache callback errorback)
@@ -238,6 +269,36 @@ CALLBACK are nil."
    :errorback errorback
    :no-cache no-cache))
 
+
+(cl-defun mg--get-mr-of-source-branch
+    (project-id source-branch &key no-cache callback errorback)
+  ""
+  (let ((observe-milestone
+         (lambda (mr)
+           (when-let (milestone (alist-get 'milestone mr))
+             (puthash (alist-get 'id milestone) milestone mg--known-milestones)))))
+    (let ((resp
+           (mg--get1
+            (concat
+             "/projects/"
+             (mg-url-encode-project-id project-id)
+             "/merge_requests")
+            `((source_branch . ,source-branch))
+            :callback
+            (when callback
+              (lambda (resp header status req)
+                (funcall observe-milestone resp)
+                (funcall callback resp header status req)))
+            :errorback errorback
+            :no-cache no-cache)))
+      (when (not (or callback errorback))
+        (funcall observe-milestone resp)
+        resp))))
+
+;; (mg--get-mr-of-source-branch
+;;  "tezos/tezos" "arvid@rename-ci-image-layers" :no-cache t)
+;; (hash-table-keys mg--known-milestones)
+
 (cl-defun mg--get-project
     (project-id &key no-cache callback errorback)
   ""
@@ -247,23 +308,6 @@ CALLBACK are nil."
    :callback callback
    :errorback errorback
    :no-cache no-cache))
-
-(cl-defun mg--get-mr-of-source-branch
-    (project-id source-branch &key no-cache callback errorback)
-  ""
-  (mg--get1
-   (concat
-    "/projects/"
-    (mg-url-encode-project-id project-id)
-    "/merge_requests")
-   `((source_branch . ,source-branch))
-   :callback callback
-   :errorback errorback
-   :no-cache no-cache))
-
-;; (mg--get-mr-of-source-branch
-;;  "tezos/tezos" "arvid@ci-add-cargo-cache")
-
 
 (defconst mg--mr-properties
   '(add_labels
@@ -543,20 +587,30 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                  (list mr new-labels)))
   (mg--mr-set-prop-async mr 'labels new-labels))
 
-(transient-define-suffix mg--mr-edit-milestone (mr new-milestone)
-  "Set the milestone of MR to NEW-MILESTONE."
+(transient-define-suffix mg--mr-edit-milestone (mr new-milestone-iid)
+  "Set the milestone of MR to NEW-MILESTONE-IID.
+
+If NEW-MILESTONE-IID is 0, then the milestone is removed.
+NEW-MILESTONE-IID is assumed to be in the same project as MR."
   ;; TODO: allow to read milestones like project/namespace%milestone
   ;; TODO: provide candidates
+  ;; TODO: more tests
+  ;; TODO: better progress messages when removing milestone
   (interactive (let* ((mr (oref transient-current-prefix scope))
                       (old-milestone (alist-get 'iid (alist-get 'milestone mr)))
-                      (new-milestone
-                       (string-remove-prefix "%" (read-string
-                                                  (mg--format mr "New milestone: ")
-                                                  (when old-milestone (number-to-string old-milestone))))))
-                 (list mr new-milestone)))
-  (mg--mr-set-prop-async
-   mr 'milestone_id new-milestone
-                         ))
+                      (new-milestone-iid
+                       (string-to-number
+                        (string-remove-prefix "%" (read-string
+                                                   (mg--format mr "New milestone id: ")
+                                                   (when old-milestone (number-to-string old-milestone)))))))
+                 (list mr new-milestone-iid)))
+  (let ((new-milestone-id
+         ;; Set milestone to 0 to un-assign
+         (if (> new-milestone-iid 0)
+             (alist-get 'id (mg--get-milestone-of-iid (alist-get 'project_id mr) new-milestone-iid))
+           new-milestone-iid)))
+    (message "new-milestone-iid: %s, new-milestone-id: %s" new-milestone-iid new-milestone-id)
+    (mg--mr-set-prop-async mr 'milestone_id new-milestone-id)))
 
 (transient-define-suffix mg--mr-edit-target-branch (mr target-branch)
   "Set the target branch of the MR associated to BRANCH to TARGET-BRANCH"
@@ -697,7 +751,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
      (list my-id)
      :show-value (lambda (_) my-username))))
 
-(transient-define-suffix mg-mr-assign-to-author (mr)
+(transient-define-suffix mg--mr-assign-to-author (mr)
   ""
   (interactive (list (oref transient-current-prefix scope)))
   (let* ((author-username (concat "@" (alist-get 'username (alist-get 'author mr))))
@@ -750,6 +804,20 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                        (s-join ", " new-reviewers)
                      "None")))))
 
+(transient-define-suffix mg--mr-set-assignees-as-reviewers (mr)
+  ""
+  (interactive (list (oref transient-current-prefix scope)))
+  (let* ((assignees
+          (if-let (assignees (alist-get 'assignees mr))
+              (mapcar #'mg--format-user-as-candidate
+                      (alist-get 'assignees mr))
+            (error "This MR has no reviewers!"))))
+    (mg--mr-set-prop-async mr
+                           'reviewer_ids
+                           (mapcar #'cdr assignees)
+                           :show-value
+                           (lambda (_)
+                             (s-join ", " (mapcar #'car assignees))))))
 
 (transient-define-suffix mg-mr-browse (mr)
   "Browse the MR of the current BRANCH on GitLab with ‘browse-url’."
@@ -783,7 +851,7 @@ kill ring instead of opening it with ‘browse-url’."
   (customize-variable 'mg-favorite-users))
 
 (transient-define-prefix
-  mg-mr-assign-to-favorite (mr) "Assign MR to a favorite user."
+  mg--mr-assign-to-favorite (mr) "Assign MR to a favorite user."
   [["Favorites"
     :if (lambda () mg-favorite-users)
     :setup-children mg--mr-assign-to-favorite--setup-children
@@ -842,9 +910,9 @@ kill ring instead of opening it with ‘browse-url’."
                         (alist-get 'assignees mr))))))
    ("a a" "edit assignees" mg--mr-edit-assignees)
    ("a m" "assign to me" mg--mr-assign-to-me)
-   ("a A" "assign to author" mg-mr-assign-to-author)
-   ("a r" "assign to reviewers" mg-mr-assign-to-reviewers)
-   ("a f" "assign to favorite" mg-mr-assign-to-favorite)]
+   ("a A" "assign to author" mg--mr-assign-to-author)
+   ("a r" "assign to reviewers" mg--mr-assign-to-reviewers)
+   ("a f" "assign to favorite" mg--mr-assign-to-favorite)]
   [:description
    (lambda ()
      (let ((mr (oref (transient-prefix-object) scope)))
@@ -853,7 +921,9 @@ kill ring instead of opening it with ‘browse-url’."
                        (mapcar
                         (lambda (user) (concat "@" (alist-get 'username user)))
                         (alist-get 'reviewers mr))))))
-   ("r r" "edit reviewers" mg--mr-edit-reviewers)]
+   ("r r" "edit reviewers" mg--mr-edit-reviewers)
+   ("r a" "assign to reviewers" mg--mr-set-assignees-as-reviewers)]
+
   ["Actions"
    ("v" "open MR on GitLab" mg-mr-browse)
    ("k" "add MR url to kill ring" mg-mr-browse-kill)
