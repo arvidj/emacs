@@ -432,7 +432,8 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
    (lambda (resp header status req)
      (set-buffer-modified-p nil)
      (mg--message mg--mr "Setting description... Done!")
-     (funcall callback resp header status req))
+     (when callback
+       (funcall callback resp header status req)))
    :errorback errorback))
 
 (defun mg-mr-save-and-close-description-buffer ()
