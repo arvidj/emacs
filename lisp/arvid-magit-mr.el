@@ -462,11 +462,11 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
       (setq index (1+ index)))
     ;; Create and switch to the buffer
     (switch-to-buffer (get-buffer-create buffer-name))
-    ;; Insert the specified content
-    (insert (alist-get 'description mr))
+    ;; Insert the description, if set.
+    (when-let (description (alist-get 'description mr))
+      (insert description))
     (goto-char (point-min))
     (set-buffer-modified-p nil)
-    ;; Activate the specified major mode
     (markdown-mode)
     ;; Set up local keybindings for this buffer
     (use-local-map (copy-keymap (current-local-map)))
