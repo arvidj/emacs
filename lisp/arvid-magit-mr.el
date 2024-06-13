@@ -499,7 +499,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
         (read-string "Branch name: ")
       (mg--strip-remote-prefix branch))))
 
-(defun mg--read-mr ()
+(cl-defun mg--read-mr (&key cache)
   ""
   ;; TODO: if can't deduce branch -> ask for full mr ref
   ;; TODO: if can't deduce project -> ask for full mr ref
@@ -510,7 +510,7 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
           (mg--get-mr-of-source-branch
            project-id
            branch
-           :no-cache t)))
+           :no-cache (not cache))))
     (or mr
         (error
          "Couldn't find MR for branch '%s' in project '%s'"
@@ -757,20 +757,23 @@ kill ring instead of opening it with ‘browse-url’."
   (customize-variable 'mg-favorite-users))
 
 (transient-define-prefix
-  mg-mr-assign-to-favorite () "Assign MR to a favorite user."
+  mg-mr-assign-to-favorite (mr) "Assign MR to a favorite user."
   [["Favorites"
     :if (lambda () mg-favorite-users)
     :setup-children mg--mr-assign-to-favorite--setup-children
+    :class transient-column
     ]
    ["Handle favorites"
     ("C" "customize favorites" mg-customize-favorites)]]
   ["Actions"
    :if (lambda () mg-favorite-users)
    ("S" "set" mg--mr-assign-to-favorite--set)
-   ("A" "add" mg--todo)])
+   ("A" "add" mg--todo)]
+  (interactive (list (mg--read-mr :cache (eq transient-current-command 'mg-mr))))
+  (transient-setup 'mg-mr-assign-to-favorite nil nil :scope mr))
 
 (transient-define-prefix
- mg--mr (mr) "Act on a GitLab merge request."
+ mg-mr (mr) "Act on a GitLab merge request."
  [:description
   (lambda ()
     (let ((mr (oref (transient-prefix-object) scope)))
@@ -822,10 +825,10 @@ kill ring instead of opening it with ‘browse-url’."
    ("k" "add MR url to kill ring" mg-mr-browse-kill)
    ]]
  (interactive (list (mg--read-mr)))
- (transient-setup 'mg--mr nil nil :scope mr))
+ (transient-setup 'mg-mr nil nil :scope mr))
 
 ;; Update magit-mode-map such that pressing @ opens the magit-glab-mr transient
-(define-key magit-mode-map (kbd "@") 'mg--mr)
+(define-key magit-mode-map (kbd "@") 'mg-mr)
 
 (provide 'arvid-magit-mr)
 
