@@ -294,7 +294,7 @@ CALLBACK are nil."
     ('description "description")
     ('discussion_locked "discussion locked")
     ('labels "labels")
-    ('milestone_id "milestone id")
+    ('milestone_id "milestone")
     ('remove_labels "remove labels")
     ('remove_source_branch "remove source branch")
     ('reviewer_ids "reviewers")
@@ -541,6 +541,21 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                         (s-join ", " (alist-get 'labels mr)))))
                  (list mr new-labels)))
   (mg--mr-set-prop-async mr 'labels new-labels))
+
+(transient-define-suffix mg--mr-edit-milestone (mr new-milestone)
+  "Set the milestone of MR to NEW-MILESTONE."
+  ;; TODO: allow to read milestones like project/namespace%milestone
+  ;; TODO: provide candidates
+  (interactive (let* ((mr (oref transient-current-prefix scope))
+                      (old-milestone (alist-get 'iid (alist-get 'milestone mr)))
+                      (new-milestone
+                       (string-remove-prefix "%" (read-string
+                                                  (mg--format mr "New milestone: ")
+                                                  (when old-milestone (number-to-string old-milestone))))))
+                 (list mr new-milestone)))
+  (mg--mr-set-prop-async
+   mr 'milestone_id new-milestone
+                         ))
 
 (transient-define-suffix mg--mr-edit-target-branch (mr target-branch)
   "Set the target branch of the MR associated to BRANCH to TARGET-BRANCH"
@@ -798,12 +813,19 @@ kill ring instead of opening it with ‘browse-url’."
                     (format "[target: %s]"
                             (propertize (alist-get 'target_branch mr)
                                         'face 'magit-branch-remote))))
-            (labels (format "Labels: [%s]" (s-join ", " (alist-get 'labels mr)))))
-        (concat (s-join "\n" (list title labels)) "\n"))))
+            (labels (format "Labels: [%s]" (s-join ", " (alist-get 'labels mr))))
+            (milestone (format
+                        "Milestone: %s"
+                        (if-let (milestone (alist-get 'milestone mr))
+                            (format "%%%d (%s)"
+                                    (alist-get 'iid milestone)
+                                    (alist-get 'title milestone))
+                          "None"))))
+        (concat (s-join "\n" (list title labels milestone)) "\n"))))
   ["Edit"
    ("t" "title" mg--mr-edit-title)
    ("d" "description" mg--mr-edit-description)
-   ("m" "milestone" mg--todo)
+   ("m" "milestone" mg--mr-edit-milestone)
    ;; TODO: since we know the MR we make this either "Draft" or "Undraft"
    ("D" "toggle draft status" mg--mr-toggle-draft)
    ("l" "labels" mg--mr-edit-labels)
