@@ -130,6 +130,8 @@
   'magit-rebase "u"
   '("M" "latest merge-commit" aj/magit-rebase-merge-interactive))
 
+ (transient-append-suffix 'magit-dispatch "!" '("@" "Act on MR" magit-glab-mr))
+
  ;; Show color in magit-process (convenient for pre-commit hook)
  ;; https://www.reddit.com/r/emacs/comments/15gjjs4/magit_process_buffer_shows_ansi_codes_instead_of/
  (setq magit-process-finish-apply-ansi-colors t))
