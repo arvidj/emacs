@@ -215,13 +215,18 @@ CALLBACK are nil."
     (when (not (or callback errorback))
       (car resp))))
 
-(cl-defun mg--get-user (username &key callback errorback)
+(cl-defun mg--get-user (username &key no-cache callback errorback)
   ""
   (mg--get1
    "/users"
    `((username . ,username))
+   :no-cache no-cache
    :callback callback
    :errorback errorback))
+
+(ert-deftest mg-test-url-encode-project-id ()
+  (should (equal 4414596 (alist-get 'id (mg--get-user "arvidnl" :no-cache t))))
+  (should (equal 4414596 (alist-get 'id (mg--get-user "arvidnl")))))
 
 (cl-defun mg--get-mr
     (project-id mr-iid &key no-cache callback errorback)
