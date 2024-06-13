@@ -532,6 +532,16 @@ Returns the 'NAMESPACE/PROJECT' part of the URL."
                  (list mr new-title)))
   (mg--mr-set-prop-async mr 'title new-title))
 
+(transient-define-suffix mg--mr-edit-labels (mr new-labels)
+  "Set the labels of MR to NEW-LABELS."
+  (interactive (let* ((mr (oref transient-current-prefix scope))
+                      (new-labels
+                       (read-string
+                        (mg--format mr "New labels: ")
+                        (s-join ", " (alist-get 'labels mr)))))
+                 (list mr new-labels)))
+  (mg--mr-set-prop-async mr 'labels new-labels))
+
 (transient-define-suffix mg--mr-edit-target-branch (mr target-branch)
   "Set the target branch of the MR associated to BRANCH to TARGET-BRANCH"
   (interactive (list
@@ -777,25 +787,26 @@ kill ring instead of opening it with ‘browse-url’."
  [:description
   (lambda ()
     (let ((mr (oref (transient-prefix-object) scope)))
-	  (concat
-       (propertize "Act on GitLab merge request "
-                   'face
-                   'transient-heading)
-       (propertize (mg--show-mr mr)
-                   'face 'magit-branch-local)
-       ": "
-       (format "%s " (alist-get 'title mr))
-       (format "[target: %s]"
-               (propertize (alist-get 'target_branch mr)
-                           'face 'magit-branch-remote))
-       "\n")))
+	  (let ((title (concat
+                    (propertize "Act on GitLab merge request "
+                                'face
+                                'transient-heading)
+                    (propertize (mg--show-mr mr)
+                                'face 'magit-branch-local)
+                    ": "
+                    (format "%s " (alist-get 'title mr))
+                    (format "[target: %s]"
+                            (propertize (alist-get 'target_branch mr)
+                                        'face 'magit-branch-remote))))
+            (labels (format "Labels: [%s]" (s-join ", " (alist-get 'labels mr)))))
+        (concat (s-join "\n" (list title labels)) "\n"))))
   ["Edit"
    ("t" "title" mg--mr-edit-title)
    ("d" "description" mg--mr-edit-description)
    ("m" "milestone" mg--todo)
    ;; TODO: since we know the MR we make this either "Draft" or "Undraft"
    ("D" "toggle draft status" mg--mr-toggle-draft)
-   ("l" "labels" mg--todo)
+   ("l" "labels" mg--mr-edit-labels)
    ("T" "target branch" mg--mr-edit-target-branch)
    ]
   [:description
