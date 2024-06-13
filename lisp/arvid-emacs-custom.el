@@ -35,6 +35,13 @@
  '(delete-selection-mode t)
  '(diff-switches "-r -u")
  '(ediff-window-setup-function 'ediff-setup-windows-plain)
+ '(edit-server-new-frame-alist
+   '((name . "Edit with Emacs FRAME")
+     (width . 80)
+     (height . 25)
+     (minibuffer . t)
+     (menu-bar-lines . t)
+     (fullscreen . fullboth)))
  '(elpy-modules
    '(elpy-module-company elpy-module-eldoc elpy-module-flymake elpy-module-pyvenv elpy-module-yasnippet elpy-module-django elpy-module-sane-defaults))
  '(flycheck-disabled-checkers '(php-phpcs))
@@ -78,10 +85,15 @@
  '(magit-branch-arguments nil)
  '(magit-commit-all-when-nothing-staged 'ask)
  '(magit-diff-refine-hunk t)
- '(magit-glab/favorite-users
+ '(magit-glab-favorite-users
    '(("i" "Myself" "@arvidnl")
      ("m" "Marge-bot" "@nomadic-margebot")
-     ("r" "Romain" "@romain.nl")))
+     ("r b" "Romain" "@romain.nl")
+     ("a" "Arvid's Marge-bot" "@margebot-arvid")
+     ("v" "Valentin Chaboche" "@vch9")
+     ("r p" "Raphaël Proust" "@raphael-proust")
+     ("p" "Pietro Abate" "@abate")
+     ("k" "Killian Delarue" "@Killian-Delarue")))
  '(magit-process-popup-time 5)
  '(magit-push-always-verify nil)
  '(magit-repo-dirs
@@ -124,7 +136,7 @@
      ("melpa" . "http://melpa.org/packages/")
      ("melpa-stable" . "http://stable.melpa.org/packages/")))
  '(package-selected-packages
-   '(names forge lua-mode eat esup chatgpt-shell marginalia orderless vertico solaire-mode nano-theme doom-themes envrc shfmt pinentry elisp-autofmt keychain-environment keychain-refresh-environment sqlformat async dune-format dune-mode flycheck-ocaml flycheck typescript-mode org markdown-mode ox-latex ocp-indent tuareg tuareg-mode emojify company-lsp lsp-ui diff-hl git-gutter-fringe csv-mode jedi jq-mode graphviz-dot-mode magit-delta gitlab nvm ocamlformat mermaid-mode tide highlight-indentation-guides highlight-indent-guides dumb-jump coverage magit-forge browse-at-remote elfeed org-drill birds-of-paradise-plus-theme gitlab-ci-mode-flycheck gitlab-ci-mode dockerfile-mode json-mode lsp-mode helm-c-yasnippet org-sync-snippets nyan-mode utop default-text-scale org-noter pdf-tools hydra py-yapf feature-mode ecukes htmlize "htmlize" dune centered-window python-pytest reason-mode visual-regexp deferred chronometer dired-icon-mode dired-icon all-the-icons-dired request writegood-mode pomidor projectile fill-column-indicator leuven-theme w3m org-plus-contrib gitignore-templates company-math boogie-friends fstar-mode web-server guess-language helm-dictionary dictionary howdoi hc-zenburn-theme magit-svn math-symbols zenburn-theme yaml-mode ws-trim wrap-region wc-mode use-package twig-mode solarized-theme soft-stone-theme smex rust-mode purple-haze-theme phpunit password-generator org-journal org-jira nginx-mode lorem-ipsum less-css-mode iedit hl-spotlight highlight-thing highlight-symbol highlight-parentheses highlight-indentation helm-bibtex hackernews gradle-mode gnuplot git-gutter exec-path-from-shell ebib dtrt-indent drag-stuff company-coq browse-kill-ring ack))
+   '(el-mock names forge lua-mode eat esup chatgpt-shell marginalia orderless vertico solaire-mode nano-theme doom-themes envrc shfmt pinentry elisp-autofmt keychain-environment keychain-refresh-environment sqlformat async dune-format dune-mode flycheck-ocaml flycheck typescript-mode org markdown-mode ox-latex ocp-indent tuareg tuareg-mode emojify company-lsp lsp-ui diff-hl git-gutter-fringe csv-mode jedi jq-mode graphviz-dot-mode magit-delta gitlab nvm ocamlformat mermaid-mode tide highlight-indentation-guides highlight-indent-guides dumb-jump coverage magit-forge browse-at-remote elfeed org-drill birds-of-paradise-plus-theme gitlab-ci-mode-flycheck gitlab-ci-mode dockerfile-mode json-mode lsp-mode helm-c-yasnippet org-sync-snippets nyan-mode utop default-text-scale org-noter pdf-tools hydra py-yapf feature-mode ecukes htmlize "htmlize" dune centered-window python-pytest reason-mode visual-regexp deferred chronometer dired-icon-mode dired-icon all-the-icons-dired request writegood-mode pomidor projectile fill-column-indicator leuven-theme w3m org-plus-contrib gitignore-templates company-math boogie-friends fstar-mode web-server guess-language helm-dictionary dictionary howdoi hc-zenburn-theme magit-svn math-symbols zenburn-theme yaml-mode ws-trim wrap-region wc-mode use-package twig-mode solarized-theme soft-stone-theme smex rust-mode purple-haze-theme phpunit password-generator org-journal org-jira nginx-mode lorem-ipsum less-css-mode iedit hl-spotlight highlight-thing highlight-symbol highlight-parentheses highlight-indentation helm-bibtex hackernews gradle-mode gnuplot git-gutter exec-path-from-shell ebib dtrt-indent drag-stuff company-coq browse-kill-ring ack))
  '(preview-default-preamble
    '("\\RequirePackage["
      ("," . preview-default-option-list)
