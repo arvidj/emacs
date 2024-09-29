@@ -14,9 +14,11 @@
         delete-pair
         downcase-region
         drag-stuff-down
+        electric-pair-delete-pair
         fill-paragraph
         forward-sexp
         helm-M-x
+        indent-for-tab-command
         kill-region
         org-beginning-of-line
         org-ctrl-c-ctrl-c
@@ -41,6 +43,7 @@
       '(
         iedit-switch-to-mc-mode
         lsp-signature-toggle-full-docs
+        lsp-ui-doc--handle-mouse-movement
         markdown-cycle
         markdown-outdent-or-delete
         mc--insert-number-and-increase

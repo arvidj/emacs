@@ -22,4 +22,8 @@
                t))
       (smerge-keep-other))))
 
+(eval-after-load 'smerge-mode
+  (lambda ()
+    (define-key smerge-mode-map (kbd "C-c m") smerge-basic-map)))
+
 (provide 'arvid-smerge)

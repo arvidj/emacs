@@ -52,12 +52,23 @@
 (defun aj/run-ciao ()
   ""
   (interactive)
-  (magit-shell-command-topdir "make -C ci"))
+  (magit-shell-command-topdir "make -s -C ci"))
 
 (defun aj/run-manifest ()
   ""
   (interactive)
-  (magit-shell-command-topdir "make -C manifest"))
+  (magit-shell-command-topdir "make -s -C manifest"))
+
+(defun aj/minibuffer-insert-current-branch ()
+  ""
+  (interactive)
+  (when-let (b (magit-get-current-branch))
+    (insert b)))
+
+(defun aj/minibuffer-insert-branch-prefix ()
+  ""
+  (interactive)
+  (insert "arvid@"))
 
 (use-package
  magit
@@ -129,12 +140,14 @@
  (transient-append-suffix
   'magit-rebase "u"
   '("M" "latest merge-commit" aj/magit-rebase-merge-interactive))
-
- (transient-append-suffix 'magit-dispatch "!" '("@" "Act on MR" magit-glab-mr))
-
+ 
  ;; Show color in magit-process (convenient for pre-commit hook)
  ;; https://www.reddit.com/r/emacs/comments/15gjjs4/magit_process_buffer_shows_ansi_codes_instead_of/
- (setq magit-process-finish-apply-ansi-colors t))
+ (setq magit-process-finish-apply-ansi-colors t)
+
+ ;; Make it easier to create branch names
+ (define-key minibuffer-mode-map (kbd "C-x C-p") #'aj/minibuffer-insert-branch-prefix)
+ (define-key minibuffer-mode-map (kbd "C-x C-b") #'aj/minibuffer-insert-current-branch))
 
 (use-package forge :ensure t :after magit)
 

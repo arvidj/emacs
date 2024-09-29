@@ -30,7 +30,7 @@
 ;; Generalities for programming
 (require 'arvid-flycheck)
 (require 'arvid-company)
-(require 'arvid-lsp)
+;; (require 'arvid-lsp)
 
 ;; Programming, etc
 (require 'arvid-lisp)
@@ -72,8 +72,23 @@
 (require 'arvid-gitlab-ci)
 (require 'arvid-projectile)
 (require 'arvid-vertico)
-(require 'arvid-magit-mr)
+(use-package magit-gitlab
+  :config
+  ;; Update magit-mode-map such that pressing @ opens the magit-gitlab-mr transient
+  (define-key magit-mode-map (kbd "@") 'magit-gitlab-mr)
+  (transient-append-suffix 'magit-dispatch "!" '("@" "Act on MR" magit-gitlab-mr))
+  (setq
+   magit-gitlab-favorite-users
+   '(("i" "Myself" "@arvidnl")
+     ("m" "Marge-bot" "@nomadic-margebot")
+     ("r b" "Romain" "@romain.nl")
+     ("a" "Arvid's Marge-bot" "@margebot-arvid")
+     ("v" "Valentin Chaboche" "@vch9")
+     ("r p" "Raphaël Proust" "@raphael-proust")
+     ("p" "Pietro Abate" "@abate")
+     ("k" "Killian Delarue" "@Killian-Delarue"))))
 (require 'arvid-magit)
+                                                                                
 (use-package browse-at-remote :commands (browse-at-remote) :ensure t)
 (require 'arvid-smerge)
 (require 'arvid-ibuffer)
@@ -110,6 +125,7 @@
 (require 'arvid-ffap)
 (require 'arvid-chatgpt-shell)
 (use-package visual-regexp :ensure t)
+(require 'arvid-longlines)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Customization

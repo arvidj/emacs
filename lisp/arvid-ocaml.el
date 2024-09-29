@@ -138,6 +138,7 @@ This function moves the point."
  ;; :custom (tuareg-opam-insinuate t)
  :hook (tuareg-mode . aj/tuareg-mode-hook)
  :hook (tuareg-mode . company-mode)
+ :hook (tuareg-mode . merlin-mode)
  ;; :config (tuareg-opam-update-env (tuareg-opam-current-compiler))
  )
 

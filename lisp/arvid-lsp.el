@@ -3,7 +3,7 @@
   (interactive)
   (when (lsp-feature? "textDocument/formatting")
     (lsp-format-buffer)))
-
+		
 (use-package
  lsp-mode
  :ensure t

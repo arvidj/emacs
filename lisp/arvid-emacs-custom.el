@@ -80,11 +80,28 @@
  '(initial-scratch-message "")
  '(ispell-program-name "aspell")
  '(latex-preview-pane-multifile-mode 'auctex)
+ '(lsp-ocaml-lang-server-command '("ocaml-language-server" "--stdio"))
+ '(lsp-ocaml-lsp-server-command '("ocamllsp" "--fallback-read-dot-merlin"))
  '(lsp-symbol-highlighting-skip-current t)
  '(lsp-ui-sideline-diagnostic-max-lines 3)
  '(magit-branch-arguments nil)
  '(magit-commit-all-when-nothing-staged 'ask)
  '(magit-diff-refine-hunk t)
+ '(magit-gitlab-favorite-users
+   '(("i" "Myself" "@arvidnl")
+     ("m" "Marge-bot" "@nomadic-margebot")
+     ("r b" "Romain" "@romain.nl")
+     ("a" "Arvid's Marge-bot" "@margebot-arvid")
+     ("v" "Valentin Chaboche" "@vch9")
+     ("r p" "Raphaël Proust" "@raphael-proust")
+     ("p a" "Pietro Abate" "@abate")
+     ("k" "Killian Delarue" "@Killian-Delarue")
+     ("n n" "Nohmane" "@neo.nl")
+     ("b" "Bruno" "@onurb")
+     ("p m" "Pierre Mary" "@pierre.mary1")
+     ("c" "Charles Nguyen" "@nguyencharles.nlabs")
+     ("d" "Diane Gallois-Wong " "@dianegalloiswong")
+     ("n v" "Nic Volanschi" "@NicVolanschi")))
  '(magit-glab-favorite-users
    '(("i" "Myself" "@arvidnl")
      ("m" "Marge-bot" "@nomadic-margebot")
@@ -99,6 +116,7 @@
  '(magit-repo-dirs
    '("/Users/arvidjakobsson/public_html/wwoof_community/typo3conf/ext/gc_wwoof/"))
  '(magit-revert-buffers 'silent)
+ '(magit-revision-show-gravatars nil)
  '(markdown-command "pandoc -f markdown -t html")
  '(markdown-header-scaling t)
  '(merlin-eldoc-type-verbosity 'min)
@@ -136,7 +154,7 @@
      ("melpa" . "http://melpa.org/packages/")
      ("melpa-stable" . "http://stable.melpa.org/packages/")))
  '(package-selected-packages
-   '(el-mock names forge lua-mode eat esup chatgpt-shell marginalia orderless vertico solaire-mode nano-theme doom-themes envrc shfmt pinentry elisp-autofmt keychain-environment keychain-refresh-environment sqlformat async dune-format dune-mode flycheck-ocaml flycheck typescript-mode org markdown-mode ox-latex ocp-indent tuareg tuareg-mode emojify company-lsp lsp-ui diff-hl git-gutter-fringe csv-mode jedi jq-mode graphviz-dot-mode magit-delta gitlab nvm ocamlformat mermaid-mode tide highlight-indentation-guides highlight-indent-guides dumb-jump coverage magit-forge browse-at-remote elfeed org-drill birds-of-paradise-plus-theme gitlab-ci-mode-flycheck gitlab-ci-mode dockerfile-mode json-mode lsp-mode helm-c-yasnippet org-sync-snippets nyan-mode utop default-text-scale org-noter pdf-tools hydra py-yapf feature-mode ecukes htmlize "htmlize" dune centered-window python-pytest reason-mode visual-regexp deferred chronometer dired-icon-mode dired-icon all-the-icons-dired request writegood-mode pomidor projectile fill-column-indicator leuven-theme w3m org-plus-contrib gitignore-templates company-math boogie-friends fstar-mode web-server guess-language helm-dictionary dictionary howdoi hc-zenburn-theme magit-svn math-symbols zenburn-theme yaml-mode ws-trim wrap-region wc-mode use-package twig-mode solarized-theme soft-stone-theme smex rust-mode purple-haze-theme phpunit password-generator org-journal org-jira nginx-mode lorem-ipsum less-css-mode iedit hl-spotlight highlight-thing highlight-symbol highlight-parentheses highlight-indentation helm-bibtex hackernews gradle-mode gnuplot git-gutter exec-path-from-shell ebib dtrt-indent drag-stuff company-coq browse-kill-ring ack))
+   '(package-lint el-mock names forge lua-mode eat esup chatgpt-shell marginalia orderless vertico solaire-mode nano-theme doom-themes envrc shfmt pinentry elisp-autofmt keychain-environment keychain-refresh-environment sqlformat async dune-format dune-mode flycheck-ocaml flycheck typescript-mode org markdown-mode ox-latex ocp-indent tuareg tuareg-mode emojify company-lsp lsp-ui diff-hl git-gutter-fringe csv-mode jedi jq-mode graphviz-dot-mode magit-delta gitlab nvm ocamlformat mermaid-mode tide highlight-indentation-guides highlight-indent-guides dumb-jump coverage magit-forge browse-at-remote elfeed org-drill birds-of-paradise-plus-theme gitlab-ci-mode-flycheck gitlab-ci-mode dockerfile-mode json-mode lsp-mode helm-c-yasnippet org-sync-snippets nyan-mode utop default-text-scale org-noter pdf-tools hydra py-yapf feature-mode ecukes htmlize "htmlize" dune centered-window python-pytest reason-mode visual-regexp deferred chronometer dired-icon-mode dired-icon all-the-icons-dired request writegood-mode pomidor projectile fill-column-indicator leuven-theme w3m org-plus-contrib gitignore-templates company-math boogie-friends fstar-mode web-server guess-language helm-dictionary dictionary howdoi hc-zenburn-theme magit-svn math-symbols zenburn-theme yaml-mode ws-trim wrap-region wc-mode use-package twig-mode solarized-theme soft-stone-theme smex rust-mode purple-haze-theme phpunit password-generator org-journal org-jira nginx-mode lorem-ipsum less-css-mode iedit hl-spotlight highlight-thing highlight-symbol highlight-parentheses highlight-indentation helm-bibtex hackernews gradle-mode gnuplot git-gutter exec-path-from-shell ebib dtrt-indent drag-stuff company-coq browse-kill-ring ack))
  '(preview-default-preamble
    '("\\RequirePackage["
      ("," . preview-default-option-list)
@@ -158,7 +176,17 @@
      (pdf "rst2pdf" ".pdf" nil)
      (s5 "rst2s5.py" ".html" nil)))
  '(safe-local-variable-values
-   '((browse-at-remote-preferred-remote-name . "tezos")
+   '((eval and buffer-file-name
+           (not
+            (eq major-mode 'package-recipe-mode))
+           (or
+            (require 'package-recipe-mode nil t)
+            (let
+                ((load-path
+                  (cons "../package-build" load-path)))
+              (require 'package-recipe-mode nil t)))
+           (package-recipe-mode))
+     (browse-at-remote-preferred-remote-name . "tezos")
      (sh-basic-offset 2)
      (shfmt-arguments "-i" "2" "-sr")
      (dune-format-on-save-mode)
