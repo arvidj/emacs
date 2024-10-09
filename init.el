@@ -30,7 +30,7 @@
 ;; Generalities for programming
 (require 'arvid-flycheck)
 (require 'arvid-company)
-;; (require 'arvid-lsp)
+(require 'arvid-lsp)
 
 ;; Programming, etc
 (require 'arvid-lisp)
